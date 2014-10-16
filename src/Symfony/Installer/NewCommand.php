@@ -46,7 +46,7 @@ class NewCommand extends Command
         }
 
         $symfonyVersion = $input->getArgument('version');
-        if (!preg_match('/2\.\d\.\d+/', $symfonyVersion)) {
+        if (!preg_match('/\A2\.\d\.\d+\z/', $symfonyVersion)) {
             throw new \RuntimeException("The Symfony version should be 2.N.M, where N = 0..9 and M = 0..99");
         }
 
