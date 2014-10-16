@@ -38,14 +38,15 @@ class NewCommand extends Command
             ->setDescription('Creates a new Symfony project.')
             ->addArgument('name', InputArgument::REQUIRED, 'The name of the directory where the new project will be created')
             // TODO: symfony.com/download should provide a latest.zip version to simplify things
-            ->addArgument('version', InputArgument::OPTIONAL, 'The Symfony version to be installed (defaults to the latest stable version)', $this->getLatestVersion());
+            ->addArgument('version', InputArgument::OPTIONAL, 'The Symfony version to be installed (defaults to the latest stable version)', $this->getLatestVersion())
+        ;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $this->fs = new Filesystem();
 
-        if (is_dir($dir = getcwd() . DIRECTORY_SEPARATOR . $input->getArgument('name'))) {
+        if (is_dir($dir = getcwd().DIRECTORY_SEPARATOR.$input->getArgument('name'))) {
             throw new \RuntimeException(sprintf("Project directory already exists:\n%s", $dir));
         }
 
@@ -58,7 +59,7 @@ class NewCommand extends Command
 
         $output->writeln("\n Downloading Symfony...");
 
-        $zipFilePath = $dir . DIRECTORY_SEPARATOR . '.symfony_' . uniqid(time()) . '.zip';
+        $zipFilePath = $dir.DIRECTORY_SEPARATOR.'.symfony_'.uniqid(time()).'.zip';
 
         $this->download($zipFilePath, $symfonyVersion, $output);
 
@@ -100,11 +101,11 @@ MESSAGE;
 
             if (null === $progressBar) {
                 ProgressBar::setPlaceholderFormatterDefinition('max', function (ProgressBar $bar) {
-                    return $this->formatSize($bar->getMaxSteps());
-                });
+                        return $this->formatSize($bar->getMaxSteps());
+                    });
                 ProgressBar::setPlaceholderFormatterDefinition('current', function (ProgressBar $bar) {
-                    return str_pad($this->formatSize($bar->getStep()), 10, ' ', STR_PAD_LEFT);
-                });
+                        return str_pad($this->formatSize($bar->getStep()), 10, ' ', STR_PAD_LEFT);
+                    });
                 $progressBar = new ProgressBar($output, $size);
                 $progressBar->setRedrawFrequency(max(1, floor($size / 1000)));
 
@@ -125,7 +126,7 @@ MESSAGE;
         $client = new Client();
         $client->getEmitter()->attach(new Progress(null, $downloadCallback));
 
-        $response = $client->get('http://symfony.com/download?v=Symfony_Standard_Vendors_' . $symfonyVersion . '.zip');
+        $response = $client->get('http://symfony.com/download?v=Symfony_Standard_Vendors_'.$symfonyVersion.'.zip');
         $this->fs->dumpFile($targetPath, $response->getBody());
 
         if (null !== $progressBar) {
@@ -144,7 +145,7 @@ MESSAGE;
         $archive->extractTo($projectDir);
         $archive->close();
 
-        $extractionDir = $projectDir . DIRECTORY_SEPARATOR . 'Symfony';
+        $extractionDir = $projectDir.DIRECTORY_SEPARATOR.'Symfony';
 
         $iterator = new \FilesystemIterator($extractionDir);
 
@@ -155,7 +156,7 @@ MESSAGE;
                 $subPath = rtrim($subPath, '/');
             }
 
-            $this->fs->rename($file->getRealPath(), $projectDir . DIRECTORY_SEPARATOR . $subPath);
+            $this->fs->rename($file->getRealPath(), $projectDir.DIRECTORY_SEPARATOR.$subPath);
         }
 
         return $this;
@@ -164,7 +165,7 @@ MESSAGE;
     private function cleanUp($zipFile, $projectDir)
     {
         $this->fs->remove($zipFile);
-        $this->fs->remove($projectDir . DIRECTORY_SEPARATOR . 'Symfony');
+        $this->fs->remove($projectDir.DIRECTORY_SEPARATOR.'Symfony');
 
         return $this;
     }
@@ -188,8 +189,7 @@ MESSAGE;
             $client = new Client();
             /** @var Response $response */
             $response = $client
-                ->get('https://packagist.org/packages/symfony/symfony.json')
-            ;
+                ->get('https://packagist.org/packages/symfony/framework-standard-edition.json');
             $packageInfo = $response->json();
             $versions = array_keys($packageInfo['package']['versions']);
             foreach ($versions as $version) {
@@ -200,12 +200,14 @@ MESSAGE;
             // This is string sorting. It takes into account the fact that versions are match next rule: \d\.\d\.\d{1,2}
             sort($this->versions);
         }
+
         return $this->versions;
     }
 
     private function getLatestVersion()
     {
         $versions = $this->getVersions();
+
         return end($versions);
     }
 }
