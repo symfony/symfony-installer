@@ -22,5 +22,5 @@
     "bin": [
         "symfony"
     ],
-    "minimum-stability": "dev"
+    "minimum-stability": "stable"
 }
