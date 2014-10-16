@@ -46,8 +46,8 @@ class NewCommand extends Command
         }
 
         $symfonyVersion = $input->getArgument('version');
-        if (!preg_match('/2\.\d\.\d+/', $symfonyVersion)) {
-            throw new \RuntimeException("The Symfony version should be 2.N.M, where N = 0..9 and M = 0..99");
+        if (!preg_match('/^2\.[0-7]\.\d{1,2}$/', $symfonyVersion)) {
+            throw new \RuntimeException('The Symfony version should be 2.N.M, where N = 0..7 and M = 0..99');
         }
 
         $this->fs->mkdir($dir);
