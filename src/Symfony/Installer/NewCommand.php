@@ -105,9 +105,9 @@ MESSAGE;
                 $progressBar->setRedrawFrequency(max(1, floor($size / 1000)));
 
                 if (!defined('PHP_WINDOWS_VERSION_BUILD')) {
-                    $progressBar->setEmptyBarCharacter('░');
-                    $progressBar->setProgressCharacter('▏');
-                    $progressBar->setBarCharacter('▋');
+                    $progressBar->setEmptyBarCharacter('░'); // light shade character \u2591
+                    $progressBar->setProgressCharacter('');
+                    $progressBar->setBarCharacter('▓'); // dark shade character \u2593
                 }
 
                 $progressBar->setBarWidth(60);
