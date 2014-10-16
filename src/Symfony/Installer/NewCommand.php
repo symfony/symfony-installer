@@ -70,13 +70,19 @@ class NewCommand extends Command
 
     * Configure your application in <comment>app/config/parameters.yml</comment> file.
 
+    * Read the documentation at <comment>http://symfony.com/doc</comment>
+
+MESSAGE;
+
+        if (50400 <= PHP_VERSION_ID) {
+            $message .= <<<MESSAGE
+
     * Run your application:
         1. Execute the <comment>php app/console server:run</comment> command.
         2. Browse to the <comment>http://localhost:8000</comment> URL.
 
-    * Read the documentation at <comment>http://symfony.com/doc</comment>
-
 MESSAGE;
+        }
 
         if (defined('PHP_WINDOWS_VERSION_BUILD')) {
             $message = str_replace('✔', 'OK', $message);
