@@ -1,7 +1,29 @@
 #!/usr/bin/env php
 <?php
 
-require __DIR__.'/vendor/autoload.php';
+function includeIfExists($file)
+{
+    if (file_exists($file)) {
+        return include $file;
+    }
+}
+
+if (
+    (!$classLoader = includeIfExists(__DIR__.'/vendor/autoload.php')) &&
+    (!$classLoader = includeIfExists(__DIR__.'/../../autoload.php'))
+) {
+    $message = <<<EOL
+You must set up the project dependencies, run the following commands:
+
+  curl -sS https://getcomposer.org/installer | php
+  php composer.phar install
+
+
+EOL;
+
+    file_put_contents('php://stderr', $message, FILE_APPEND);
+    exit(1);
+}
 
 $appVersion = '1.0';
 
