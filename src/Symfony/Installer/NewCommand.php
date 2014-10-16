@@ -197,8 +197,7 @@ MESSAGE;
                     $this->versions[] = $matches[1];
                 }
             }
-            // This is string sorting. It takes into account the fact that versions are match next rule: \d\.\d\.\d{1,2}
-            sort($this->versions);
+            rsort($this->versions, SORT_NATURAL);
         }
 
         return $this->versions;
@@ -208,6 +207,6 @@ MESSAGE;
     {
         $versions = $this->getVersions();
 
-        return end($versions);
+        return reset($versions);
     }
 }
