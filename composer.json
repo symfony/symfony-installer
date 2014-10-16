@@ -19,6 +19,11 @@
         "symfony/console": "~2.5",
         "symfony/filesystem": "~2.5"
     },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "1.0-dev"
+        }
+    },
     "bin": [
         "symfony"
     ],
