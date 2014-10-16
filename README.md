@@ -13,7 +13,7 @@ execute the following commands:
 
 ```bash
 # install the Symfony installer
-$ composer global require symfony/symfony-installer
+$ composer global require symfony/symfony-installer ~1.0@dev
 
 # update the Symfony installer
 $ composer global update symfony/symfony-installer
