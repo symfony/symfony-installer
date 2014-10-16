@@ -26,6 +26,11 @@ class NewCommand extends Command
      */
     private $fs;
 
+    /**
+     * @var array All available versions
+     */
+    private $versions;
+
     protected function configure()
     {
         $this
@@ -33,15 +38,14 @@ class NewCommand extends Command
             ->setDescription('Creates a new Symfony project.')
             ->addArgument('name', InputArgument::REQUIRED, 'The name of the directory where the new project will be created')
             // TODO: symfony.com/download should provide a latest.zip version to simplify things
-            ->addArgument('version', InputArgument::OPTIONAL, 'The Symfony version to be installed (defaults to the latest stable version)', '2.5.3')
-        ;
+            ->addArgument('version', InputArgument::OPTIONAL, 'The Symfony version to be installed (defaults to the latest stable version)', $this->getLatestVersion());
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $this->fs = new Filesystem();
 
-        if (is_dir($dir = getcwd().DIRECTORY_SEPARATOR.$input->getArgument('name'))) {
+        if (is_dir($dir = getcwd() . DIRECTORY_SEPARATOR . $input->getArgument('name'))) {
             throw new \RuntimeException(sprintf("Project directory already exists:\n%s", $dir));
         }
 
@@ -54,7 +58,7 @@ class NewCommand extends Command
 
         $output->writeln("\n Downloading Symfony...");
 
-        $zipFilePath = $dir.DIRECTORY_SEPARATOR.'.symfony_'.uniqid(time()).'.zip';
+        $zipFilePath = $dir . DIRECTORY_SEPARATOR . '.symfony_' . uniqid(time()) . '.zip';
 
         $this->download($zipFilePath, $symfonyVersion, $output);
 
@@ -121,7 +125,7 @@ MESSAGE;
         $client = new Client();
         $client->getEmitter()->attach(new Progress(null, $downloadCallback));
 
-        $response = $client->get('http://symfony.com/download?v=Symfony_Standard_Vendors_'.$symfonyVersion.'.zip');
+        $response = $client->get('http://symfony.com/download?v=Symfony_Standard_Vendors_' . $symfonyVersion . '.zip');
         $this->fs->dumpFile($targetPath, $response->getBody());
 
         if (null !== $progressBar) {
@@ -140,7 +144,7 @@ MESSAGE;
         $archive->extractTo($projectDir);
         $archive->close();
 
-        $extractionDir = $projectDir.DIRECTORY_SEPARATOR.'Symfony';
+        $extractionDir = $projectDir . DIRECTORY_SEPARATOR . 'Symfony';
 
         $iterator = new \FilesystemIterator($extractionDir);
 
@@ -151,7 +155,7 @@ MESSAGE;
                 $subPath = rtrim($subPath, '/');
             }
 
-            $this->fs->rename($file->getRealPath(), $projectDir.DIRECTORY_SEPARATOR.$subPath);
+            $this->fs->rename($file->getRealPath(), $projectDir . DIRECTORY_SEPARATOR . $subPath);
         }
 
         return $this;
@@ -160,7 +164,7 @@ MESSAGE;
     private function cleanUp($zipFile, $projectDir)
     {
         $this->fs->remove($zipFile);
-        $this->fs->remove($projectDir.DIRECTORY_SEPARATOR.'Symfony');
+        $this->fs->remove($projectDir . DIRECTORY_SEPARATOR . 'Symfony');
 
         return $this;
     }
@@ -176,5 +180,32 @@ MESSAGE;
         $bytes /= pow(1024, $pow);
 
         return round($bytes, 2) . ' ' . $units[$pow];
+    }
+
+    private function getVersions()
+    {
+        if (empty($this->versions)) {
+            $client = new Client();
+            /** @var Response $response */
+            $response = $client
+                ->get('https://packagist.org/packages/symfony/symfony.json')
+            ;
+            $packageInfo = $response->json();
+            $versions = array_keys($packageInfo['package']['versions']);
+            foreach ($versions as $version) {
+                if (preg_match('@^v(.*)$@', $version, $matches)) {
+                    $this->versions[] = $matches[1];
+                }
+            }
+            // This is string sorting. It takes into account the fact that versions are match next rule: \d\.\d\.\d{1,2}
+            sort($this->versions);
+        }
+        return $this->versions;
+    }
+
+    private function getLatestVersion()
+    {
+        $versions = $this->getVersions();
+        return end($versions);
     }
 }
