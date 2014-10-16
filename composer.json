@@ -1,0 +1,26 @@
+{
+    "name": "symfony/symfony-installer",
+    "description": "The official installer to create projects based on the Symfony full-stack framework.",
+    "keywords": ["symfony", "framework", "installer", "php"],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Symfony Community",
+            "homepage": "http://symfony.com/contributors"
+        }
+    ],
+    "autoload": {
+        "psr-0": { "Symfony\\": "src/" }
+    },
+    "require": {
+        "ext-zip": "*",
+        "guzzlehttp/guzzle": "~4.0",
+        "guzzlehttp/progress-subscriber": "~1.1",
+        "symfony/console": "~2.5",
+        "symfony/filesystem": "~2.5"
+    },
+    "bin": [
+        "symfony"
+    ],
+    "minimum-stability": "stable"
+}
