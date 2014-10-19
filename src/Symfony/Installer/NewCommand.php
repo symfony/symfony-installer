@@ -30,6 +30,7 @@ class NewCommand extends Command
     private $projectDir;
     private $version;
     private $compressedFilePath;
+    private $requirementsErrors = array();
 
     protected function configure()
     {
@@ -56,6 +57,7 @@ class NewCommand extends Command
             ->download()
             ->extract()
             ->cleanUp()
+            ->checkSymfonyRequirements()
             ->displayInstallationResult()
         ;
     }
@@ -283,16 +285,39 @@ class NewCommand extends Command
      */
     private function displayInstallationResult()
     {
+        if (empty($this->requirementsErrors)) {
+            $this->output->writeln(sprintf(
+                " <info>%s</info>  Symfony was <info>successfully installed</info>. Now you can:\n",
+                defined('PHP_WINDOWS_VERSION_BUILD') ? 'OK' : '✔'
+            ));
+        } else {
+            $this->output->writeln(sprintf(
+                " <comment>%s</comment>  Symfony was <info>successfully installed</info> but your system doesn't meet its\n".
+                "     technical requirements! Fix the following issues before executing\n".
+                "     your Symfony application:\n",
+                defined('PHP_WINDOWS_VERSION_BUILD') ? 'FAILED' : '✕'
+            ));
+
+            foreach ($this->requirementsErrors as $helpText) {
+                $this->output->writeln(' * '.$helpText);
+            }
+
+            $this->output->writeln(sprintf(
+                " After fixing these issues, re-check Symfony requirements executing this command:\n\n".
+                "   <comment>php %s/app/check.php</comment>\n\n".
+                " Then, you can:\n",
+                $this->projectName
+            ));
+        }
+
         $this->output->writeln(sprintf(
-            " <info>%s</info>  Symfony was <info>successfully installed</info>. Now you can:\n".
-            "\n".
             "    * Change your current directory to %s.\n".
             "    * Configure your application in <comment>app/config/parameters.yml</comment> file.\n\n".
             "    * Run your application:\n".
             "        1. Execute the <comment>php app/console server:run</comment> command.\n".
             "        2. Browse to the <comment>http://localhost:8000</comment> URL.\n\n".
             "    * Read the documentation at <comment>http://symfony.com/doc</comment>\n",
-            defined('PHP_WINDOWS_VERSION_BUILD') ? 'OK' : '✔', $this->projectName
+            $this->projectName
         ));
 
         return $this;
@@ -316,5 +341,34 @@ class NewCommand extends Command
         $bytes /= pow(1024, $pow);
 
         return number_format($bytes, 2).' '.$units[$pow];
+    }
+
+    /**
+     * Checks if environment meets symfony requirements
+     */
+    private function checkSymfonyRequirements()
+    {
+        require $this->projectDir.'/app/SymfonyRequirements.php';
+        $symfonyRequirements = new \SymfonyRequirements();
+        $this->requirementsErrors = array();
+        foreach ($symfonyRequirements->getRequirements() as $req) {
+            if ($helpText = $this->getErrorMessage($req)) {
+                $this->requirementsErrors[] = $helpText;
+            }
+        }
+
+        return $this;
+    }
+
+    private function getErrorMessage(\Requirement $requirement, $lineSize = 70)
+    {
+        if ($requirement->isFulfilled()) {
+            return;
+        }
+
+        $errorMessage  = wordwrap($requirement->getTestMessage(), $lineSize - 3, PHP_EOL.'   ').PHP_EOL;
+        $errorMessage .= '   > '.wordwrap($requirement->getHelpText(), $lineSize - 5, PHP_EOL.'   > ').PHP_EOL;
+
+        return $errorMessage;
     }
 }
