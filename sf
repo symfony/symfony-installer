@@ -1,0 +1,10 @@
+#!/usr/bin/env php
+<?php
+
+	if (file_exists(getcwd() . DIRECTORY_SEPARATOR . 'app' . DIRECTORY_SEPARATOR . 'console')) {
+		chdir(getcwd());
+		array_shift($argv);		
+		passthru('app/console ' . implode(' ' , $argv));
+	} else {
+		echo "You must be in a symfony project to execute this command.\n";
+	}
