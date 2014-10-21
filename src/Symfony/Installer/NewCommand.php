@@ -46,9 +46,7 @@ class NewCommand extends Command
         }
 
         $symfonyVersion = $input->getArgument('version');
-        if (!preg_match('/^2\.\d\.\d+$/', $symfonyVersion)) {
-            throw new \RuntimeException("The Symfony version should be 2.N.M, where N = 0..9 and M = 0..99");
-        }
+        $this->isSymfonyVersionInstallable($symfonyVersion, $input->getArgument('name'));
 
         $this->fs->mkdir($dir);
 
@@ -83,6 +81,69 @@ MESSAGE;
         }
 
         $output->writeln($message);
+    }
+
+    /**
+     * Checks whether the given Symfony version is installable by the installer.
+     * The rules to decide if a version is installable depend on the changes
+     * introduced for the ICU/Intl components, and are as follows:
+     *
+     *   - 2.0, 2.1, 2.2 and 2.4 cannot be installed because they are unmaintained.
+     *   - 2.3 can be installed starting from version 2.3.21 (inclusive)
+     *   - 2.5 can be installed starting from version 2.5.6 (inclusive)
+     *   - 2.6, 2.7, 2.8 and 2.9 can be installed regardless the version.
+     *
+     * @param  string $version     The symfony version to install
+     * @param  string $projectName The name of the new Symfony project to create
+     *
+     * @return  boolean            True if the given version can be installed with the installer.
+     *                             False otherwise.
+     *
+     * @throws \RuntimeException   If the given Symfony version is not compatible with this installer.
+     */
+    private function isSymfonyVersionInstallable($version, $projectName)
+    {
+        // 'latest' is a special version name that refers to the latest stable version
+        // available at the moment of installing Symfony
+        if ('latest' === $version) {
+            return true;
+        }
+
+        if (!preg_match('/^2\.\d\.\d{1,2}$/', $version)) {
+            throw new \RuntimeException("The Symfony version should be 2.N.M, where N = 0..9 and M = 0..99");
+        }
+
+        // 2.0, 2.1, 2.2 and 2.4 cannot be installed because they are unmaintained
+        if (preg_match('/^2\.[0124]\.\d{1,2}$/', $version)) {
+            throw new \RuntimeException(sprintf(
+                "The selected Symfony version (%s) is not compatible with this installer\n".
+                "To solve this issue install Symfony manually executing the following command:\n\n".
+                "composer create-project symfony/framework-standard-edition %s %s",
+                $version, $projectName, $version
+            );
+        }
+
+        // 2.3 can be installed starting from version 2.3.21 (inclusive)
+        if (preg_match('/^2\.3\.\d{1,2}$/', $version) && version_compare($version, '2.3.21', '<')) {
+            throw new \RuntimeException(sprintf(
+                "This installer is compatible with Symfony 2.3 versions starting from (%s)\n".
+                "To solve this issue install Symfony manually executing the following command:\n\n".
+                "composer create-project symfony/framework-standard-edition %s %s",
+                $version, $projectName, $version
+            );
+        }
+
+        // 2.5 can be installed starting from version 2.5.6 (inclusive)
+        if (preg_match('/^2\.3\.\d{1,2}$/', $version) && version_compare($version, '2.5.6', '<')) {
+            throw new \RuntimeException(sprintf(
+                "This installer is compatible with Symfony 2.5 versions starting from (%s)\n".
+                "To solve this issue install Symfony manually executing the following command:\n\n".
+                "composer create-project symfony/framework-standard-edition %s %s",
+                $version, $projectName, $version
+            );
+        }
+
+        return true;
     }
 
     private function download($targetPath, $symfonyVersion, OutputInterface $output)
