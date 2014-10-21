@@ -96,7 +96,7 @@ MESSAGE;
      * @param  string $version     The symfony version to install
      * @param  string $projectName The name of the new Symfony project to create
      *
-     * @return  boolean            True if the given version can be installed with the installer.
+     * @return  bool               True if the given version can be installed with the installer.
      *                             False otherwise.
      *
      * @throws \RuntimeException   If the given Symfony version is not compatible with this installer.
@@ -195,7 +195,7 @@ MESSAGE;
 
     private function extract($zipFilePath, $projectDir)
     {
-        $archive = new ZipArchive;
+        $archive = new ZipArchive();
 
         $archive->open($zipFilePath);
         $archive->extractTo($projectDir);
@@ -236,6 +236,6 @@ MESSAGE;
 
         $bytes /= pow(1024, $pow);
 
-        return round($bytes, 2) . ' ' . $units[$pow];
+        return round($bytes, 2).' '.$units[$pow];
     }
 }
