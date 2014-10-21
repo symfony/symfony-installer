@@ -1,0 +1,76 @@
+---------------------------------------------------------------------------
+
+by stof at 2014-10-16T11:33:19Z
+
+why not using ``^`` and ``$`` instead ?
+
+---------------------------------------------------------------------------
+
+by fivestar at 2014-10-16T11:58:54Z
+
+So `\A` and `\z` match *head* and *end* collectly than `^` and `$`.
+Is it bothering you?
+
+---------------------------------------------------------------------------
+
+by sivolobov at 2014-10-16T12:01:30Z
+
+`\A` and `\z` can be useful for multiline input where `^` and `$` will match begining and ending of every line, `\A` and `\z` will match only begining and ending of whole input text.
+
+I think that @stof is right. Because you always will have one line in input for version number.
+
+---------------------------------------------------------------------------
+
+by stof at 2014-10-16T12:11:59Z
+
+but here, we are not in a multiline regex (we don't have the ``m`` modifier), so they are equivalent. I would rather use ``^`` and ``$``, to be consistent with the Symfony codebase
+
+---------------------------------------------------------------------------
+
+by fivestar at 2014-10-16T12:21:08Z
+
+OK. I fixed it for consistency.
+
+---------------------------------------------------------------------------
+
+by kenjis at 2014-10-16T13:06:52Z
+
+Just for your information.
+
+> but here, we are not in a multiline regex (we don't have the m modifier), so they are equivalent.
+
+They are not equivalent.
+
+`$` matches "\n" at the end, but `\z` does not match "\n" at the end.
+So string like "2.2.5\n" passes the validation.
+
+Of course nobody types the version number like that.
+
+---------------------------------------------------------------------------
+
+by javiereguiluz at 2014-10-16T13:10:16Z
+
+@kenjis a human won't type the version as `2.2.5\n`, but beware that this tool could be used inside an automated command and then this trailing `\n` character could be indeed wrongly passed inside the version number.
+
+---------------------------------------------------------------------------
+
+by fivestar at 2014-10-21T02:03:28Z
+
+@stof A regex has already been fixed. Anything else?
+
+---------------------------------------------------------------------------
+
+by kenjis at 2014-10-21T02:15:32Z
+
+@javiereguiluz Thank you for your comment.
+
+I think `2.2.5\n` is not valid version number. So we should use `\z` instead of `$` ?
+
+---------------------------------------------------------------------------
+
+by fivestar at 2014-10-21T03:22:53Z
+
+@kenjis Indeed, I also think `\z` is valid than `$` whether or not multiline because it doesn't match `\n`.
+However, @stof mentioned the consistency, so I think this PR is enough.
+
+(英語かけてるかわからないので日本語で書いておきますが、`\n` にマッチしたところでたいした問題ではないので、気持ちもわかるんですが、一貫性を優先してこれでよいかと思っています。)
