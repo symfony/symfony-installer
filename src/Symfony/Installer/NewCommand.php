@@ -197,7 +197,7 @@ class NewCommand extends Command
                     return $this->formatSize($bar->getMaxSteps());
                 });
                 ProgressBar::setPlaceholderFormatterDefinition('current', function (ProgressBar $bar) {
-                    return str_pad($this->formatSize($bar->getStep()), 10, ' ', STR_PAD_LEFT);
+                    return str_pad($this->formatSize($bar->getStep()), 11, ' ', STR_PAD_LEFT);
                 });
 
                 $progressBar = new ProgressBar($this->output, $size);
