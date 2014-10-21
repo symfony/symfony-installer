@@ -126,7 +126,7 @@ MESSAGE;
         // 2.3 can be installed starting from version 2.3.21 (inclusive)
         if (preg_match('/^2\.3\.\d{1,2}$/', $version) && version_compare($version, '2.3.21', '<')) {
             throw new \RuntimeException(sprintf(
-                "This installer is compatible with Symfony 2.3 versions starting from (%s)\n".
+                "This installer is compatible with Symfony 2.3 versions starting from 2.3.21\n".
                 "To solve this issue install Symfony manually executing the following command:\n\n".
                 "composer create-project symfony/framework-standard-edition %s %s",
                 $version, $projectName, $version
@@ -134,9 +134,9 @@ MESSAGE;
         }
 
         // 2.5 can be installed starting from version 2.5.6 (inclusive)
-        if (preg_match('/^2\.3\.\d{1,2}$/', $version) && version_compare($version, '2.5.6', '<')) {
+        if (preg_match('/^2\.5\.\d{1,2}$/', $version) && version_compare($version, '2.5.6', '<')) {
             throw new \RuntimeException(sprintf(
-                "This installer is compatible with Symfony 2.5 versions starting from (%s)\n".
+                "This installer is compatible with Symfony 2.5 versions starting from 2.5.6\n".
                 "To solve this issue install Symfony manually executing the following command:\n\n".
                 "composer create-project symfony/framework-standard-edition %s %s",
                 $version, $projectName, $version
