@@ -1,0 +1,28 @@
+{
+    "directories": ["src/"],
+    "finder": [
+        {
+            "name": "*.php",
+            "exclude": [
+                ".gitignore",
+                ".md",
+                "phpunit",
+                "Tester",
+                "Tests",
+                "tests",
+                "yaml"
+            ],
+            "in": "vendor"
+        }
+    ],
+    "compactors": [
+        "Herrera\\Box\\Compactor\\Json",
+        "Herrera\\Box\\Compactor\\Php"
+    ],
+    "compression": "GZ",
+    "git-version": "package_version",
+    "main": "symfony",
+    "output": "symfony.phar",
+    "stub": true,
+    "chmod": "0755"
+}

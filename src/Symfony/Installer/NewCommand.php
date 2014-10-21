@@ -14,7 +14,7 @@ use Symfony\Component\Filesystem\Filesystem;
 use ZipArchive;
 
 /**
- * This command provides information about the Symfony installer.
+ * This command creates new Symfony projects for the given Symfony version.
  *
  * @author Christophe Coevoet <stof@notk.org>
  * @author Javier Eguiluz <javier.eguiluz@gmail.com>
@@ -39,16 +39,30 @@ class NewCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        if (version_compare(PHP_VERSION, '5.4.0', '<')) {
+            $message = <<<MESSAGE
+Symfony Installer requires PHP 5.4 version or higher and your system has
+PHP %s version installed.
+
+To solve this issue, upgrade your PHP installation or install Symfony manually.
+To do so, make sure that your system has Composer installed and execute the
+following command:
+
+$ composer create-project symfony/framework-standard-edition %s
+MESSAGE;
+            $output->writeln(sprintf($message, PHP_VERSION, $input->getArgument('name')));
+
+            return 1;
+        }
+
         $this->fs = new Filesystem();
 
-        if (is_dir($dir = getcwd().DIRECTORY_SEPARATOR.$input->getArgument('name'))) {
+        if (is_dir($dir = rtrim(getcwd().DIRECTORY_SEPARATOR.$input->getArgument('name'), DIRECTORY_SEPARATOR))) {
             throw new \RuntimeException(sprintf("Project directory already exists:\n%s", $dir));
         }
 
         $symfonyVersion = $input->getArgument('version');
-        if (!preg_match('/^2\.\d\.\d+$/', $symfonyVersion)) {
-            throw new \RuntimeException("The Symfony version should be 2.N.M, where N = 0..9 and M = 0..99");
-        }
+        $this->isSymfonyVersionInstallable($symfonyVersion, $input->getArgument('name'));
 
         $this->fs->mkdir($dir);
 
@@ -83,6 +97,73 @@ MESSAGE;
         }
 
         $output->writeln($message);
+    }
+
+    /**
+     * Checks whether the given Symfony version is installable by the installer.
+     * The rules to decide if a version is installable depend on the changes
+     * introduced for the ICU/Intl components, and are as follows:
+     *
+     *   - 2.0, 2.1, 2.2 and 2.4 cannot be installed because they are unmaintained.
+     *   - 2.3 can be installed starting from version 2.3.21 (inclusive)
+     *   - 2.5 can be installed starting from version 2.5.6 (inclusive)
+     *   - 2.6, 2.7, 2.8 and 2.9 can be installed regardless the version.
+     *
+     * @param  string $version     The symfony version to install
+     * @param  string $projectName The name of the new Symfony project to create
+     *
+     * @return  bool               True if the given version can be installed with the installer.
+     *                             False otherwise.
+     *
+     * @throws \RuntimeException   If the given Symfony version is not compatible with this installer.
+     */
+    private function isSymfonyVersionInstallable($version, $projectName)
+    {
+        // 'latest' is a special version name that refers to the latest stable version
+        // available at the moment of installing Symfony
+        if ('latest' === $version) {
+            return true;
+        }
+
+        // validate semver syntax
+        if (!preg_match('/^2\.\d\.\d{1,2}$/', $version)) {
+            throw new \RuntimeException('The Symfony version should be 2.N.M, where N = 0..9 and M = 0..99');
+        }
+
+        // 2.0, 2.1, 2.2 and 2.4 cannot be installed because they are unmaintained
+        if (preg_match('/^2\.[0124]\.\d{1,2}$/', $version)) {
+            throw new \RuntimeException(sprintf(
+                "The selected version (%s) cannot be installed because it belongs\n".
+                "to an unmaintained Symfony branch which is not compatible with this installer.\n".
+                "To solve this issue install Symfony manually executing the following command:\n\n".
+                "composer create-project symfony/framework-standard-edition %s %s",
+                $version, $projectName, $version
+            ));
+        }
+
+        // 2.3 can be installed starting from version 2.3.21 (inclusive)
+        if (preg_match('/^2\.3\.\d{1,2}$/', $version) && version_compare($version, '2.3.21', '<')) {
+            throw new \RuntimeException(sprintf(
+                "The selected version (%s) cannot be installed because this installer\n".
+                "is compatible with Symfony 2.3 versions starting from 2.3.21.\n".
+                "To solve this issue install Symfony manually executing the following command:\n\n".
+                "composer create-project symfony/framework-standard-edition %s %s",
+                $version, $projectName, $version
+            ));
+        }
+
+        // 2.5 can be installed starting from version 2.5.6 (inclusive)
+        if (preg_match('/^2\.5\.\d{1,2}$/', $version) && version_compare($version, '2.5.6', '<')) {
+            throw new \RuntimeException(sprintf(
+                "The selected version (%s) cannot be installed because this installer\n".
+                "is compatible with Symfony 2.5 versions starting from 2.5.6.\n".
+                "To solve this issue install Symfony manually executing the following command:\n\n".
+                "composer create-project symfony/framework-standard-edition %s %s",
+                $version, $projectName, $version
+            ));
+        }
+
+        return true;
     }
 
     private function download($targetPath, $symfonyVersion, OutputInterface $output)
@@ -134,7 +215,7 @@ MESSAGE;
 
     private function extract($zipFilePath, $projectDir)
     {
-        $archive = new ZipArchive;
+        $archive = new ZipArchive();
 
         $archive->open($zipFilePath);
         $archive->extractTo($projectDir);
@@ -175,6 +256,6 @@ MESSAGE;
 
         $bytes /= pow(1024, $pow);
 
-        return round($bytes, 2) . ' ' . $units[$pow];
+        return round($bytes, 2).' '.$units[$pow];
     }
 }
