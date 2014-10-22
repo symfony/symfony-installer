@@ -52,7 +52,7 @@ $ composer create-project symfony/framework-standard-edition name-of-your-projec
 MESSAGE;
             $output->writeln(sprintf($message,PHP_VERSION));
 
-            return 0;
+            return 1;
         }
 
         $this->fs = new Filesystem();
