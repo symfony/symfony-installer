@@ -39,6 +39,20 @@ class NewCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        if(version_compare(PHP_VERSION,'5.4.0','<')) {
+            $message = <<<MESSAGE
+Symfony Installer requires PHP 5.4 version or higher and your system has
+PHP %s version installed.
+
+To solve this issue, upgrade your PHP installation or install Symfony manually.
+To do so, make sure that your system has Composer installed and execute the
+following command:
+MESSAGE;
+            $output->writeln(sprintf($message,PHP_VERSION));
+
+            return 0;
+        }
+
         $this->fs = new Filesystem();
 
         if (is_dir($dir = getcwd().DIRECTORY_SEPARATOR.$input->getArgument('name'))) {
