@@ -129,7 +129,7 @@ MESSAGE;
                 "This installer is compatible with Symfony 2.3 versions starting from 2.3.21\n".
                 "To solve this issue install Symfony manually executing the following command:\n\n".
                 "composer create-project symfony/framework-standard-edition %s %s",
-                $version, $projectName, $version
+                $projectName, $version
             );
         }
 
@@ -139,7 +139,7 @@ MESSAGE;
                 "This installer is compatible with Symfony 2.5 versions starting from 2.5.6\n".
                 "To solve this issue install Symfony manually executing the following command:\n\n".
                 "composer create-project symfony/framework-standard-edition %s %s",
-                $version, $projectName, $version
+                $projectName, $version
             );
         }
 
