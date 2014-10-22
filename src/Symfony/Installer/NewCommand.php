@@ -48,9 +48,9 @@ To solve this issue, upgrade your PHP installation or install Symfony manually.
 To do so, make sure that your system has Composer installed and execute the
 following command:
 
-$ composer create-project symfony/framework-standard-edition name-of-your-project
+$ composer create-project symfony/framework-standard-edition %s
 MESSAGE;
-            $output->writeln(sprintf($message,PHP_VERSION));
+            $output->writeln(sprintf($message, PHP_VERSION, $input->getArgument('name')));
 
             return 1;
         }
