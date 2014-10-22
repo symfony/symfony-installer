@@ -39,7 +39,7 @@ class NewCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        if(version_compare(PHP_VERSION,'5.4.0','<')) {
+        if (version_compare(PHP_VERSION,'5.4.0','<')) {
             $message = <<<MESSAGE
 Symfony Installer requires PHP 5.4 version or higher and your system has
 PHP %s version installed.
