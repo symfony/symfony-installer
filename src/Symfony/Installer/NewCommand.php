@@ -41,7 +41,7 @@ class NewCommand extends Command
     {
         $this->fs = new Filesystem();
 
-        if (is_dir($dir = getcwd().DIRECTORY_SEPARATOR.$input->getArgument('name'))) {
+        if (is_dir($dir = rtrim(getcwd().DIRECTORY_SEPARATOR.$input->getArgument('name'), DIRECTORY_SEPARATOR))) {
             throw new \RuntimeException(sprintf("Project directory already exists:\n%s", $dir));
         }
 
