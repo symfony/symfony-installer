@@ -1,0 +1,38 @@
+---------------------------------------------------------------------------
+
+by pgodel at 2014-10-16T22:00:22Z
+
+This PR should help with #12
+
+---------------------------------------------------------------------------
+
+by pgodel at 2014-10-17T15:50:23Z
+
+@stof thanks, I had copied the file from another project and did not notice. Interestingly, the box tool did not complain about it. Fixed now.
+
+---------------------------------------------------------------------------
+
+by jeromemacias at 2014-10-17T19:34:23Z
+
+:+1:
+We could add the phar into package managers like homebrew (as already done for composer or phpunit)
+
+---------------------------------------------------------------------------
+
+by pgodel at 2014-10-17T19:58:36Z
+
+@jeromemacias great idea!
+
+---------------------------------------------------------------------------
+
+by stof at 2014-10-21T08:22:23Z
+
+> thanks, I had copied the file from another project and did not notice. Interestingly, the box tool did not complain about it. Fixed now.
+
+Of course it does not. Tabs are valid in JSON (unlike YAML). It was a matter of coding standards, not of making things work
+
+---------------------------------------------------------------------------
+
+by stof at 2014-10-21T08:22:52Z
+
+:+1:
