@@ -1,0 +1,26 @@
+---------------------------------------------------------------------------
+
+by xabbuh at 2014-10-25T20:16:40Z
+
+But the exception that will be thrown when the condition is true, actually was not thrown in your example.
+
+---------------------------------------------------------------------------
+
+by adamelso at 2014-10-25T20:36:16Z
+
+@xabbuh Apologies if I've missed something but I don't understand what you're saying.
+
+I tried this again with a different directory name and the trailing slash just to be sure, but I still get the exception thrown.
+I tried this again _without_ the trailing slash and everything worked okay. So I edited the global Composer installation of the installer directly to trim `DIRECTORY_SEPARATOR` and everything worked okay.
+
+---------------------------------------------------------------------------
+
+by xabbuh at 2014-10-25T20:51:16Z
+
+@adamelso Sorry, you're right. I was just confused that the exception message from line 45 was not part of your error. But I tried it myself and can confirm that your change fixes the issue. :+1:
+
+---------------------------------------------------------------------------
+
+by adamelso at 2014-10-25T20:55:57Z
+
+@xabbuh No worries, thank you. :) Pleased to hear my fix works.
