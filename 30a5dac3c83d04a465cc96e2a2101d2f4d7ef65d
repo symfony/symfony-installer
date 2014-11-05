@@ -1,0 +1,5 @@
+---------------------------------------------------------------------------
+
+by xabbuh at 2014-10-22T11:13:05Z
+
+We could include the version (if given) into the `composer create-project` command.
