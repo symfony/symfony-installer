@@ -3,6 +3,7 @@
 namespace Symfony\Installer;
 
 use Distill\Distill;
+use Distill\Strategy\MinimumSize;
 use GuzzleHttp\Client;
 use GuzzleHttp\Message\Response;
 use GuzzleHttp\Subscriber\Progress\Progress;
@@ -21,6 +22,9 @@ use Symfony\Component\Filesystem\Filesystem;
  */
 class NewCommand extends Command
 {
+    /**
+     * @var Filesystem
+     */
     private $fs;
     private $projectName;
     private $projectDir;
@@ -41,7 +45,7 @@ class NewCommand extends Command
     {
         $this->fs = new Filesystem();
         $this->projectName = trim($input->getArgument('name'));
-        $this->projectDir = rtrim(getcwd().DIRECTORY_SEPARATOR.trim($this->projectName), DIRECTORY_SEPARATOR);
+        $this->projectDir = rtrim(getcwd().DIRECTORY_SEPARATOR.$this->projectName, DIRECTORY_SEPARATOR);
         $this->version = trim($input->getArgument('version'));
         $this->output = $output;
 
@@ -68,7 +72,7 @@ class NewCommand extends Command
                 "PHP %s version installed.\n\n".
                 "To solve this issue, upgrade your PHP installation or install Symfony manually\n".
                 "executing the following command:\n\n".
-                "$ composer create-project symfony/framework-standard-edition %s",
+                "composer create-project symfony/framework-standard-edition %s",
                 PHP_VERSION, $this->projectName
             ));
         }
@@ -77,7 +81,7 @@ class NewCommand extends Command
     }
 
     /**
-     * Checks if it's safe to create a new project for the given name in the
+     * Checks whether it's safe to create a new project for the given name in the
      * given directory.
      */
     private function checkProjectName()
@@ -173,7 +177,7 @@ class NewCommand extends Command
         $distill = new Distill();
         $symfonyArchiveFile = $distill
             ->getChooser()
-            ->setStrategy(new \Distill\Strategy\MinimumSize())
+            ->setStrategy(new MinimumSize())
             ->addFile('http://symfony.com/download?v=Symfony_Standard_Vendors_'.$this->version.'.zip')
             ->addFile('http://symfony.com/download?v=Symfony_Standard_Vendors_'.$this->version.'.tgz')
             ->getPreferredFile()
@@ -193,16 +197,17 @@ class NewCommand extends Command
                 ProgressBar::setPlaceholderFormatterDefinition('current', function (ProgressBar $bar) {
                     return str_pad($this->formatSize($bar->getStep()), 10, ' ', STR_PAD_LEFT);
                 });
+
                 $progressBar = new ProgressBar($this->output, $size);
+                $progressBar->setFormat('%current%/%max% %bar%  %percent:3s%%');
                 $progressBar->setRedrawFrequency(max(1, floor($size / 1000)));
+                $progressBar->setBarWidth(60);
 
                 if (!defined('PHP_WINDOWS_VERSION_BUILD')) {
                     $progressBar->setEmptyBarCharacter('░'); // light shade character \u2591
                     $progressBar->setProgressCharacter('');
                     $progressBar->setBarCharacter('▓'); // dark shade character \u2593
                 }
-
-                $progressBar->setBarWidth(60);
 
                 $progressBar->start();
             }
