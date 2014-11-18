@@ -1,0 +1,23 @@
+---------------------------------------------------------------------------
+
+by stof at 2014-10-21T11:29:31Z
+
+@javiereguiluz just a small note: it would be better to send PRs from a fork rather than from the main repo, to avoid having the feature branches in it
+
+---------------------------------------------------------------------------
+
+by javiereguiluz at 2014-10-21T11:29:52Z
+
+@stof you are right. I'm sorry.
+
+---------------------------------------------------------------------------
+
+by stof at 2014-10-21T11:34:53Z
+
+wouldn't it be better to match the version once with capturing groups for the minor and patch versions, and then to apply conditions on them rather than doing more regex matches ?
+
+---------------------------------------------------------------------------
+
+by javiereguiluz at 2014-10-21T12:46:02Z
+
+@stof I agree that your proposal is more correct, but I find this solution more readable. Therefore, before any change, I'd like to wait for some more opinions about this.
