@@ -93,6 +93,22 @@ class NewCommand extends Command
         return $this;
     }
 
+    private function checkInstalledPhpVersion($projectName)
+    {
+        if (version_compare(PHP_VERSION, '5.4.0', '<')) {
+            throw new \RuntimeException(sprintf(
+                "Symfony Installer requires PHP 5.4 version or higher and your system has\n".
+                "PHP %s version installed.\n\n".
+                "To solve this issue, upgrade your PHP installation or install Symfony manually\n".
+                "executing the following command:\n\n".
+                "$ composer create-project symfony/framework-standard-edition %s",
+                PHP_VERSION, $projectName
+            ));
+
+            return 1;
+        }
+    }
+
     /**
      * Checks whether the given Symfony version is installable by the installer.
      * Due to the changes introduced in the Icu/Intl components
@@ -223,7 +239,7 @@ class NewCommand extends Command
             $this->output->writeln("\n");
         }
 
-        return $this;
+        return $compressedFilePath;
     }
 
     /**
