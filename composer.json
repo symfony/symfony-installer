@@ -10,7 +10,7 @@
         }
     ],
     "autoload": {
-        "psr-4": { "Symfony\\Installer\\": "src/" }
+        "psr-4": { "Symfony\\": "src/Symfony/" }
     },
     "require": {
         "ext-zip": "*",
