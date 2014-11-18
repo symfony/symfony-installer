@@ -14,7 +14,7 @@ use Symfony\Component\Filesystem\Filesystem;
 use ZipArchive;
 
 /**
- * This command provides information about the Symfony installer.
+ * This command creates new Symfony projects for the given Symfony version.
  *
  * @author Christophe Coevoet <stof@notk.org>
  * @author Javier Eguiluz <javier.eguiluz@gmail.com>
@@ -109,6 +109,7 @@ MESSAGE;
             return true;
         }
 
+        // validate semver syntax
         if (!preg_match('/^2\.\d\.\d{1,2}$/', $version)) {
             throw new \RuntimeException('The Symfony version should be 2.N.M, where N = 0..9 and M = 0..99');
         }
@@ -116,31 +117,34 @@ MESSAGE;
         // 2.0, 2.1, 2.2 and 2.4 cannot be installed because they are unmaintained
         if (preg_match('/^2\.[0124]\.\d{1,2}$/', $version)) {
             throw new \RuntimeException(sprintf(
-                "The selected Symfony version (%s) is not compatible with this installer\n".
+                "The selected version (%s) cannot be installed because it belongs\n".
+                "to an unmaintained Symfony branch which is not compatible with this installer.\n".
                 "To solve this issue install Symfony manually executing the following command:\n\n".
                 "composer create-project symfony/framework-standard-edition %s %s",
                 $version, $projectName, $version
-            );
+            ));
         }
 
         // 2.3 can be installed starting from version 2.3.21 (inclusive)
         if (preg_match('/^2\.3\.\d{1,2}$/', $version) && version_compare($version, '2.3.21', '<')) {
             throw new \RuntimeException(sprintf(
-                "This installer is compatible with Symfony 2.3 versions starting from 2.3.21\n".
+                "The selected version (%s) cannot be installed because this installer\n".
+                "is compatible with Symfony 2.3 versions starting from 2.3.21.\n".
                 "To solve this issue install Symfony manually executing the following command:\n\n".
                 "composer create-project symfony/framework-standard-edition %s %s",
-                $projectName, $version
-            );
+                $version, $projectName, $version
+            ));
         }
 
         // 2.5 can be installed starting from version 2.5.6 (inclusive)
         if (preg_match('/^2\.5\.\d{1,2}$/', $version) && version_compare($version, '2.5.6', '<')) {
             throw new \RuntimeException(sprintf(
-                "This installer is compatible with Symfony 2.5 versions starting from 2.5.6\n".
+                "The selected version (%s) cannot be installed because this installer\n".
+                "is compatible with Symfony 2.5 versions starting from 2.5.6.\n".
                 "To solve this issue install Symfony manually executing the following command:\n\n".
                 "composer create-project symfony/framework-standard-edition %s %s",
-                $projectName, $version
-            );
+                $version, $projectName, $version
+            ));
         }
 
         return true;
