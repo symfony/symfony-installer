@@ -263,6 +263,7 @@ class NewCommand extends Command
             if (!is_dir($file)) {
                 $subPath = rtrim($subPath, '/');
             }
+
             $this->fs->rename($file->getRealPath(), $this->projectDir.DIRECTORY_SEPARATOR.$subPath);
         }
 
