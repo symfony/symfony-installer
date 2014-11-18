@@ -32,8 +32,7 @@ class NewCommand extends Command
             ->setName('new')
             ->setDescription('Creates a new Symfony project.')
             ->addArgument('name', InputArgument::REQUIRED, 'The name of the directory where the new project will be created')
-            // TODO: symfony.com/download should provide a latest.zip version to simplify things
-            ->addArgument('version', InputArgument::OPTIONAL, 'The Symfony version to be installed (defaults to the latest stable version)', '2.5.3')
+            ->addArgument('version', InputArgument::OPTIONAL, 'The Symfony version to be installed (defaults to the latest stable version)', 'latest')
         ;
     }
 
