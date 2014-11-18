@@ -13,6 +13,7 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Filesystem\Exception\IOException;
 
 /**
  * This command creates new Symfony projects for the given Symfony version.
@@ -240,10 +241,21 @@ class NewCommand extends Command
     {
         $this->output->writeln(" Preparing project...\n");
 
-        $distill = new Distill();
-        $distill->extract($this->compressedFilePath, dirname($this->compressedFilePath));
+        try {
+            $distill = new Distill();
+            $distill->extract($this->compressedFilePath, dirname($this->compressedFilePath));
 
-        $this->fs->rename(dirname($this->compressedFilePath).DIRECTORY_SEPARATOR.'Symfony', $this->projectDir);
+            $this->fs->rename(dirname($this->compressedFilePath).DIRECTORY_SEPARATOR.'Symfony', $this->projectDir);
+        } catch (IOException $exception) {
+            throw new \RuntimeException(sprintf(
+                "Symfony can't be installed because the downloaded package is corrupt\n".
+                "or because the installer doesn't have enough permissions to uncompress and\n".
+                "rename the Symfony contents.\n\n".
+                "To solve this issue, try installing Symfony again and check the permissions of\n".
+                "the %s directory",
+                getcwd()
+            ));
+        }
 
         return $this;
     }
