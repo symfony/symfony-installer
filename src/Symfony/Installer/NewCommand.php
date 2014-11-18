@@ -26,6 +26,11 @@ class NewCommand extends Command
      */
     private $fs;
 
+    /**
+     * @var array All available versions
+     */
+    private $versions;
+
     protected function configure()
     {
         $this
@@ -33,7 +38,7 @@ class NewCommand extends Command
             ->setDescription('Creates a new Symfony project.')
             ->addArgument('name', InputArgument::REQUIRED, 'The name of the directory where the new project will be created')
             // TODO: symfony.com/download should provide a latest.zip version to simplify things
-            ->addArgument('version', InputArgument::OPTIONAL, 'The Symfony version to be installed (defaults to the latest stable version)', '2.5.3')
+            ->addArgument('version', InputArgument::OPTIONAL, 'The Symfony version to be installed (defaults to the latest stable version)', $this->getLatestVersion())
         ;
     }
 
@@ -258,5 +263,32 @@ MESSAGE;
         $bytes /= pow(1024, $pow);
 
         return round($bytes, 2).' '.$units[$pow];
+    }
+
+    private function getVersions()
+    {
+        if (empty($this->versions)) {
+            $client = new Client();
+            /** @var Response $response */
+            $response = $client
+                ->get('https://packagist.org/packages/symfony/framework-standard-edition.json');
+            $packageInfo = $response->json();
+            $versions = array_keys($packageInfo['package']['versions']);
+            foreach ($versions as $version) {
+                if (preg_match('@^v(.*)$@', $version, $matches)) {
+                    $this->versions[] = $matches[1];
+                }
+            }
+            rsort($this->versions, SORT_NATURAL);
+        }
+
+        return $this->versions;
+    }
+
+    private function getLatestVersion()
+    {
+        $versions = $this->getVersions();
+
+        return reset($versions);
     }
 }
