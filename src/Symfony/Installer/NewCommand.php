@@ -213,7 +213,8 @@ class NewCommand extends Command
         $client = new Client();
         $client->getEmitter()->attach(new Progress(null, $downloadCallback));
 
-        $this->compressedFilePath = sprintf('%s%s.symfony_%s.%s', $this->projectDir, DIRECTORY_SEPARATOR, uniqid(time()), pathinfo($symfonyArchiveFile, PATHINFO_EXTENSION));
+        // store the file in a temporary hidden directory with a random name
+        $this->compressedFilePath = getcwd().DIRECTORY_SEPARATOR.'.'.uniqid(time()).DIRECTORY_SEPARATOR.'symfony.'.pathinfo($symfonyArchiveFile, PATHINFO_EXTENSION);
 
         $response = $client->get($symfonyArchiveFile);
         $this->fs->dumpFile($this->compressedFilePath, $response->getBody());
@@ -235,21 +236,9 @@ class NewCommand extends Command
         $this->output->writeln(" Preparing project...\n");
 
         $distill = new Distill();
-        $distill->extract($this->compressedFilePath, $this->projectDir);
+        $distill->extract($this->compressedFilePath, dirname($this->compressedFilePath));
 
-        // When uncompressing the Symfony file, its contents are stored in
-        // the Symfony/ directory inside the project directory. That's why
-        // we need to move all the contents to the upper project directory.
-        $extractionDir = $this->projectDir.DIRECTORY_SEPARATOR.'Symfony';
-        $iterator = new \FilesystemIterator($extractionDir);
-        foreach ($iterator as $file) {
-            $subPath = $this->fs->makePathRelative($file->getRealPath(), $extractionDir);
-            if (!is_dir($file)) {
-                $subPath = rtrim($subPath, '/');
-            }
-
-            $this->fs->rename($file->getRealPath(), $this->projectDir.DIRECTORY_SEPARATOR.$subPath);
-        }
+        $this->fs->rename(dirname($this->compressedFilePath).DIRECTORY_SEPARATOR.'Symfony', $this->projectDir);
 
         return $this;
     }
@@ -260,8 +249,7 @@ class NewCommand extends Command
      */
     private function cleanUp()
     {
-        $this->fs->remove($this->compressedFilePath);
-        $this->fs->remove($this->projectDir.DIRECTORY_SEPARATOR.'Symfony');
+        $this->fs->remove(dirname($this->compressedFilePath));
 
         return $this;
     }
