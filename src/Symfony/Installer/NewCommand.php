@@ -250,7 +250,7 @@ class NewCommand extends Command
             throw new \RuntimeException(sprintf(
                 "Symfony can't be installed because the downloaded package is corrupted\n".
                 "or because the installer doesn't have enough permissions to uncompress and\n".
-                "rename the Symfony contents.\n\n".
+                "rename the package contents.\n\n".
                 "To solve this issue, try installing Symfony again and check the permissions of\n".
                 "the %s directory",
                 getcwd()
