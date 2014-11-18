@@ -86,7 +86,7 @@ class NewCommand extends Command
             throw new \RuntimeException(sprintf(
                 "There is already a '%s' project in this directory (%s).\n".
                 "Change your project name or create it in another directory.",
-                $this->projectName, $this->projectDir
+                $this->projectName, getcwd()
             ));
         }
 
