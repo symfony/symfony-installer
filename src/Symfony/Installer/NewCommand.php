@@ -248,7 +248,7 @@ class NewCommand extends Command
             $this->fs->rename(dirname($this->compressedFilePath).DIRECTORY_SEPARATOR.'Symfony', $this->projectDir);
         } catch (IOException $exception) {
             throw new \RuntimeException(sprintf(
-                "Symfony can't be installed because the downloaded package is corrupt\n".
+                "Symfony can't be installed because the downloaded package is corrupted\n".
                 "or because the installer doesn't have enough permissions to uncompress and\n".
                 "rename the Symfony contents.\n\n".
                 "To solve this issue, try installing Symfony again and check the permissions of\n".
