@@ -93,7 +93,11 @@ class NewCommand extends Command
         return $this;
     }
 
-    private function checkInstalledPhpVersion($projectName)
+    /**
+     * Checks if the system has PHP 5.4 or higher installed, which is a requirement
+     * to execute the installer.
+     */
+    private function checkInstalledPhpVersion()
     {
         if (version_compare(PHP_VERSION, '5.4.0', '<')) {
             throw new \RuntimeException(sprintf(
@@ -102,11 +106,28 @@ class NewCommand extends Command
                 "To solve this issue, upgrade your PHP installation or install Symfony manually\n".
                 "executing the following command:\n\n".
                 "$ composer create-project symfony/framework-standard-edition %s",
-                PHP_VERSION, $projectName
+                PHP_VERSION, $this->projectName
             ));
-
-            return 1;
         }
+
+        return $this;
+    }
+
+    /**
+     * Checks if it's safe to create a new project for the given name in the
+     * given directory.
+     */
+    private function checkProjectName()
+    {
+        if (is_dir($this->projectDir)) {
+            throw new \RuntimeException(sprintf(
+                "There is already a '%s' project in this directory (%s).\n".
+                "Change your project name or create it in another directory.",
+                $this->projectName, $this->projectDir
+            ));
+        }
+
+        return $this;
     }
 
     /**
@@ -239,7 +260,7 @@ class NewCommand extends Command
             $this->output->writeln("\n");
         }
 
-        return $compressedFilePath;
+        return $this;
     }
 
     /**
