@@ -41,15 +41,26 @@ class AboutCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $output->writeln(sprintf("\n<info>Symfony Installer</info> <comment>%s</comment>", $this->appVersion));
-        $output->writeln("=====================");
+        $commandHelp = <<<COMMAND_HELP
 
-        $output->writeln(" The official Symfony installer to start new projects based on Symfony full-stack framework.\n");
+ Symfony Installer (%s)
+ =======================
 
-        $output->writeln("Available commands");
-        $output->writeln("------------------");
+ This is the official installer to start new projects based on the
+ Symfony full-stack framework.
 
-        $output->writeln("   <info>new <dir-name></info>  Creates a new Symfony project in the given directory.");
-        $output->writeln("                   Example: <comment>$ symfony new blog/</comment>\n");
+ To create a new project called <info>blog</info> in the current directory using
+ the <info>latest stable version</info> of Symfony, execute the following command:
+
+   <comment>$ %s new blog</comment>
+
+ To base your project on a <info>specific Symfony version</info>, append the version
+ number at the end of the command:
+
+   <comment>$ %s new blog 2.5.6</comment>
+
+COMMAND_HELP;
+
+        $output->writeln(sprintf($commandHelp, $this->appVersion, $_SERVER['PHP_SELF'], $_SERVER['PHP_SELF']));
     }
 }
