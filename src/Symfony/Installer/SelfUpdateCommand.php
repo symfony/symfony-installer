@@ -62,10 +62,15 @@ class SelfUpdateCommand extends Command
             copy($remoteFilename, $tempFilename);
             chmod($tempFilename, 0777 & ~umask());
 
-            // test the phar validity
-            $phar = new \Phar($tempFilename);
-            // free the variable to unlock the file
-            unset($phar);
+            // creating a Phar instance for an existing file is not allowed
+            // when the Phar extension is in readonly mode
+            if (!ini_get('phar.readonly')) {
+                // test the phar validity
+                $phar = new \Phar($tempFilename);
+                // free the variable to unlock the file
+                unset($phar);
+            }
+
             rename($tempFilename, $localFilename);
 
             $output->writeln('<info>Symfony Installer was successfully updated.</info>');
