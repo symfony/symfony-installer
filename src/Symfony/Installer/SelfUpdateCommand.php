@@ -32,14 +32,7 @@ class SelfUpdateCommand extends Command
             ->setName('self-update')
             ->setAliases(array('selfupdate'))
             ->setDescription('Update the installer to the latest version.')
-            ->setHelp(<<<EOT
-The <info>%command.name%</info> command updates the installer to the latest
-available version.
-
-<info>php symfony %command.name%</info>
-
-EOT
-            )
+            ->setHelp('The <info>%command.name%</info> command updates the installer to the latest available version.')
         ;
     }
 
