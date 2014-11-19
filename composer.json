@@ -17,7 +17,7 @@
         "guzzlehttp/progress-subscriber": "~1.1",
         "symfony/console": "~2.5",
         "symfony/filesystem": "~2.5",
-        "raulfraile/distill": "~0.6"
+        "raulfraile/distill": "~0.7"
     },
     "extra": {
         "branch-alias": {
