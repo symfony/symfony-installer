@@ -44,7 +44,7 @@ class AboutCommand extends Command
         $commandHelp = <<<COMMAND_HELP
 
  Symfony Installer (%s)
- =======================
+ %s
 
  This is the official installer to start new projects based on the
  Symfony full-stack framework.
@@ -57,10 +57,30 @@ class AboutCommand extends Command
  To base your project on a <info>specific Symfony version</info>, append the version
  number at the end of the command:
 
-   <comment>$ %s new blog 2.5.6</comment>
+   <comment>$ %3\$s new blog 2.5.6</comment>
 
 COMMAND_HELP;
 
-        $output->writeln(sprintf($commandHelp, $this->appVersion, $_SERVER['PHP_SELF'], $_SERVER['PHP_SELF']));
+        // show the self-update information only when using the PHAR file
+        if ('phar://' === substr(__DIR__, 0, 7)) {
+            $commandUpdateHelp = <<<COMMAND_UPDATE_HELP
+ Updating the Symfony Installer
+ ------------------------------
+
+ New versions of the Symfony Installer are released regularly. To <info>update your
+ installer</info> version, execute the following command:
+
+   <comment>$ %3\$s self-update</comment>
+
+COMMAND_UPDATE_HELP;
+
+            $commandHelp .= $commandUpdateHelp;
+        }
+
+        $output->writeln(sprintf($commandHelp,
+            $this->appVersion,
+            str_repeat('=', 20 + strlen($this->appVersion)),
+            $_SERVER['PHP_SELF']
+        ));
     }
 }
