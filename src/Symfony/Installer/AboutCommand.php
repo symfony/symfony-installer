@@ -57,7 +57,7 @@ class AboutCommand extends Command
  To base your project on a <info>specific Symfony version</info>, append the version
  number at the end of the command:
 
-   <comment>$ %s new blog 2.5.6</comment>
+   <comment>$ %2\$s new blog 2.5.6</comment>
 
  Updating the Symfony Installer
  ------------------------------
@@ -65,10 +65,10 @@ class AboutCommand extends Command
  New versions of the Symfony Installer are released regularly. To <info>update your
  installer</info> version, execute the following command:
 
-   <comment>$ %s self-update</comment>
+   <comment>$ %2\$s self-update</comment>
 
 COMMAND_HELP;
 
-        $output->writeln(sprintf($commandHelp, $this->appVersion, $_SERVER['PHP_SELF'], $_SERVER['PHP_SELF'], $_SERVER['PHP_SELF']));
+        $output->writeln(sprintf($commandHelp, $this->appVersion, $_SERVER['PHP_SELF']));
     }
 }
