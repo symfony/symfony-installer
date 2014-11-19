@@ -1,0 +1,5 @@
+---------------------------------------------------------------------------
+
+by stof at 2014-11-19T14:06:32Z
+
+you should also check that the installer file is writable to report a good error in this case rather than having the update fail in a weird way when copying the downloaded phar to its final location
