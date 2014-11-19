@@ -64,6 +64,7 @@ COMMAND_HELP;
         // show the self-update information only when using the PHAR file
         if ('phar://' === substr(__DIR__, 0, 7)) {
             $commandUpdateHelp = <<<COMMAND_UPDATE_HELP
+
  Updating the Symfony Installer
  ------------------------------
 
