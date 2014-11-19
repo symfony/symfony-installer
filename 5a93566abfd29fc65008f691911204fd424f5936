@@ -1,0 +1,23 @@
+---------------------------------------------------------------------------
+
+by javiereguiluz at 2014-11-15T12:01:46Z
+
+@xabbuh I like your improvement, but we should rebase this PR and take into account the latest additions to the command, where you can omit the version and in that case we'll use the special version called `latest`
+
+---------------------------------------------------------------------------
+
+by xabbuh at 2014-11-16T10:29:50Z
+
+@javiereguiluz If you are talking about #29, that pull request is still pending. I don't see any other changes I could rebase this onto (the branch was forked after the last commit to `master`).
+
+---------------------------------------------------------------------------
+
+by fabpot at 2014-11-18T08:49:09Z
+
+#29 is merged now.
+
+---------------------------------------------------------------------------
+
+by xabbuh at 2014-11-18T09:09:34Z
+
+It's rebased and takes the special `latest` version number into account.
