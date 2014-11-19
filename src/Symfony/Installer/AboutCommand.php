@@ -52,15 +52,15 @@ class AboutCommand extends Command
  To create a new project called <info>blog</info> in the current directory using
  the <info>latest stable version</info> of Symfony, execute the following command:
 
-   <comment>$ symfony new blog</comment>
+   <comment>$ %s new blog</comment>
 
  To base your project on a <info>specific Symfony version</info>, append the version
  number at the end of the command:
 
-   <comment>$ symfony new blog 2.5.6</comment>
+   <comment>$ %s new blog 2.5.6</comment>
 
 COMMAND_HELP;
 
-        $output->writeln(sprintf($commandHelp, $this->appVersion));
+        $output->writeln(sprintf($commandHelp, $this->appVersion, $_SERVER['PHP_SELF'], $_SERVER['PHP_SELF']));
     }
 }
