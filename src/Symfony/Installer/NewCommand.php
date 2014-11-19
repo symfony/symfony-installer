@@ -242,7 +242,7 @@ class NewCommand extends Command
 
         try {
             $distill = new Distill();
-            $distill->extractWithoutRootDirectory($this->compressedFilePath, $this->projectDir);
+            $extractionSucceeded = $distill->extractWithoutRootDirectory($this->compressedFilePath, $this->projectDir);
         } catch (\Exception $e) {
             throw new \RuntimeException(sprintf(
                 "Symfony can't be installed because the downloaded package is corrupted\n".
@@ -252,6 +252,13 @@ class NewCommand extends Command
                 "the %s directory",
                 getcwd()
             ));
+        }
+
+        if (!$extractionSucceeded) {
+            throw new \RuntimeException(
+                "Symfony can't be installed because the downloaded package is corrupted\n".
+                "or because the uncompress commands of your operating system didn't work."
+            );
         }
 
         return $this;
