@@ -44,7 +44,7 @@ class SelfUpdateCommand extends Command
         preg_match('/\((.*?)\)$/', $this->getApplication()->getLongVersion(), $match);
         $localVersion = isset($match[1]) ? $match[1] : '';
 
-        if (false !== $remoteVersion = @file_get_contents('http://get.sensiolabs.org/symfony-installer.version')) {
+        if (false !== $remoteVersion = @file_get_contents('http://get.sensiolabs.org/symfony.version')) {
             if ($localVersion === $remoteVersion) {
                 $output->writeln('<info>Symfony Installer is already up to date.</info>');
 
