@@ -83,7 +83,7 @@ class SelfUpdateCommand extends Command
                 unset($phar);
             }
 
-            $fs->rename($tempFilename, $localFilename);
+            $fs->rename($tempFilename, $localFilename, true);
 
             $output->writeln('<info>Symfony Installer was successfully updated.</info>');
         } catch (\Exception $e) {
