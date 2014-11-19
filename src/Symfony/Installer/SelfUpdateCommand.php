@@ -50,7 +50,7 @@ class SelfUpdateCommand extends Command
         }
 
         $remoteFilename = 'http://symfony.com/installer';
-        $localFilename = $_SERVER['argv'][0];
+        $localFilename = realpath($_SERVER['argv'][0]) ?: $_SERVER['argv'][0];
         $tempFilename = basename($localFilename, '.phar').'-tmp.phar';
         if (false === @file_get_contents($remoteFilename)) {
             $output->writeln('<error>The new version of the Symfony Installer couldn\'t be downloaded from the server.</error>');
