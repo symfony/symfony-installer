@@ -41,15 +41,18 @@ class SelfUpdateCommand extends Command
     {
         $fs = new Filesystem();
 
-        preg_match('/\((.*?)\)$/', $this->getApplication()->getLongVersion(), $match);
-        $localVersion = isset($match[1]) ? $match[1] : '';
+        $localVersion = $this->getApplication()->getVersion();
 
-        if (false !== $remoteVersion = @file_get_contents('http://get.sensiolabs.org/symfony.version')) {
-            if ($localVersion === $remoteVersion) {
-                $output->writeln('<info>Symfony Installer is already up to date.</info>');
+        if (false === $remoteVersion = @file_get_contents('http://get.sensiolabs.org/symfony.version')) {
+            $output->writeln('<error>The new version of the Symfony Installer couldn\'t be downloaded from the server.</error>');
 
-                return;
-            }
+            return 1;
+        }
+
+        if ($localVersion === $remoteVersion) {
+            $output->writeln('<info>Symfony Installer is already up to date.</info>');
+
+            return;
         }
 
         $remoteFilename = 'http://symfony.com/installer';
