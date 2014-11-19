@@ -10,7 +10,11 @@ $appVersion = '0.0.3-DEV';
 $app = new Symfony\Component\Console\Application('Symfony Installer', $appVersion);
 $app->add(new Symfony\Installer\AboutCommand($appVersion));
 $app->add(new Symfony\Installer\NewCommand());
-$app->add(new Symfony\Installer\SelfUpdateCommand());
+
+// enable the self-update command only when using the PHAR file
+if ('phar://' === substr(__DIR__, 0, 7)) {
+    $app->add(new Symfony\Installer\SelfUpdateCommand());
+}
 
 $app->setDefaultCommand('about');
 
