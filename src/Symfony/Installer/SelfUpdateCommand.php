@@ -14,6 +14,7 @@ namespace Symfony\Installer;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Filesystem\Filesystem;
 
 /**
  * This command is a direct port of the self-update command included
@@ -38,6 +39,8 @@ class SelfUpdateCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $fs = new Filesystem();
+
         preg_match('/\((.*?)\)$/', $this->getApplication()->getLongVersion(), $match);
         $localVersion = isset($match[1]) ? $match[1] : '';
 
@@ -59,8 +62,8 @@ class SelfUpdateCommand extends Command
         }
 
         try {
-            copy($remoteFilename, $tempFilename);
-            chmod($tempFilename, 0777 & ~umask());
+            $fs->copy($remoteFilename, $tempFilename);
+            $fs->chmod($tempFilename, 0777 & ~umask());
 
             // creating a Phar instance for an existing file is not allowed
             // when the Phar extension is in readonly mode
@@ -71,14 +74,14 @@ class SelfUpdateCommand extends Command
                 unset($phar);
             }
 
-            rename($tempFilename, $localFilename);
+            $fs->rename($tempFilename, $localFilename);
 
             $output->writeln('<info>Symfony Installer was successfully updated.</info>');
         } catch (\Exception $e) {
             if (!$e instanceof \UnexpectedValueException && !$e instanceof \PharException) {
                 throw $e;
             }
-            unlink($tempFilename);
+            $fs->remove($tempFilename);
             $output->writeln(sprintf('<error>The downloaded file is corrupted (%s).</error>', $e->getMessage()));
             $output->writeln('<error>Please re-run the self-update command to try again.</error>');
 
