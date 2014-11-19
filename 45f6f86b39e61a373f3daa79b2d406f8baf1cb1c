@@ -1,0 +1,17 @@
+---------------------------------------------------------------------------
+
+by fabpot at 2014-11-05T21:41:34Z
+
+I'm against changing the directory structure. It makes things not clear enough about the namespaces. You can switch to PSR-4 if you want but let's keep the directory structure intact.
+
+---------------------------------------------------------------------------
+
+by javiereguiluz at 2014-11-18T08:25:24Z
+
+@jmgq we want to finish the Symfony installer this week, so I wonder if you have time to do the changes proposed by Fabien. The idea is to switch to PSR-4 but maintaining the same directory structure. If you need some help, you can check out [this PR from the Symfony repository](https://github.com/symfony/symfony/pull/12466) which does exactly that.
+
+---------------------------------------------------------------------------
+
+by jmgq at 2014-11-18T21:21:39Z
+
+Thanks for the link, @javiereguiluz. I've changed the directory structure to the original one. I've also merged this commit locally into the latest version of master and tested that it works correctly.
