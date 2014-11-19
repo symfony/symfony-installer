@@ -72,8 +72,10 @@ class NewCommand extends Command
                 "PHP %s version installed.\n\n".
                 "To solve this issue, upgrade your PHP installation or install Symfony manually\n".
                 "executing the following command:\n\n".
-                "composer create-project symfony/framework-standard-edition %s",
-                PHP_VERSION, $this->projectName
+                "composer create-project symfony/framework-standard-edition %s %s",
+                PHP_VERSION,
+                $this->projectName,
+                'latest' !== $this->version ? $this->version : ''
             ));
         }
 
