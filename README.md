@@ -17,14 +17,6 @@ $ sudo mv symfony.phar /usr/local/bin/symfony
 $ chmod a+x /usr/local/bin/symfony
 ```
 
-If you don't have cURL installed, use the following commands instead:
-
-```bash
-$ php -r "readfile('http://symfony.com/installer');" > symfony.phar
-$ sudo mv symfony.phar /usr/local/bin/symfony
-$ chmod a+x /usr/local/bin/symfony
-```
-
 ### Windows
 
 ```bash
