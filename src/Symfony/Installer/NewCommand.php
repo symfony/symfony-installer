@@ -286,12 +286,13 @@ class NewCommand extends Command
         $this->output->writeln(sprintf(
             " <info>%s</info>  Symfony was <info>successfully installed</info>. Now you can:\n".
             "\n".
-            "    * Configure your application in <comment>%s/app/config/parameters.yml</comment> file.\n\n".
+            "    * Change your current directory to %s.\n".
+            "    * Configure your application in <comment>app/config/parameters.yml</comment> file.\n\n".
             "    * Run your application:\n".
-            "        1. Execute the <comment>php %s/app/console server:run</comment> command.\n".
+            "        1. Execute the <comment>php app/console server:run</comment> command.\n".
             "        2. Browse to the <comment>http://localhost:8000</comment> URL.\n\n".
             "    * Read the documentation at <comment>http://symfony.com/doc</comment>\n",
-            defined('PHP_WINDOWS_VERSION_BUILD') ? 'OK' : '✔', $this->projectName, $this->projectName
+            defined('PHP_WINDOWS_VERSION_BUILD') ? 'OK' : '✔', $this->projectName
         ));
 
         return $this;
