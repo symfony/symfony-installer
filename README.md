@@ -1,29 +1,41 @@
 Symfony Installer
 =================
 
-The **Symfony Installer** is the easiest and fastest way to create a new 
-project based on the Symfony full-stack framework.
+**This is the official installer to start new projects based on the Symfony 
+full-stack framework.**
 
 Installing the installer
 ------------------------
 
-This step is only needed the first time you use the installer. We recommend you
-to install it globally so you can use it anywhere on your system. To do so,
-execute the following commands:
+This step is only needed the first time you use the installer:
+
+### Linux and Mac OS X
 
 ```bash
-# install the Symfony installer
-$ composer global require symfony/symfony-installer ~1.0@dev
-
-# update the Symfony installer
-$ composer global update symfony/symfony-installer
+$ curl -LsS http://symfony.com/installer > symfony.phar
+$ sudo mv symfony.phar /usr/local/bin/symfony
+$ chmod a+x /usr/local/bin/symfony
 ```
 
-Once installed, this tool adds a new `symfony` binary that can be used to
-easily access to all its features:
+If you don't have cURL installed, use the following commands instead:
 
 ```bash
-$ symfony
+$ php -r "readfile('http://symfony.com/installer');" > symfony.phar
+$ sudo mv symfony.phar /usr/local/bin/symfony
+$ chmod a+x /usr/local/bin/symfony
+```
+
+### Windows
+
+```bash
+c:\> php -r "readfile('http://symfony.com/installer');" > symfony.phar
+```
+
+Move the downloaded `symfony.phar` file to your projects directory and execute 
+it as follows:
+
+```bash
+c:\> php symfony.phar
 ```
 
 Using the installer
@@ -34,7 +46,11 @@ Using the installer
 Execute the `new` command and provide the name of your project:
 
 ```bash
-$ symfony new blog/
+# Linux, Mac OS X
+$ symfony new my_project
+
+# Windows
+$ php symfony.phar new my_project
 ```
 
 **2. Start a new project based on a specific Symfony version**
@@ -42,5 +58,23 @@ $ symfony new blog/
 Execute the `new` command and provide the name of your project as the first argument followed by the needed version as the second argument:
 
 ```bash
-$ symfony new blog/ 2.2.5
+# Linux, Mac OS X
+$ symfony new my_project 2.5.6
+
+# Windows
+$ php symfony.phar new my_project 2.5.6
+```
+
+Updating the installer
+----------------------
+
+New versions of the Symfony Installer are released regularly. To update your
+installer version, execute the following command:
+
+```bash
+# Linux, Mac OS X
+$ symfony self-update
+
+# Windows
+$ php symfony.phar self-update
 ```
