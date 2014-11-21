@@ -57,7 +57,7 @@ class SelfUpdateCommand extends Command
 
         $remoteFilename = 'http://symfony.com/installer';
         $localFilename = realpath($_SERVER['argv'][0]) ?: $_SERVER['argv'][0];
-        $tempDir = sys_get_temp_dir();
+        $tempDir = is_writable(dirname($localFilename)) ? dirname($localFilename) : sys_get_temp_dir();
 
         // check for permissions in local filesystem before start downloading files
         if (!is_writable($localFilename)) {
