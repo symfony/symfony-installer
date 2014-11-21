@@ -309,7 +309,7 @@ class NewCommand extends Command
     /**
      * Utility method to show the number of bytes in a readable format.
      *
-     * @param integer $bytes The number of bytes to format
+     * @param int     $bytes The number of bytes to format
      * @return string The human readable string of bytes (e.g. 4.32MB)
      */
     private function formatSize($bytes)

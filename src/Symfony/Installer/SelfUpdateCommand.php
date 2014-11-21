@@ -99,6 +99,7 @@ class SelfUpdateCommand extends Command
             $output->writeln(sprintf('<error>The downloaded file is corrupted (%s).</error>', $e->getMessage()));
             $output->writeln('<error>Please re-run the self-update command to try again.</error>');
         }
+
         return 1;
     }
 }
