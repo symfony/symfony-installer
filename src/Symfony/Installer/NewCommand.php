@@ -314,6 +314,6 @@ class NewCommand extends Command
 
         $bytes /= pow(1024, $pow);
 
-        return round($bytes, 2).' '.$units[$pow];
+        return number_format($bytes, 2).' '.$units[$pow];
     }
 }
