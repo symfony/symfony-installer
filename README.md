@@ -14,7 +14,7 @@ This step is only needed the first time you use the installer:
 ```bash
 curl -LsS http://symfony.com/installer > symfony.phar
 sudo mv symfony.phar /usr/local/bin/symfony
-sudo chmod a+x /usr/local/bin/symfony
+chmod a+x /usr/local/bin/symfony
 ```
 
 ### Windows
