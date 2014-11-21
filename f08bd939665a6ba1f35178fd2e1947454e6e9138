@@ -1,0 +1,46 @@
+---------------------------------------------------------------------------
+
+by javiereguiluz at 2014-11-20T14:11:03Z
+
+@tvlooy thanks for reporting this error! We've tackled it in this related PR in the symfony repo: https://github.com/symfony/symfony/issues/12524
+
+It should be fixed for new Symfony versions, but anyway, we probably need to change the message because it's not gonna work with older Symfony versions.
+
+---------------------------------------------------------------------------
+
+by javiereguiluz at 2014-11-20T14:13:07Z
+
+:+1:
+
+---------------------------------------------------------------------------
+
+by tvlooy at 2014-11-20T14:22:06Z
+
+Aha, okay. Good!
+
+---------------------------------------------------------------------------
+
+by javiereguiluz at 2014-11-20T14:28:23Z
+
+@tvlooy to make this PR ready to be merged, we need two changes from you:
+
+  * Remove the `src/Symfony/Installer/NewCommand.php~` temp. file which was accidentally committed.
+  * Fix the minor code syntax error reported here: http://fabbot.io/report/symfony/symfony-installer/45/a4ec60afea03c0761311150b8987e85870c92ad8
+
+---------------------------------------------------------------------------
+
+by stof at 2014-11-20T14:57:17Z
+
+@tvlooy I suggest you to use a global ignore file to always avoid commiting the backup file of your IDE. See https://help.github.com/articles/ignoring-files/ for the way to do it
+
+---------------------------------------------------------------------------
+
+by tvlooy at 2014-11-20T16:31:32Z
+
+@javiereguiluz @stof whoops, thanks for pointing this out. I normally don't use gedit to do these kind of edits, but added in my global gitignore nonetheless
+
+---------------------------------------------------------------------------
+
+by javiereguiluz at 2014-11-21T08:27:23Z
+
+:+1: everything seems ready to be merged! Thanks again @tvlooy
