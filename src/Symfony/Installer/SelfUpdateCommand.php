@@ -57,13 +57,13 @@ class SelfUpdateCommand extends Command
 
         $remoteFilename = 'http://symfony.com/installer';
         $localFilename = realpath($_SERVER['argv'][0]) ?: $_SERVER['argv'][0];
-        $tempFilename = basename($localFilename, '.phar').'-tmp.phar';
+        $tempDir = is_writable(dirname($localFilename)) ? dirname($localFilename) : sys_get_temp_dir();
 
         // check for permissions in local filesystem before start downloading files
         if (!is_writable($localFilename)) {
             throw new \RuntimeException('Symfony Installer update failed: the "'.$localFilename.'" file could not be written');
         }
-        if (!is_writable($tempDir = dirname($localFilename))) {
+        if (!is_writable($tempDir)) {
             throw new \RuntimeException('Symfony Installer update failed: the "'.$tempDir.'" directory used to download the temporary file could not be written');
         }
 
@@ -74,6 +74,8 @@ class SelfUpdateCommand extends Command
         }
 
         try {
+            $tempFilename = $tempDir.'/'.basename($localFilename, '.phar').'-temp.phar';
+
             $fs->copy($remoteFilename, $tempFilename);
             $fs->chmod($tempFilename, 0777 & ~umask());
 
