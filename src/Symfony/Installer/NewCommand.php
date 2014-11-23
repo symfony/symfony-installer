@@ -230,7 +230,6 @@ class NewCommand extends Command
         // store the file in a temporary hidden directory with a random name
         $this->compressedFilePath = getcwd().DIRECTORY_SEPARATOR.'.'.uniqid(time()).DIRECTORY_SEPARATOR.'symfony.'.pathinfo($symfonyArchiveFile, PATHINFO_EXTENSION);
 
-        /** @var Response $response */
         $response = $client->get($symfonyArchiveFile);
         $this->fs->dumpFile($this->compressedFilePath, $response->getBody());
 
@@ -310,6 +309,7 @@ class NewCommand extends Command
      * Utility method to show the number of bytes in a readable format.
      *
      * @param int     $bytes The number of bytes to format
+     *
      * @return string The human readable string of bytes (e.g. 4.32MB)
      */
     private function formatSize($bytes)

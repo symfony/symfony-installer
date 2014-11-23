@@ -91,6 +91,8 @@ class SelfUpdateCommand extends Command
             $fs->rename($tempFilename, $localFilename, true);
 
             $output->writeln('<info>Symfony Installer was successfully updated.</info>');
+
+            return 0;
         } catch (\Exception $e) {
             if (!$e instanceof \UnexpectedValueException && !$e instanceof \PharException) {
                 throw $e;
@@ -98,8 +100,8 @@ class SelfUpdateCommand extends Command
             $fs->remove($tempFilename);
             $output->writeln(sprintf('<error>The downloaded file is corrupted (%s).</error>', $e->getMessage()));
             $output->writeln('<error>Please re-run the self-update command to try again.</error>');
-        }
 
-        return 1;
+            return 1;
+        }
     }
 }
