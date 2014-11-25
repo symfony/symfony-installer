@@ -23,6 +23,11 @@ use Symfony\Component\Filesystem\Filesystem;
 class NewCommand extends Command
 {
     /**
+     * The download URL minus the version and file extension.
+     */
+    const DOWNLOAD_URL = 'http://symfony.com/download?v=Symfony_Standard_Vendors_';
+
+    /**
      * @var Filesystem
      */
     private $fs;
@@ -180,8 +185,8 @@ class NewCommand extends Command
         $symfonyArchiveFile = $distill
             ->getChooser()
             ->setStrategy(new MinimumSize())
-            ->addFile('http://symfony.com/download?v=Symfony_Standard_Vendors_'.$this->version.'.zip')
-            ->addFile('http://symfony.com/download?v=Symfony_Standard_Vendors_'.$this->version.'.tgz')
+            ->addFile(self::DOWNLOAD_URL.$this->version.'.zip')
+            ->addFile(self::DOWNLOAD_URL.$this->version.'.tgz')
             ->getPreferredFile()
         ;
 
