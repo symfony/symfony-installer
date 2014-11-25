@@ -1,0 +1,17 @@
+---------------------------------------------------------------------------
+
+by xabbuh at 2014-11-25T09:50:16Z
+
+@javiereguiluz I wasn't able to reproduce your issue, but the commit message doesn't really look related to what it does. :)
+
+---------------------------------------------------------------------------
+
+by javiereguiluz at 2014-11-25T09:51:43Z
+
+@xabbuh I know that the commit message is wrong :(  But the actual commit code is probably right.
+
+---------------------------------------------------------------------------
+
+by xabbuh at 2014-11-25T09:57:52Z
+
+@javiereguiluz I was able to reproduce it now and I can confirm that your change fixes the problem.
