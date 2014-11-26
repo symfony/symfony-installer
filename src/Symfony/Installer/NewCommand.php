@@ -5,6 +5,7 @@ namespace Symfony\Installer;
 use Distill\Distill;
 use Distill\Strategy\MinimumSize;
 use GuzzleHttp\Client;
+use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Message\Response;
 use GuzzleHttp\Subscriber\Progress\Progress;
 use Symfony\Component\Console\Command\Command;
@@ -232,7 +233,27 @@ class NewCommand extends Command
         // store the file in a temporary hidden directory with a random name
         $this->compressedFilePath = getcwd().DIRECTORY_SEPARATOR.'.'.uniqid(time()).DIRECTORY_SEPARATOR.'symfony.'.pathinfo($symfonyArchiveFile, PATHINFO_EXTENSION);
 
-        $response = $client->get($symfonyArchiveFile);
+        try {
+            $response = $client->get($symfonyArchiveFile);
+        } catch (ClientException $e) {
+            if ($e->getCode() === 403 || $e->getCode() === 404) {
+                throw new \RuntimeException(sprintf(
+                    "The selected version (%s) cannot be installed because it does not exist.\n".
+                    "Try the special \"latest\" version to install the latest stable Symfony release:\n".
+                    'php symfony %s %s latest',
+                    $this->version,
+                    $this->getName(),
+                    $this->projectName
+                ));
+            } else {
+                throw new \RuntimeException(sprintf(
+                    "The selected version (%s) couldn\'t be downloaded because of the following error:\n%s",
+                    $this->version,
+                    $e->getMessage()
+                ));
+            }
+        }
+
         $this->fs->dumpFile($this->compressedFilePath, $response->getBody());
 
         if (null !== $progressBar) {
