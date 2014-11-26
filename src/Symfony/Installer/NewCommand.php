@@ -32,6 +32,11 @@ class NewCommand extends Command
     private $compressedFilePath;
     private $requirementsErrors = array();
 
+    /**
+     * @var OutputInterface
+     */
+    private $output;
+
     protected function configure()
     {
         $this
@@ -65,6 +70,7 @@ class NewCommand extends Command
     /**
      * Checks if the system has PHP 5.4 or higher installed, which is a requirement
      * to execute the installer.
+     * @return $this
      */
     private function checkInstalledPhpVersion()
     {
@@ -187,6 +193,7 @@ class NewCommand extends Command
             ->getPreferredFile()
         ;
 
+        /** @var ProgressBar|null $progressBar */
         $progressBar = null;
         $downloadCallback = function ($size, $downloaded, $client, $request, Response $response) use (&$progressBar) {
             // Don't initialize the progress bar for redirects as the size is much smaller
@@ -326,7 +333,7 @@ class NewCommand extends Command
     /**
      * Utility method to show the number of bytes in a readable format.
      *
-     * @param $bytes The number of bytes to format
+     * @param int     $bytes The number of bytes to format
      *
      * @return string The human readable string of bytes (e.g. 4.32MB)
      */

@@ -52,7 +52,7 @@ class SelfUpdateCommand extends Command
         if ($localVersion === $remoteVersion) {
             $output->writeln('<info>Symfony Installer is already up to date.</info>');
 
-            return;
+            return 0;
         }
 
         $remoteFilename = 'http://symfony.com/installer';
@@ -91,6 +91,8 @@ class SelfUpdateCommand extends Command
             $fs->rename($tempFilename, $localFilename, true);
 
             $output->writeln('<info>Symfony Installer was successfully updated.</info>');
+
+            return 0;
         } catch (\Exception $e) {
             if (!$e instanceof \UnexpectedValueException && !$e instanceof \PharException) {
                 throw $e;
