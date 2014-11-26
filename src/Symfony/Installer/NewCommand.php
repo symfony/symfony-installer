@@ -37,6 +37,11 @@ class NewCommand extends Command
      */
     private $output;
 
+    /**
+     * @var OutputInterface
+     */
+    private $output;
+
     protected function configure()
     {
         $this
