@@ -1,0 +1,115 @@
+---------------------------------------------------------------------------
+
+by dirkluijk at 2014-10-19T15:43:05Z
+
+Just a small note: your PR does not yet comply with the Symfony Coding Standards.
+
+- add space: ``if (condition)``
+- remove line breaks between ``if (condition)`` and  ``{``
+- lower case ``array()``
+- extra line break before ``return``
+
+Sorry for bothering you with coding style
+
+:+1:
+
+---------------------------------------------------------------------------
+
+by jzawadzki at 2014-10-19T20:47:21Z
+
+@dirkluijk fixed - thanks!
+
+---------------------------------------------------------------------------
+
+by javiereguiluz at 2014-11-18T08:21:02Z
+
+@jzawadzki thanks for this PR.
+
+I was testing it locally and I removed the `date.timezone` setting to force an error. I got this:
+
+![symfony_installer_errors](https://cloud.githubusercontent.com/assets/73419/5084243/0c1e7e6c-6f04-11e4-8298-4ba44bf684d5.png)
+
+Could we silence all the PHP warning messages?
+
+---------------------------------------------------------------------------
+
+by stof at 2014-11-18T09:54:01Z
+
+@javiereguiluz do you have the same warnings when running the symfony requirement checking directly ? If yes, it should be fixed in SensioDistributionBundle instead
+
+---------------------------------------------------------------------------
+
+by javiereguiluz at 2014-11-18T11:25:53Z
+
+Indeed I have the same warning messages when checking the requirements by hand. I assume that this is just a problem on my side, so this PR is OK to me:
+
+![testing_symfony_checks](https://cloud.githubusercontent.com/assets/73419/5086524/efe3fa50-6f1d-11e4-81fa-2ae0b3e5a7ad.png)
+
+---------------------------------------------------------------------------
+
+by stof at 2014-11-18T11:31:01Z
+
+@javiereguiluz not on your side IMO, but on the SensioDistributionBundle side (given that it puts this requirement because of PHP throwing a warning, it should silence the warning when detecting it)
+
+---------------------------------------------------------------------------
+
+by jzawadzki at 2014-11-18T15:32:19Z
+
+yes, as @stof said this should be fixed on SymfonyRequirements.php in SensioDistributionBundle.
+Even if we checked that `date.timezone` is not set, we run `date_default_timezone_get()` in next requirement (if timezone is supported by php) which produces the warning
+
+---------------------------------------------------------------------------
+
+by javiereguiluz at 2014-11-18T16:03:09Z
+
+@jzawadzki I'm really sorry but if the PR #38 is accepted, you'll have to make some changes to your own PR.
+
+The main change is that the command now uses a fluent interface: https://github.com/symfony/symfony-installer/pull/38/files?diff=unified#diff-77c527f42958c747f498904bde7e94c5R52
+
+You'll have to "hook" your method before the last `displayInstallationResult()` method.
+
+---------------------------------------------------------------------------
+
+by jzawadzki at 2014-11-18T16:10:03Z
+
+@javiereguiluz - sure, no problem. Code needed small clean up ;)
+
+---------------------------------------------------------------------------
+
+by fabpot at 2014-11-19T13:03:47Z
+
+#38 has been merged now. @jzawadzki Can you make the the needed changes here? Thanks.
+
+---------------------------------------------------------------------------
+
+by jzawadzki at 2014-11-19T23:03:29Z
+
+Thanks @fabpot for letting me know.
+
+This is now rebased, fixed to newest version and squashed.
+
+---------------------------------------------------------------------------
+
+by javiereguiluz at 2014-11-20T07:47:25Z
+
+@jzawadzki thanks for your work on this! I have two questions:
+
+**1.** When the system doesn't meet the requirements, the `X` displaying the fail status is displayed in green (`<info>`) which is the same color used when everything works. Ideally we could make it red to show that there are some errors, but an easy way to distinguish it could be to use the yellow color of `<comment>`.
+
+**Before**
+
+![before_error](https://cloud.githubusercontent.com/assets/73419/5121360/ac5deadc-7091-11e4-8e37-d81dfaeea12f.png)
+
+**After**
+
+![after_error](https://cloud.githubusercontent.com/assets/73419/5121361/af07e5d0-7091-11e4-8cbd-d3f67649da0b.png)
+
+**2.** When there is an error, I would add a short phrase to clearly tell the user that he/she has to fix the problems before running the Symfony application:
+
+![error_message](https://cloud.githubusercontent.com/assets/73419/5121371/d672902a-7091-11e4-9d30-b996aff6ae2a.png)
+
+---------------------------------------------------------------------------
+
+by jzawadzki at 2014-11-20T09:56:46Z
+
+Thanks @javiereguiluz - done
