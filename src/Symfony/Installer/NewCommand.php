@@ -61,6 +61,7 @@ class NewCommand extends Command
             ->checkSymfonyVersionIsInstallable()
             ->download()
             ->extract()
+            ->createGitIgnore()
             ->cleanUp()
             ->checkSymfonyRequirements()
             ->displayInstallationResult()
@@ -271,6 +272,33 @@ class NewCommand extends Command
                 "or because the uncompress commands of your operating system didn't work."
             );
         }
+
+        return $this;
+    }
+
+    /**
+     * Creates the .gitignore file.
+     */
+    private function createGitIgnore()
+    {
+        $ignored = array(
+            '/web/bundles/',
+            '/app/bootstrap.php.cache',
+            '/app/cache/*',
+            '/app/config/parameters.yml',
+            '/app/logs/*',
+            '!app/cache/.gitkeep',
+            '!app/logs/.gitkeep',
+            '/app/phpunit.xml',
+            '/build/',
+            '/vendor/',
+            '/bin/',
+        );
+
+        $this->fs->dumpFile(
+            $this->projectDir.DIRECTORY_SEPARATOR.'.gitignore',
+            implode(PHP_EOL, $ignored).PHP_EOL
+        );
 
         return $this;
     }
