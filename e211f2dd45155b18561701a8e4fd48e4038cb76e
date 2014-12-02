@@ -1,0 +1,23 @@
+---------------------------------------------------------------------------
+
+by xabbuh at 2014-12-02T20:12:50Z
+
+@javiereguiluz The line break makes sense. It now looks like this:
+
+![after](https://cloud.githubusercontent.com/assets/1957048/5270013/eb2ae0a0-7a67-11e4-8d9e-8c8565cbe96c.png)
+
+While before it has been:
+
+![before](https://cloud.githubusercontent.com/assets/1957048/5270018/f08d5b04-7a67-11e4-8a54-9ee1f3783d89.png)
+
+---------------------------------------------------------------------------
+
+by xabbuh at 2014-12-02T20:16:24Z
+
+However, I also decided to simply show "php symfony new project-name latest" as a suggestion instead of trying to build the original command since that's how it ends up for users if they follow the installation instructions.
+
+---------------------------------------------------------------------------
+
+by javiereguiluz at 2014-12-02T21:21:03Z
+
+:+1: everything looks good to me. Thanks @xabbuh!
