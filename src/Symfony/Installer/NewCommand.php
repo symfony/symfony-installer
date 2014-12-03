@@ -240,8 +240,9 @@ class NewCommand extends Command
                 throw new \RuntimeException(sprintf(
                     "The selected version (%s) cannot be installed because it does not exist.\n".
                     "Try the special \"latest\" version to install the latest stable Symfony release:\n".
-                    'php symfony %s %s latest',
+                    '%s %s %s latest',
                     $this->version,
+                    defined('PHP_WINDOWS_VERSION_BUILD') ? 'php symfony.phar' : 'symfony',
                     $this->getName(),
                     $this->projectName
                 ));
