@@ -57,7 +57,6 @@ class NewCommand extends Command
         $this->output = $output;
 
         $this
-            ->checkInstalledPhpVersion()
             ->checkProjectName()
             ->checkSymfonyVersionIsInstallable()
             ->download()
@@ -66,29 +65,6 @@ class NewCommand extends Command
             ->checkSymfonyRequirements()
             ->displayInstallationResult()
         ;
-    }
-
-    /**
-     * Checks if the system has PHP 5.4 or higher installed, which is a requirement
-     * to execute the installer.
-     * @return $this
-     */
-    private function checkInstalledPhpVersion()
-    {
-        if (version_compare(PHP_VERSION, '5.4.0', '<')) {
-            throw new \RuntimeException(sprintf(
-                "Symfony Installer requires PHP 5.4 version or higher and your system has\n".
-                "PHP %s version installed.\n\n".
-                "To solve this issue, upgrade your PHP installation or install Symfony manually\n".
-                "executing the following command:\n\n".
-                "composer create-project symfony/framework-standard-edition %s %s",
-                PHP_VERSION,
-                $this->projectName,
-                'latest' !== $this->version ? $this->version : ''
-            ));
-        }
-
-        return $this;
     }
 
     /**
