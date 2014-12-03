@@ -344,8 +344,9 @@ class NewCommand extends Command
             "    * Run your application:\n".
             "        1. Execute the <comment>php app/console server:run</comment> command.\n".
             "        2. Browse to the <comment>http://localhost:8000</comment> URL.\n\n".
-            "    * Read the documentation at <comment>http://symfony.com/doc</comment>\n",
-            $this->projectName
+            "    * Read the documentation at <comment>http://symfony.com/doc/%s</comment>\n",
+            $this->projectName,
+            substr($this->version, 0, 3)
         ));
 
         return $this;
