@@ -56,15 +56,20 @@ class NewCommand extends Command
         $this->version = trim($input->getArgument('version'));
         $this->output = $output;
 
-        $this
-            ->checkProjectName()
-            ->checkSymfonyVersionIsInstallable()
-            ->download()
-            ->extract()
-            ->cleanUp()
-            ->checkSymfonyRequirements()
-            ->displayInstallationResult()
-        ;
+        try {
+            $this
+                ->checkProjectName()
+                ->checkSymfonyVersionIsInstallable()
+                ->download()
+                ->extract()
+                ->cleanUp()
+                ->checkSymfonyRequirements()
+                ->displayInstallationResult()
+            ;
+        } catch (\Exception $e) {
+            $this->cleanUp();
+            throw $e;
+        }
     }
 
     /**
