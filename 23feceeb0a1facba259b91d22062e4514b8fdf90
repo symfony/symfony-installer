@@ -1,0 +1,23 @@
+---------------------------------------------------------------------------
+
+by javiereguiluz at 2014-12-03T22:14:49Z
+
+@xabbuh thanks for taking into account these details. However, as we usually use `symfony` for Mac and Linux instead of `php symfony`, what do you think about simplifying your proposal as follows?
+
+```
+'php symfony%s %s %s latest',
+...
+defined('PHP_WINDOWS_VERSION_BUILD') ? '.phar' : '',
+```
+
+```
+'%s %s %s latest',
+...
+defined('PHP_WINDOWS_VERSION_BUILD') ? 'php symfony.phar' : 'symfony',
+```
+
+---------------------------------------------------------------------------
+
+by xabbuh at 2014-12-03T22:51:05Z
+
+@javiereguiluz Of course, you're right.
