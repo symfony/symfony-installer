@@ -1,6 +1,19 @@
 #!/usr/bin/env php
 <?php
 
+if (PHP_VERSION_ID < 50400) {
+    file_put_contents('php://stderr', sprintf(
+        "Symfony Installer requires PHP 5.4 version or higher and your system has\n".
+        "PHP %s version installed.\n\n".
+        "To solve this issue, upgrade your PHP installation or install Symfony manually\n".
+        "executing the following command:\n\n".
+        "composer create-project symfony/framework-standard-edition <project-name> <symfony-version>\n\n",
+        PHP_VERSION
+    ));
+
+    exit(1);
+}
+
 require file_exists(__DIR__.'/vendor/autoload.php')
     ? __DIR__.'/vendor/autoload.php'
     : __DIR__.'/../../autoload.php';
