@@ -404,7 +404,7 @@ class NewCommand extends Command
 
     /**
      * Returns the full Symfony version number of the project by getting
-     * it in the composer.lock file.
+     * it from the composer.lock file.
      *
      * @return string
      */
