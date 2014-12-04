@@ -315,15 +315,17 @@ class NewCommand extends Command
     {
         if (empty($this->requirementsErrors)) {
             $this->output->writeln(sprintf(
-                " <info>%s</info>  Symfony was <info>successfully installed</info>. Now you can:\n",
-                defined('PHP_WINDOWS_VERSION_BUILD') ? 'OK' : '✔'
+                " <info>%s</info>  Symfony %s was <info>successfully installed</info>. Now you can:\n",
+                defined('PHP_WINDOWS_VERSION_BUILD') ? 'OK' : '✔',
+                $this->getInstalledSymfonyVersion()
             ));
         } else {
             $this->output->writeln(sprintf(
-                " <comment>%s</comment>  Symfony was <info>successfully installed</info> but your system doesn't meet its\n".
+                " <comment>%s</comment>  Symfony %s was <info>successfully installed</info> but your system doesn't meet its\n".
                 "     technical requirements! Fix the following issues before executing\n".
                 "     your Symfony application:\n",
-                defined('PHP_WINDOWS_VERSION_BUILD') ? 'FAILED' : '✕'
+                defined('PHP_WINDOWS_VERSION_BUILD') ? 'FAILED' : '✕',
+                $this->getInstalledSymfonyVersion()
             ));
 
             foreach ($this->requirementsErrors as $helpText) {
@@ -339,13 +341,13 @@ class NewCommand extends Command
         }
 
         $this->output->writeln(sprintf(
-            "    * Change your current directory to %s.\n".
+            "    * Change your current directory to <comment>%s</comment>\n\n".
             "    * Configure your application in <comment>app/config/parameters.yml</comment> file.\n\n".
             "    * Run your application:\n".
             "        1. Execute the <comment>php app/console server:run</comment> command.\n".
             "        2. Browse to the <comment>http://localhost:8000</comment> URL.\n\n".
             "    * Read the documentation at <comment>http://symfony.com/doc</comment>\n",
-            $this->projectName
+            $this->projectDir
         ));
 
         return $this;
@@ -398,5 +400,22 @@ class NewCommand extends Command
         $errorMessage .= '   > '.wordwrap($requirement->getHelpText(), $lineSize - 5, PHP_EOL.'   > ').PHP_EOL;
 
         return $errorMessage;
+    }
+
+    /**
+     * Returns the full Symfony version number of the project by getting
+     * it in the composer.lock file.
+     *
+     * @return string
+     */
+    private function getInstalledSymfonyVersion()
+    {
+        $composer = json_decode(file_get_contents($this->projectDir.'/composer.lock'), true);
+
+        foreach ($composer['packages'] as $package) {
+            if ('symfony/symfony' === $package['name']) {
+                return $package['version'];
+            }
+        }
     }
 }
