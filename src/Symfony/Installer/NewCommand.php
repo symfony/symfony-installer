@@ -70,6 +70,8 @@ class NewCommand extends Command
     /**
      * Checks whether it's safe to create a new project for the given name in the
      * given directory.
+     *
+     * @return NewCommand
      */
     private function checkProjectName()
     {
@@ -96,6 +98,8 @@ class NewCommand extends Command
      *   - 2.3 can be installed starting from version 2.3.21 (inclusive)
      *   - 2.5 can be installed starting from version 2.5.6 (inclusive)
      *   - 2.6, 2.7, 2.8 and 2.9 can be installed regardless the version.
+     *
+     * @return NewCommand
      *
      * @throws \RuntimeException If the given Symfony version is not compatible with this installer.
      */
@@ -152,6 +156,8 @@ class NewCommand extends Command
      * Chooses the best compressed file format to download (ZIP or TGZ) depending upon the
      * available operating system uncompressing commands and the enabled PHP extensions
      * and it downloads the file.
+     *
+     * @return NewCommand
      *
      * @throws \Distill\Exception\FormatGuesserRequiredException
      * @throws \Distill\Exception\StrategyRequiredException
@@ -244,6 +250,8 @@ class NewCommand extends Command
     /**
      * Extracts the compressed Symfony file (ZIP or TGZ) using the
      * native operating system commands if available or PHP code otherwise.
+     *
+     * @return NewCommand
      */
     private function extract()
     {
@@ -276,6 +284,8 @@ class NewCommand extends Command
     /**
      * Removes all the temporary files and directories created to
      * download and extract Symfony.
+     *
+     * @return NewCommand
      */
     private function cleanUp()
     {
@@ -287,6 +297,8 @@ class NewCommand extends Command
     /**
      * It displays the message with the result of installing Symfony
      * and provides some pointers to the user.
+     *
+     * @return NewCommand
      */
     private function displayInstallationResult()
     {
@@ -352,6 +364,8 @@ class NewCommand extends Command
 
     /**
      * Checks if environment meets symfony requirements
+     *
+     * @return NewCommand
      */
     private function checkSymfonyRequirements()
     {
