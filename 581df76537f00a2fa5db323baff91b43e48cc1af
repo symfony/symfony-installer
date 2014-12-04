@@ -1,0 +1,27 @@
+---------------------------------------------------------------------------
+
+by 1ed at 2014-12-03T16:38:28Z
+
+:+1:  works well for me
+```
+$ php symfony.phar
+Symfony Installer requires PHP 5.4 version or higher and your system has
+PHP 5.3.3 version installed.
+
+To solve this issue, upgrade your PHP installation or install Symfony manually
+executing the following command:
+
+composer create-project symfony/framework-standard-edition <project-name> <symfony-version>
+```
+
+---------------------------------------------------------------------------
+
+by 1ed at 2014-12-03T16:58:14Z
+
+Maybe you should remove the other check in the command.
+
+---------------------------------------------------------------------------
+
+by xabbuh at 2014-12-03T17:11:48Z
+
+@1ed Thanks for the feedback.
