@@ -1,0 +1,121 @@
+---------------------------------------------------------------------------
+
+by javiereguiluz at 2014-12-01T09:07:34Z
+
+@saro0h I really like the idea of displaying the exact installed version of Symfony. That's a nice improvement! Thank you.
+
+However, I don't like the idea to make the result message longer with so many lines. We're completely obsessed with streamlining the installation experience as much as possible and therefore, every line counts. That's why I propose you to simplify a bit your proposal as follows:
+
+![installer_display_more_information](https://cloud.githubusercontent.com/assets/73419/5243216/8f4156f6-7941-11e4-9500-54bf769caaeb.png)
+
+If you agree, this is the patch with the required changes:
+
+```patch
+diff --git a/src/Symfony/Installer/NewCommand.php b/src/Symfony/Installer/NewCommand.php
+index 56b11f8..1603b41 100755
+--- a/src/Symfony/Installer/NewCommand.php
++++ b/src/Symfony/Installer/NewCommand.php
+@@ -295,27 +295,18 @@ class NewCommand extends Command
+     private function displayInstallationResult()
+     {
+         if (empty($this->requirementsErrors)) {
+-            $versionInstalled = $this->getInstalledProjectVersion();
+-            $folderInstalled = $this->getProjectFolder();
+-            $tick = defined('PHP_WINDOWS_VERSION_BUILD') ? 'OK' : '✔';
+-
+             $this->output->writeln(sprintf(
+-                " <info>%s</info>  Symfony was <info>successfully installed</info>.\n".
+-                " <info>%s</info>  Your new project is using <info>%s</info>.\n".
+-                " <info>%s</info>  Your project is here: <comment>%s</comment>.\n\n".
+-                " Now you can:",
+-                $tick,
+-                $tick,
+-                $versionInstalled,
+-                $tick,
+-                $folderInstalled
++                " <info>%s</info>  Symfony %s was <info>successfully installed</info>. Now you can:\n",
++                defined('PHP_WINDOWS_VERSION_BUILD') ? 'OK' : '✔',
++                $this->getInstalledSymfonyVersion()
+             ));
+         } else {
+             $this->output->writeln(sprintf(
+-                " <comment>%s</comment>  Symfony was <info>successfully installed</info> but your system doesn't meet its\n".
++                " <comment>%s</comment>  Symfony %s was <info>successfully installed</info> but your system doesn't meet its\n".
+                 "     technical requirements! Fix the following issues before executing\n".
+                 "     your Symfony application:\n",
+-                defined('PHP_WINDOWS_VERSION_BUILD') ? 'FAILED' : '✕'
++                defined('PHP_WINDOWS_VERSION_BUILD') ? 'FAILED' : '✕',
++                $this->getInstalledSymfonyVersion()
+             ));
+
+             foreach ($this->requirementsErrors as $helpText) {
+@@ -331,13 +322,13 @@ class NewCommand extends Command
+         }
+
+         $this->output->writeln(sprintf(
+-            "    * Change your current directory to %s.\n".
++            "    * Change your current directory to <comment>%s</comment>\n\n".
+             "    * Configure your application in <comment>app/config/parameters.yml</comment> file.\n\n".
+             "    * Run your application:\n".
+             "        1. Execute the <comment>php app/console server:run</comment> command.\n".
+             "        2. Browse to the <comment>http://localhost:8000</comment> URL.\n\n".
+             "    * Read the documentation at <comment>http://symfony.com/doc</comment>\n",
+-            $this->projectName
++            $this->projectDir
+         ));
+
+         return $this;
+@@ -392,7 +383,12 @@ class NewCommand extends Command
+         return $errorMessage;
+     }
+
+-    private function getInstalledProjectVersion()
++    /**
++     * It returns the full Symfony version number of the project by executing
++     * the '$ ./app/console --version' command, which outputs the following:
++     * Symfony version X.Y.Z - app/dev/debug
++     */
++    private function getInstalledSymfonyVersion()
+     {
+         $phpExecutableFinder = new PhpExecutableFinder();
+         $php = $phpExecutableFinder->find();
+@@ -404,11 +400,6 @@ class NewCommand extends Command
+             throw new \RuntimeException($getVersion->getErrorOutput());
+         }
+
+-        return substr($getVersion->getOutput(), 0, strlen($getVersion->getOutput())-17);
+-    }
+-
+-    private function getProjectFolder()
+-    {
+-        return str_replace("\n", '', getcwd().'/'.$this->projectName);
++        return substr($getVersion->getOutput(), 16, 5);
+     }
+ }
+```
+
+---------------------------------------------------------------------------
+
+by romainneutron at 2014-12-01T22:11:43Z
+
+Nice job !
+
+---------------------------------------------------------------------------
+
+by saro0h at 2014-12-03T21:17:42Z
+
+Here you go. Thanks @lyrixx for the tip :)
+
+---------------------------------------------------------------------------
+
+by javiereguiluz at 2014-12-03T22:12:09Z
+
+:+1:
+
+Thank you Sarah for improving the installer!
+
+---------------------------------------------------------------------------
+
+by hhamon at 2014-12-03T22:26:38Z
+
+:+1:
