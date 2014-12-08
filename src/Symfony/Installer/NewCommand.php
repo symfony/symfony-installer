@@ -3,8 +3,10 @@
 namespace Symfony\Installer;
 
 use Distill\Distill;
+use Distill\Exception\IO\Input\FileCorruptedException;
+use Distill\Exception\IO\Input\FileEmptyException;
+use Distill\Exception\IO\Output\TargetDirectoryNotWritableException;
 use Distill\Strategy\MinimumSize;
-use Distill\Exception as DistillException;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Message\Response;
@@ -266,17 +268,17 @@ class NewCommand extends Command
         try {
             $distill = new Distill();
             $extractionSucceeded = $distill->extractWithoutRootDirectory($this->compressedFilePath, $this->projectDir);
-        } catch (DistillException\IO\Input\FileCorruptedException $e) {
+        } catch (FileCorruptedException $e) {
             throw new \RuntimeException(
                 "Symfony can't be installed because the downloaded package is corrupted.\n\n".
                 "To solve this issue, try installing Symfony again"
             );
-        } catch (DistillException\IO\Input\FileEmptyException $e) {
+        } catch (FileEmptyException $e) {
             throw new \RuntimeException(
                 "Symfony can't be installed because the downloaded package is empty.\n\n".
                 "To solve this issue, try installing Symfony again"
             );
-        } catch (DistillException\IO\Output\TargetDirectoryNotWritableException $e) {
+        } catch (TargetDirectoryNotWritableException $e) {
             throw new \RuntimeException(sprintf(
                 "Symfony can't be installed because the installer doesn't have enough\n".
                 "permissions to uncompress and rename the package contents.\n\n".
