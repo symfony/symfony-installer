@@ -4,6 +4,7 @@ namespace Symfony\Installer;
 
 use Distill\Distill;
 use Distill\Strategy\MinimumSize;
+use Distill\Exception as DistillException;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Message\Response;
@@ -173,11 +174,11 @@ class NewCommand extends Command
 
         // decide which is the best compressed version to download
         $distill = new Distill();
+        $baseName = 'http://symfony.com/download?v=Symfony_Standard_Vendors_'.$this->version;
         $symfonyArchiveFile = $distill
             ->getChooser()
             ->setStrategy(new MinimumSize())
-            ->addFile('http://symfony.com/download?v=Symfony_Standard_Vendors_'.$this->version.'.zip')
-            ->addFile('http://symfony.com/download?v=Symfony_Standard_Vendors_'.$this->version.'.tgz')
+            ->addFilesWithDifferentExtensions($baseName, ['zip', 'tgz'])
             ->getPreferredFile()
         ;
 
@@ -265,6 +266,24 @@ class NewCommand extends Command
         try {
             $distill = new Distill();
             $extractionSucceeded = $distill->extractWithoutRootDirectory($this->compressedFilePath, $this->projectDir);
+        } catch (DistillException\IO\Input\FileCorruptedException $e) {
+            throw new \RuntimeException(
+                "Symfony can't be installed because the downloaded package is corrupted.\n\n".
+                "To solve this issue, try installing Symfony again"
+            );
+        } catch (DistillException\IO\Input\FileEmptyException $e) {
+            throw new \RuntimeException(
+                "Symfony can't be installed because the downloaded package is empty.\n\n".
+                "To solve this issue, try installing Symfony again"
+            );
+        } catch (DistillException\IO\Output\TargetDirectoryNotWritableException $e) {
+            throw new \RuntimeException(sprintf(
+                "Symfony can't be installed because the installer doesn't have enough\n".
+                "permissions to uncompress and rename the package contents.\n\n".
+                "To solve this issue, try installing Symfony again and check the permissions of\n".
+                "the %s directory",
+                getcwd()
+            ));
         } catch (\Exception $e) {
             throw new \RuntimeException(sprintf(
                 "Symfony can't be installed because the downloaded package is corrupted\n".
