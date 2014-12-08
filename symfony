@@ -18,7 +18,7 @@ require file_exists(__DIR__.'/vendor/autoload.php')
     ? __DIR__.'/vendor/autoload.php'
     : __DIR__.'/../../autoload.php';
 
-$appVersion = '0.4.0-DEV';
+$appVersion = '0.4.0';
 
 $app = new Symfony\Component\Console\Application('Symfony Installer', $appVersion);
 $app->add(new Symfony\Installer\AboutCommand($appVersion));
