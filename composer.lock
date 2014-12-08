@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "96998a3d98dae8da8d2ad6253ddd26d3",
+    "hash": "35ff854097824700eda497a8bf6cfbcc",
     "packages": [
         {
             "name": "guzzlehttp/guzzle",
@@ -218,28 +218,27 @@
         },
         {
             "name": "raulfraile/distill",
-            "version": "v0.7.4",
+            "version": "v0.9.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/raulfraile/distill.git",
-                "reference": "6be8886af91127c5d1f121b324cc4a8c74f07cd7"
+                "reference": "b115ee8cec36cfd358566a43a99b4ddddab60922"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/raulfraile/distill/zipball/6be8886af91127c5d1f121b324cc4a8c74f07cd7",
-                "reference": "6be8886af91127c5d1f121b324cc4a8c74f07cd7",
+                "url": "https://api.github.com/repos/raulfraile/distill/zipball/b115ee8cec36cfd358566a43a99b4ddddab60922",
+                "reference": "b115ee8cec36cfd358566a43a99b4ddddab60922",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.4.0",
                 "pimple/pimple": "~3.0",
-                "symfony/filesystem": ">=2.4",
-                "symfony/process": ">=2.4"
+                "symfony/filesystem": "~2.4",
+                "symfony/process": "~2.4"
             },
             "require-dev": {
                 "mockery/mockery": "0.9.1",
-                "raulfraile/ladybug": "~1.0",
-                "symfony/finder": ">=2.4"
+                "raulfraile/ladybug": "~1.0"
             },
             "suggest": {
                 "ext-rar": "Allows to uncompress rar files using RarArchive",
@@ -247,7 +246,7 @@
             },
             "type": "library",
             "autoload": {
-                "psr-0": {
+                "psr-4": {
                     "Distill\\": "src/"
                 }
             },
@@ -264,34 +263,40 @@
             "description": "Smart compressed files extractor",
             "keywords": [
                 "7zip",
+                "archive",
+                "bz2",
                 "bzip",
                 "bzip2",
                 "cab",
                 "compression",
+                "epub",
                 "extractor",
                 "gzip",
                 "phar",
                 "rar",
+                "strategy",
                 "tar.gz",
                 "tar.xz",
+                "tgz",
+                "unzip",
                 "xz",
                 "zip"
             ],
-            "time": "2014-11-21 08:07:14"
+            "time": "2014-12-08 01:41:59"
         },
         {
             "name": "symfony/console",
-            "version": "v2.5.7",
+            "version": "v2.6.1",
             "target-dir": "Symfony/Component/Console",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/Console.git",
-                "reference": "61b13c27c9258e97009249d4ef193c964bf346b7"
+                "reference": "ef825fd9f809d275926547c9e57cbf14968793e8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/Console/zipball/61b13c27c9258e97009249d4ef193c964bf346b7",
-                "reference": "61b13c27c9258e97009249d4ef193c964bf346b7",
+                "url": "https://api.github.com/repos/symfony/Console/zipball/ef825fd9f809d275926547c9e57cbf14968793e8",
+                "reference": "ef825fd9f809d275926547c9e57cbf14968793e8",
                 "shasum": ""
             },
             "require": {
@@ -299,16 +304,18 @@
             },
             "require-dev": {
                 "psr/log": "~1.0",
-                "symfony/event-dispatcher": "~2.1"
+                "symfony/event-dispatcher": "~2.1",
+                "symfony/process": "~2.1"
             },
             "suggest": {
                 "psr/log": "For using the console logger",
-                "symfony/event-dispatcher": ""
+                "symfony/event-dispatcher": "",
+                "symfony/process": ""
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.5-dev"
+                    "dev-master": "2.6-dev"
                 }
             },
             "autoload": {
@@ -332,21 +339,21 @@
             ],
             "description": "Symfony Console Component",
             "homepage": "http://symfony.com",
-            "time": "2014-11-20 13:22:25"
+            "time": "2014-12-02 20:19:20"
         },
         {
             "name": "symfony/filesystem",
-            "version": "v2.5.7",
+            "version": "v2.6.1",
             "target-dir": "Symfony/Component/Filesystem",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/Filesystem.git",
-                "reference": "3c3e382bd869b3ec10008a3d9ef455b1cc2868db"
+                "reference": "ff6efc95256cb33031933729e68b01d720b5436b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/Filesystem/zipball/3c3e382bd869b3ec10008a3d9ef455b1cc2868db",
-                "reference": "3c3e382bd869b3ec10008a3d9ef455b1cc2868db",
+                "url": "https://api.github.com/repos/symfony/Filesystem/zipball/ff6efc95256cb33031933729e68b01d720b5436b",
+                "reference": "ff6efc95256cb33031933729e68b01d720b5436b",
                 "shasum": ""
             },
             "require": {
@@ -355,7 +362,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.5-dev"
+                    "dev-master": "2.6-dev"
                 }
             },
             "autoload": {
@@ -379,21 +386,21 @@
             ],
             "description": "Symfony Filesystem Component",
             "homepage": "http://symfony.com",
-            "time": "2014-11-16 17:28:00"
+            "time": "2014-12-02 20:19:20"
         },
         {
             "name": "symfony/process",
-            "version": "v2.5.7",
+            "version": "v2.6.1",
             "target-dir": "Symfony/Component/Process",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/Process.git",
-                "reference": "ffe6e27a57e31262c3204a0955076c27c54c8e7e"
+                "reference": "bf0c9bd625f13b0b0bbe39919225cf145dfb935a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/Process/zipball/ffe6e27a57e31262c3204a0955076c27c54c8e7e",
-                "reference": "ffe6e27a57e31262c3204a0955076c27c54c8e7e",
+                "url": "https://api.github.com/repos/symfony/Process/zipball/bf0c9bd625f13b0b0bbe39919225cf145dfb935a",
+                "reference": "bf0c9bd625f13b0b0bbe39919225cf145dfb935a",
                 "shasum": ""
             },
             "require": {
@@ -402,7 +409,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.5-dev"
+                    "dev-master": "2.6-dev"
                 }
             },
             "autoload": {
@@ -426,7 +433,7 @@
             ],
             "description": "Symfony Process Component",
             "homepage": "http://symfony.com",
-            "time": "2014-11-03 19:48:45"
+            "time": "2014-12-02 20:19:20"
         }
     ],
     "packages-dev": [],
@@ -434,6 +441,8 @@
     "minimum-stability": "stable",
     "stability-flags": [],
     "prefer-stable": false,
-    "platform": [],
+    "platform": {
+        "php": ">=5.4.0"
+    },
     "platform-dev": []
 }
