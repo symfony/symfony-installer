@@ -14,6 +14,7 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Yaml\Yaml;
 
 /**
  * This command creates new Symfony projects for the given Symfony version.
@@ -63,6 +64,7 @@ class NewCommand extends Command
                 ->download()
                 ->extract()
                 ->cleanUp()
+                ->updateParameters()
                 ->checkSymfonyRequirements()
                 ->displayInstallationResult()
             ;
@@ -384,6 +386,29 @@ class NewCommand extends Command
         }
 
         return $this;
+    }
+
+    private function updateParameters()
+    {
+        $filename = $this->projectDir.'/app/config/parameters.yml';
+
+        if (!file_exists($filename) || !is_writable($filename)) {
+            return $this;
+        }
+
+        $ret = Yaml::parse($filename);
+
+        $ret['parameters']['secret'] = $this->generateRandomSecret();
+
+        $yaml = Yaml::dump($ret, 2);
+        file_put_contents($filename, $yaml);
+
+        return $this;
+    }
+
+    private function generateRandomSecret()
+    {
+        return hash('sha1', uniqid(mt_rand()));
     }
 
     private function getErrorMessage(\Requirement $requirement, $lineSize = 70)
