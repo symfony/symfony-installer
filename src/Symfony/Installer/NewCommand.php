@@ -63,6 +63,7 @@ class NewCommand extends Command
                 ->download()
                 ->extract()
                 ->cleanUp()
+                ->updateParameters()
                 ->checkSymfonyRequirements()
                 ->displayInstallationResult()
             ;
@@ -384,6 +385,29 @@ class NewCommand extends Command
         }
 
         return $this;
+    }
+
+    private function updateParameters()
+    {
+        $filename = $this->projectDir.'/app/config/parameters.yml';
+
+        if (!is_writable($filename)) {
+            return $this;
+        }
+
+        $ret = str_replace('ThisTokenIsNotSoSecretChangeIt', $this->generateRandomSecret(), file_get_contents($filename));
+        file_put_contents($filename, $ret);
+
+        return $this;
+    }
+
+    private function generateRandomSecret()
+    {
+        if (function_exists('openssl_random_pseudo_bytes')) {
+            return hash('sha1', openssl_random_pseudo_bytes(23));
+        }
+
+        return hash('sha1', uniqid(mt_rand(), true));
     }
 
     private function getErrorMessage(\Requirement $requirement, $lineSize = 70)
