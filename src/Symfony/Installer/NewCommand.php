@@ -408,7 +408,11 @@ class NewCommand extends Command
 
     private function generateRandomSecret()
     {
-        return hash('sha1', uniqid(mt_rand()));
+        if(function_exists('openssl_random_pseudo_bytes')) {
+           return hash('sha1', openssl_random_pseudo_bytes(23));
+        }
+
+        return hash('sha1', uniqid(mt_rand(), true));
     }
 
     private function getErrorMessage(\Requirement $requirement, $lineSize = 70)
