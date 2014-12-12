@@ -392,7 +392,7 @@ class NewCommand extends Command
     {
         $filename = $this->projectDir.'/app/config/parameters.yml';
 
-        if (!file_exists($filename) || !is_writable($filename)) {
+        if (!is_writable($filename)) {
             return $this;
         }
 
