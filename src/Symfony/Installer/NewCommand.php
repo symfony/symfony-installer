@@ -411,6 +411,10 @@ class NewCommand extends Command
 
         foreach ($composer['packages'] as $package) {
             if ('symfony/symfony' === $package['name']) {
+                if ('v' === substr($package['version'], 0, 1)) {
+                    return substr($package['version'], 1);
+                };
+
                 return $package['version'];
             }
         }
