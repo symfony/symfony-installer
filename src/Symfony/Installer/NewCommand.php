@@ -43,16 +43,17 @@ class NewCommand extends Command
         $this
             ->setName('new')
             ->setDescription('Creates a new Symfony project.')
-            ->addArgument('name', InputArgument::REQUIRED, 'The name of the directory where the new project will be created')
-            ->addArgument('version', InputArgument::OPTIONAL, 'The Symfony version to be installed (defaults to the latest stable version)', 'latest')
+            ->addArgument('directory', InputArgument::REQUIRED, 'Directory where the new project will be created.')
+            ->addArgument('version', InputArgument::OPTIONAL, 'The Symfony version to be installed (defaults to the latest stable version).', 'latest')
         ;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $this->fs = new Filesystem();
-        $this->projectName = trim($input->getArgument('name'));
-        $this->projectDir = rtrim(getcwd().DIRECTORY_SEPARATOR.$this->projectName, DIRECTORY_SEPARATOR);
+        $directory = rtrim(trim($input->getArgument('directory')), DIRECTORY_SEPARATOR);
+        $this->projectDir = $this->fs->isAbsolutePath($directory) ? $directory : getcwd().DIRECTORY_SEPARATOR.$directory;
+        $this->projectName = basename($directory);
         $this->version = trim($input->getArgument('version'));
         $this->output = $output;
 
@@ -84,7 +85,7 @@ class NewCommand extends Command
             throw new \RuntimeException(sprintf(
                 "There is already a '%s' project in this directory (%s).\n".
                 "Change your project name or create it in another directory.",
-                $this->projectName, getcwd()
+                $this->projectName, $this->projectDir
             ));
         }
 
@@ -128,7 +129,7 @@ class NewCommand extends Command
                 "to an unmaintained Symfony branch which is not compatible with this installer.\n".
                 "To solve this issue install Symfony manually executing the following command:\n\n".
                 "composer create-project symfony/framework-standard-edition %s %s",
-                $this->version, $this->projectName, $this->version
+                $this->version, $this->projectDir, $this->version
             ));
         }
 
@@ -139,7 +140,7 @@ class NewCommand extends Command
                 "is compatible with Symfony 2.3 versions starting from 2.3.21.\n".
                 "To solve this issue install Symfony manually executing the following command:\n\n".
                 "composer create-project symfony/framework-standard-edition %s %s",
-                $this->version, $this->projectName, $this->version
+                $this->version, $this->projectDir, $this->version
             ));
         }
 
@@ -150,7 +151,7 @@ class NewCommand extends Command
                 "is compatible with Symfony 2.5 versions starting from 2.5.6.\n".
                 "To solve this issue install Symfony manually executing the following command:\n\n".
                 "composer create-project symfony/framework-standard-edition %s %s",
-                $this->version, $this->projectName, $this->version
+                $this->version, $this->projectDir, $this->version
             ));
         }
 
@@ -231,7 +232,7 @@ class NewCommand extends Command
                     $this->version,
                     defined('PHP_WINDOWS_VERSION_BUILD') ? 'php symfony.phar' : 'symfony',
                     $this->getName(),
-                    $this->projectName
+                    $this->projectDir
                 ));
             } else {
                 throw new \RuntimeException(sprintf(
