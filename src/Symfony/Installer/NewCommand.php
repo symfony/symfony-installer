@@ -450,7 +450,7 @@ class NewCommand extends Command
     private function getExecutedCommand()
     {
         $version = '';
-        if ('latest' === $this->version) {
+        if ('latest' !== $this->version) {
             $version = $this->version;
         }
 
