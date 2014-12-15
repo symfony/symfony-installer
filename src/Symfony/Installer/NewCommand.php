@@ -269,31 +269,37 @@ class NewCommand extends Command
             $distill = new Distill();
             $extractionSucceeded = $distill->extractWithoutRootDirectory($this->compressedFilePath, $this->projectDir);
         } catch (FileCorruptedException $e) {
-            throw new \RuntimeException(
-                "Symfony can't be installed because the downloaded package is corrupted.\n\n".
-                "To solve this issue, try installing Symfony again"
-            );
+            throw new \RuntimeException(sprintf(
+                "Symfony can't be installed because the downloaded package is corrupted.\n".
+                "To solve this issue, try installing Symfony again.\n".
+                "\$ %s",
+                $this->getExecutedCommand()
+            ));
         } catch (FileEmptyException $e) {
-            throw new \RuntimeException(
-                "Symfony can't be installed because the downloaded package is empty.\n\n".
-                "To solve this issue, try installing Symfony again"
-            );
+            throw new \RuntimeException(sprintf(
+                "Symfony can't be installed because the downloaded package is empty.\n".
+                "To solve this issue, try installing Symfony again.\n".
+                "\$ %s",
+                $this->getExecutedCommand()
+            ));
         } catch (TargetDirectoryNotWritableException $e) {
             throw new \RuntimeException(sprintf(
                 "Symfony can't be installed because the installer doesn't have enough\n".
-                "permissions to uncompress and rename the package contents.\n\n".
-                "To solve this issue, try installing Symfony again and check the permissions of\n".
-                "the %s directory",
-                getcwd()
+                "permissions to uncompress and rename the package contents.\n".
+                "To solve this issue, check the permissions of the %s directory and\n".
+                "try installing Symfony again.\n",
+                "\$ %s",
+                getcwd(), $this->getExecutedCommand()
             ));
         } catch (\Exception $e) {
             throw new \RuntimeException(sprintf(
                 "Symfony can't be installed because the downloaded package is corrupted\n".
                 "or because the installer doesn't have enough permissions to uncompress and\n".
-                "rename the package contents.\n\n".
-                "To solve this issue, try installing Symfony again and check the permissions of\n".
-                "the %s directory",
-                getcwd()
+                "rename the package contents.\n".
+                "To solve this issue, check the permissions of the %s directory and\n".
+                "try installing Symfony again.\n",
+                "\$ %s",
+                getcwd(), $this->getExecutedCommand()
             ));
         }
 
@@ -434,5 +440,20 @@ class NewCommand extends Command
                 return $package['version'];
             }
         }
+    }
+
+    /**
+     * Returns the executed command.
+     *
+     * @return string
+     */
+    private function getExecutedCommand()
+    {
+        $version = '';
+        if ('latest' === $this->version) {
+            $version = $this->version;
+        }
+
+        return sprintf('%s new %s %s', $_SERVER['PHP_SELF'], $this->projectName, $version);
     }
 }
