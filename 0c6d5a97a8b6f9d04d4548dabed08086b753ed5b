@@ -1,0 +1,33 @@
+---------------------------------------------------------------------------
+
+by javiereguiluz at 2014-12-08T16:59:11Z
+
+:+1: @raulfraile thanks a lot for this! I really wanted to provide more detailed error messages and your PR solved that perfectly.
+
+By the way, thanks for the shortcut to provide different extensions for the same file. I loved that little detail!
+
+---------------------------------------------------------------------------
+
+by raulfraile at 2014-12-08T21:38:22Z
+
+@xabbuh I just changed the use statements to use one for each class/exception. Thanks!
+
+---------------------------------------------------------------------------
+
+by javiereguiluz at 2014-12-15T16:40:13Z
+
+@raulfraile no pressure here, but it would be great if you could find some time in the coming days to address the minor comments pointed by @xabbuh. Thanks!
+
+---------------------------------------------------------------------------
+
+by raulfraile at 2014-12-15T16:54:23Z
+
+@javiereguiluz @xabbuh yes, it will be ready in the coming hours/days, thanks for the reminder!
+
+---------------------------------------------------------------------------
+
+by raulfraile at 2014-12-15T22:38:05Z
+
+@javiereguiluz @xabbuh changes made! This is how errors look like now, let me know if the way the command is displayed is ok:
+
+![screen shot 2014-12-15 at 23 36 45](https://cloud.githubusercontent.com/assets/595160/5445356/56a21ec0-84b3-11e4-8039-cbd591b4eb04.png)
