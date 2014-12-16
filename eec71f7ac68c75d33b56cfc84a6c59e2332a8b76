@@ -1,0 +1,105 @@
+---------------------------------------------------------------------------
+
+by javiereguiluz at 2014-12-12T07:33:19Z
+
+@jzawadzki thanks for submitting this PR!
+
+Regarding how to handle with errors, I agree with you. Given that this is just a nice enhancement but it's not critical, I'd ignore any error. If we can updated the `secret`, do it; if we cannot for any reason, just ignore this step silently.
+
+Now I have a question about how you did the actual `secret` replacement. In my opinion, your PR is the professional and correct way to do it. But I'd like to ask you and others if we should just do a simple `str_replace()` (not even a `preg_replace()`!). That way we'd remove the Yaml dependency and this process would be a bit faster. What do you (and others) think about this?
+
+---------------------------------------------------------------------------
+
+by raulfraile at 2014-12-12T08:32:37Z
+
+Two comments:
+
+1. Regarding the YAML dependency, I agree with @javiereguiluz that for this specific case it is not worth it to add the `symfony/yaml` dependency.
+2. For the `secret` parameter generation, I would check if the `openssl` extension is enabled and in that case use something like [openssl_random_pseudo_bytes](http://php.net/manual/en/function.openssl-random-pseudo-bytes.php) and `uniqid()` as a fallback. Also, as set in the docs for `uniqid()`: "Under Cygwin, `more_entropy` must be set to TRUE for this function to work". I would set that parameter to `true` in any case.
+
+---------------------------------------------------------------------------
+
+by jzawadzki at 2014-12-12T09:11:51Z
+
+@javiereguiluz  - I thought about `str_replace` but wasn't sure if we wouldn't like to add any other changes to yaml files. If not, I agree that `str_replace` would be better
+@raulfraile ad 2 - I've done this as it was in SensioLabs Distribution Bundle https://github.com/sensiolabs/SensioDistributionBundle/blob/master/Configurator/Step/SecretStep.php
+
+---------------------------------------------------------------------------
+
+by xabbuh at 2014-12-12T15:35:32Z
+
+> Regarding how to handle with errors, I agree with you. Given that this is just a nice enhancement but it's not critical, I'd ignore any error. If we can updated the secret, do it; if we cannot for any reason, just ignore this step silently.
+
+I would at least print some short information (put into `<comment>...</comment>` for example).
+
+---------------------------------------------------------------------------
+
+by jzawadzki at 2014-12-12T23:26:31Z
+
+Thanks all for the feedback!
+
+I changed function which generates secret (@raulfraile please let me know if it's ok now)
+and removed `file_exists` check
+
+---------------------------------------------------------------------------
+
+by raulfraile at 2014-12-12T23:44:37Z
+
+@jzawadzki great job! Regarding the `generateRandomSecret()` method, I think it is ok now
+
+---------------------------------------------------------------------------
+
+by jzawadzki at 2014-12-13T00:43:30Z
+
+Thanks @raulfraile!
+I have also removed Yaml component dependency and use `str_replace` instead.
+
+---------------------------------------------------------------------------
+
+by javiereguiluz at 2014-12-14T10:51:12Z
+
+@jzawadzki I've tested this patch locally and it worked like a charm. The `parameters.yml` looked like this:
+
+```yaml
+# This file is auto-generated during the composer install
+parameters:
+    database_driver: pdo_mysql
+    database_host: 127.0.0.1
+    database_port: null
+    database_name: symfony
+    database_user: root
+    database_password: null
+    mailer_transport: smtp
+    mailer_host: 127.0.0.1
+    mailer_user: null
+    mailer_password: null
+    locale: en
+    secret: df62732461bddc9485c8a7827e8294b741f2cd10
+```
+
+---------------------------------------------------------------------------
+
+by javiereguiluz at 2014-12-15T16:38:09Z
+
+Almost everybody seems happy with this new feature and nobody reported any error. So I guess this is mergeable now.
+
+Thanks @jzawadzki!
+
+---------------------------------------------------------------------------
+
+by stof at 2014-12-15T18:56:25Z
+
+:+1:
+
+---------------------------------------------------------------------------
+
+by raulfraile at 2014-12-15T22:48:02Z
+
+It works fine for me:
+
+````
+# app/config/parameters.yml
+parameters:
+    ...
+    secret: cde8ff224c64cdb40ed06450e8b0623a2b1fab17
+````
