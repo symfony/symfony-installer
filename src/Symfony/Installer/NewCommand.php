@@ -407,6 +407,14 @@ class NewCommand extends Command
         $filename = $this->projectDir.'/app/config/parameters.yml';
 
         if (!is_writable($filename)) {
+            if ($this->output->isVerbose()) {
+                $this->output->writeln(sprintf(
+                    " <comment>[WARNING]</comment> The value of the <info>secret</info> configuration option cannot be updated because\n".
+                    " <comment>%s</comment> file is not writable.\n",
+                    $filename
+                ));
+            }
+
             return $this;
         }
 
@@ -427,6 +435,14 @@ class NewCommand extends Command
         $filename = $this->projectDir.'/composer.json';
 
         if (!is_writable($filename)) {
+            if ($this->output->isVerbose()) {
+                $this->output->writeln(sprintf(
+                    " <comment>[WARNING]</comment> Project name cannot be configured because\n".
+                    " <comment>%s</comment> file is not writable.\n",
+                    $filename
+                ));
+            }
+
             return $this;
         }
 
