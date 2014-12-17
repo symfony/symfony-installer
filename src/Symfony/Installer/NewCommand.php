@@ -410,7 +410,7 @@ class NewCommand extends Command
             if ($this->output->isVerbose()) {
                 $this->output->writeln(sprintf(
                     " <comment>[WARNING]</comment> The value of the <info>secret</info> configuration option cannot be updated because\n".
-                    " <comment>%s</comment> file is not writable.\n",
+                    " the <comment>%s</comment> file is not writable.\n",
                     $filename
                 ));
             }
@@ -438,7 +438,7 @@ class NewCommand extends Command
             if ($this->output->isVerbose()) {
                 $this->output->writeln(sprintf(
                     " <comment>[WARNING]</comment> Project name cannot be configured because\n".
-                    " <comment>%s</comment> file is not writable.\n",
+                    " the <comment>%s</comment> file is not writable.\n",
                     $filename
                 ));
             }
