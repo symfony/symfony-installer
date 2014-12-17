@@ -542,6 +542,8 @@ class NewCommand extends Command
 
         if (!empty($_SERVER['USERNAME'])) {
             $name = $_SERVER['USERNAME'].'/'.$name;
+        } elseif ($user = posix_getpwuid(posix_getuid())) {
+            $name = $user['name'].'/'.$name;
         } elseif (get_current_user()) {
             $name = get_current_user().'/'.$name;
         } else {
