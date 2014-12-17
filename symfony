@@ -23,6 +23,7 @@ $appVersion = '0.6.0-DEV';
 $app = new Symfony\Component\Console\Application('Symfony Installer', $appVersion);
 $app->add(new Symfony\Installer\AboutCommand($appVersion));
 $app->add(new Symfony\Installer\NewCommand());
+$app->add(new Symfony\Installer\VersionCommand());
 
 // enable the self-update command only when using the PHAR file
 if ('phar://' === substr(__DIR__, 0, 7)) {
