@@ -216,7 +216,7 @@ class NewCommand extends Command
                 $progressBar->start();
             }
 
-            $progressBar->setCurrent($downloaded);
+            $progressBar->setProgress($downloaded);
         };
 
         $client = new Client();
