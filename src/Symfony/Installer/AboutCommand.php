@@ -52,12 +52,12 @@ class AboutCommand extends Command
  To create a new project called <info>blog</info> in the current directory using
  the <info>latest stable version</info> of Symfony, execute the following command:
 
-   <comment>$ %s new blog</comment>
+   <comment>%s new blog</comment>
 
  To base your project on a <info>specific Symfony version</info>, append the version
  number at the end of the command:
 
-   <comment>$ %3\$s new blog 2.5.6</comment>
+   <comment>%3\$s new blog 2.5.6</comment>
 
 COMMAND_HELP;
 
@@ -71,7 +71,7 @@ COMMAND_HELP;
  New versions of the Symfony Installer are released regularly. To <info>update your
  installer</info> version, execute the following command:
 
-   <comment>$ %3\$s self-update</comment>
+   <comment>%3\$s self-update</comment>
 
 COMMAND_UPDATE_HELP;
 

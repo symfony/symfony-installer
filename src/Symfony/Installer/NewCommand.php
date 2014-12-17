@@ -234,7 +234,7 @@ class NewCommand extends Command
                     "Try the special \"latest\" version to install the latest stable Symfony release:\n".
                     '%s %s %s latest',
                     $this->version,
-                    defined('PHP_WINDOWS_VERSION_BUILD') ? 'php symfony.phar' : 'symfony',
+                    $_SERVER['PHP_SELF'],
                     $this->getName(),
                     $this->projectDir
                 ));
@@ -273,15 +273,13 @@ class NewCommand extends Command
         } catch (FileCorruptedException $e) {
             throw new \RuntimeException(sprintf(
                 "Symfony can't be installed because the downloaded package is corrupted.\n".
-                "To solve this issue, try installing Symfony again.\n".
-                "\$ %s",
+                "To solve this issue, try installing Symfony again.\n%s",
                 $this->getExecutedCommand()
             ));
         } catch (FileEmptyException $e) {
             throw new \RuntimeException(sprintf(
                 "Symfony can't be installed because the downloaded package is empty.\n".
-                "To solve this issue, try installing Symfony again.\n".
-                "\$ %s",
+                "To solve this issue, try installing Symfony again.\n%s",
                 $this->getExecutedCommand()
             ));
         } catch (TargetDirectoryNotWritableException $e) {
@@ -289,8 +287,7 @@ class NewCommand extends Command
                 "Symfony can't be installed because the installer doesn't have enough\n".
                 "permissions to uncompress and rename the package contents.\n".
                 "To solve this issue, check the permissions of the %s directory and\n".
-                "try installing Symfony again.\n",
-                "\$ %s",
+                "try installing Symfony again.\n%s",
                 getcwd(), $this->getExecutedCommand()
             ));
         } catch (\Exception $e) {
@@ -299,8 +296,7 @@ class NewCommand extends Command
                 "or because the installer doesn't have enough permissions to uncompress and\n".
                 "rename the package contents.\n".
                 "To solve this issue, check the permissions of the %s directory and\n".
-                "try installing Symfony again.\n",
-                "\$ %s",
+                "try installing Symfony again.\n%s",
                 getcwd(), $this->getExecutedCommand()
             ));
         }
