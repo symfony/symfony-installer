@@ -1,0 +1,87 @@
+---------------------------------------------------------------------------
+
+by stof at 2014-12-17T08:36:28Z
+
+:+1:
+
+---------------------------------------------------------------------------
+
+by raulfraile at 2014-12-17T09:19:15Z
+
+:+1: Just a couple of **minor** suggestions:
+
+First, if the system user is different than the one used in projects, it can be annoying having to change it every time a project is created. Maybe supporting an environment variable could be useful and really easy to implement:
+
+```
+$ export SF_USERNAME="test"
+```
+
+```
+if (!empty($_ENV['SF_USERNAME'])) {
+    $name = $_ENV['SF_USERNAME'].'/'.$name;
+} elseif (!empty($_SERVER['USERNAME'])) {
+    $name = $_SERVER['USERNAME'].'/'.$name;
+}
+```
+
+Second, [posix_getpwuid()](http://php.net/manual/en/function.posix-getpwuid.php) could be used as well. [get_current_user()](http://php.net/manual/en/function.get-current-user.php) provides the user owning the current script, not the one running the process. POSIX functions are enabled by default.
+
+---------------------------------------------------------------------------
+
+by javiereguiluz at 2014-12-17T09:36:00Z
+
+I've added some additional messages for verbose mode only:
+
+```
+$ ./symfony new testing_errors_messages -v
+
+ Downloading Symfony...
+    4.89 MB/4.89 MB ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓  100%
+
+ Preparing project...
+
+ [WARNING] The value of the secret configuration option cannot be updated because
+ /Users/javier/sf/symfony-installer/testing_errors_messages/app/config/parameters.yml file is not writable.
+
+ [WARNING] Project name cannot be configured because
+ /Users/javier/sf/symfony-installer/testing_errors_messages/composer.json file is not writable.
+
+ ✔  Symfony 2.6.1 was successfully installed. Now you can:
+
+    * Change your current directory to /Users/javier/sf/symfony-installer/testing_errors_messages
+
+    * Configure your application in app/config/parameters.yml file.
+
+    * Run your application:
+        1. Execute the php app/console server:run command.
+        2. Browse to the http://localhost:8000 URL.
+
+    * Read the documentation at http://symfony.com/doc
+
+```
+
+I don't like displaying these messages out of the verbosity context because I consider them "soft errors" that can be ignored.
+
+---------------------------------------------------------------------------
+
+by javiereguiluz at 2014-12-17T09:42:15Z
+
+@raulfraile thanks for your comments. I like the idea of also using `posix_getpwuid()` to get the name of the user. However, I don't like the idea of using a new environment variable to set the name of the user. It looks to complicated to me.
+
+---------------------------------------------------------------------------
+
+by Pierstoval at 2014-12-17T09:44:49Z
+
+@javiereguiluz It can be good for companies or people that create many apps, by setting an environment var in all environments, any created project will use the "company name". Of course, it's kind of a little gadget, but it sounds good.
+
+---------------------------------------------------------------------------
+
+by raulfraile at 2014-12-17T10:02:34Z
+
+@javiereguiluz I think it could be useful, as @Pierstoval pointed out. But as I said, it's a minor suggestion and we don't really know how the installer is going to be used yet, so we can discuss it later if you prefer.
+
+---------------------------------------------------------------------------
+
+by javiereguiluz at 2014-12-17T10:08:58Z
+
+@Pierstoval @raulfraile I agree that this idea is useful, but I don't know if it's needed or if it will be used. As Raúl said, let's wait to see how people use this installer and then we'll adapt to them. For now, let's do the least amount of things possible.
