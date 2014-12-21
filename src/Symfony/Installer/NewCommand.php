@@ -68,6 +68,7 @@ class NewCommand extends Command
                 ->extract()
                 ->cleanUp()
                 ->updateParameters()
+                ->updateComposerJson()
                 ->checkSymfonyRequirements()
                 ->displayInstallationResult()
             ;
@@ -373,6 +374,85 @@ class NewCommand extends Command
     }
 
     /**
+     * Checks if environment meets symfony requirements
+     *
+     * @return NewCommand
+     */
+    private function checkSymfonyRequirements()
+    {
+        require $this->projectDir.'/app/SymfonyRequirements.php';
+        $symfonyRequirements = new \SymfonyRequirements();
+        $this->requirementsErrors = array();
+        foreach ($symfonyRequirements->getRequirements() as $req) {
+            if ($helpText = $this->getErrorMessage($req)) {
+                $this->requirementsErrors[] = $helpText;
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * Updates the Symfony parameters.yml file to replace default configuration
+     * values with better generated values.
+     *
+     * @return NewCommand
+     */
+    private function updateParameters()
+    {
+        $filename = $this->projectDir.'/app/config/parameters.yml';
+
+        if (!is_writable($filename)) {
+            if ($this->output->isVerbose()) {
+                $this->output->writeln(sprintf(
+                    " <comment>[WARNING]</comment> The value of the <info>secret</info> configuration option cannot be updated because\n".
+                    " the <comment>%s</comment> file is not writable.\n",
+                    $filename
+                ));
+            }
+
+            return $this;
+        }
+
+        $ret = str_replace('ThisTokenIsNotSoSecretChangeIt', $this->generateRandomSecret(), file_get_contents($filename));
+        file_put_contents($filename, $ret);
+
+        return $this;
+    }
+
+    /**
+     * Updates the composer.json file to provide better values for some of the
+     * default configuration values.
+     *
+     * @return NewCommand
+     */
+    private function updateComposerJson()
+    {
+        $filename = $this->projectDir.'/composer.json';
+
+        if (!is_writable($filename)) {
+            if ($this->output->isVerbose()) {
+                $this->output->writeln(sprintf(
+                    " <comment>[WARNING]</comment> Project name cannot be configured because\n".
+                    " the <comment>%s</comment> file is not writable.\n",
+                    $filename
+                ));
+            }
+
+            return $this;
+        }
+
+        $ret = str_replace(
+            '"name": "symfony/framework-standard-edition",',
+            sprintf('"name": "%s",', $this->generateComposerProjectName()),
+            file_get_contents($filename)
+        );
+        file_put_contents($filename, $ret);
+
+        return $this;
+    }
+
+    /**
      * Utility method to show the number of bytes in a readable format.
      *
      * @param int     $bytes The number of bytes to format
@@ -393,47 +473,11 @@ class NewCommand extends Command
     }
 
     /**
-     * Checks if environment meets symfony requirements
+     * Formats the error message contained in the given Requirement item
+     * using the optional line length provided.
      *
-     * @return NewCommand
+     * @return string
      */
-    private function checkSymfonyRequirements()
-    {
-        require $this->projectDir.'/app/SymfonyRequirements.php';
-        $symfonyRequirements = new \SymfonyRequirements();
-        $this->requirementsErrors = array();
-        foreach ($symfonyRequirements->getRequirements() as $req) {
-            if ($helpText = $this->getErrorMessage($req)) {
-                $this->requirementsErrors[] = $helpText;
-            }
-        }
-
-        return $this;
-    }
-
-    private function updateParameters()
-    {
-        $filename = $this->projectDir.'/app/config/parameters.yml';
-
-        if (!is_writable($filename)) {
-            return $this;
-        }
-
-        $ret = str_replace('ThisTokenIsNotSoSecretChangeIt', $this->generateRandomSecret(), file_get_contents($filename));
-        file_put_contents($filename, $ret);
-
-        return $this;
-    }
-
-    private function generateRandomSecret()
-    {
-        if (function_exists('openssl_random_pseudo_bytes')) {
-            return hash('sha1', openssl_random_pseudo_bytes(23));
-        }
-
-        return hash('sha1', uniqid(mt_rand(), true));
-    }
-
     private function getErrorMessage(\Requirement $requirement, $lineSize = 70)
     {
         if ($requirement->isFulfilled()) {
@@ -465,6 +509,45 @@ class NewCommand extends Command
                 return $package['version'];
             }
         }
+    }
+
+    /**
+     * Generates a good random value for Symfony's 'secret' option
+     *
+     * @return string
+     */
+    private function generateRandomSecret()
+    {
+        if (function_exists('openssl_random_pseudo_bytes')) {
+            return hash('sha1', openssl_random_pseudo_bytes(23));
+        }
+
+        return hash('sha1', uniqid(mt_rand(), true));
+    }
+
+    /**
+     * Generates a good Composer project name based on the application name
+     * and on the user name.
+     *
+     * @return string
+     */
+    private function generateComposerProjectName()
+    {
+        $name = preg_replace('{(?:([a-z])([A-Z])|([A-Z])([A-Z][a-z]))}', '\\1\\3-\\2\\4', $this->projectName);
+        $name = strtolower($name);
+
+        if (!empty($_SERVER['USERNAME'])) {
+            $name = $_SERVER['USERNAME'].'/'.$name;
+        } elseif ($user = posix_getpwuid(posix_getuid())) {
+            $name = $user['name'].'/'.$name;
+        } elseif (get_current_user()) {
+            $name = get_current_user().'/'.$name;
+        } else {
+            // package names must be in the format foo/bar
+            $name = $name.'/'.$name;
+        }
+
+        return $name;
     }
 
     /**
