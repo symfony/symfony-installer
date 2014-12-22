@@ -1,0 +1,27 @@
+language: php
+
+sudo: false
+
+php:
+  - 5.4
+  - 5.5
+  - 5.6
+  - hhvm-nightly
+
+env:
+  - dependencies=no
+
+matrix:
+  include:
+    - php: 5.4
+      env: dependencies=low
+    - php: 5.6
+      env: dependencies=high
+
+before_install:
+  - composer self-update
+
+install:
+  - if [ "$dependencies" = "low" ]; then composer update --prefer-source --prefer-lowest; fi;
+  - if [ "$dependencies" = "high" ]; then composer update --prefer-source; fi;
+  - if [ "$dependencies" = "no" ]; then composer install --prefer-source; fi;
