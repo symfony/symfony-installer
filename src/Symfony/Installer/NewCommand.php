@@ -7,6 +7,7 @@ use Distill\Exception\IO\Input\FileCorruptedException;
 use Distill\Exception\IO\Input\FileEmptyException;
 use Distill\Exception\IO\Output\TargetDirectoryNotWritableException;
 use Distill\Strategy\MinimumSize;
+use GuzzleHttp;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Message\Response;
@@ -122,9 +123,32 @@ class NewCommand extends Command
             return $this;
         }
 
-        // validate semver syntax
-        if (!preg_match('/^2\.\d\.\d{1,2}$/', $this->version)) {
-            throw new \RuntimeException('The Symfony version should be 2.N.M, where N = 0..9 and M = 0..99');
+        // validate server syntax
+        if (!preg_match('/^(2\.\d\.\d{1,2}|2\.\d)$/', $this->version)) {
+            throw new \RuntimeException('The Symfony version should be 2.N or 2.N.M, where N = 0..9 and M = 0..99');
+        }
+
+        if (preg_match('/^2\.\d$/', $this->version)) {
+            // Check if we have a minor version
+
+            $json = @file_get_contents('http://symfony.com/versions.json');
+
+            if (false !== $json) {
+                $versionsList = GuzzleHttp\json_decode($json, true);
+                if (isset($versionsList[$this->version]) && in_array($versionsList[$this->version], $versionsList['installable'])) {
+                    // Get the latest installable of the minor version the user asked
+                    $this->version = $versionsList[$this->version];
+                } else {
+                    throw new \RuntimeException(sprintf(
+                        "The selected version (%s) cannot be installed because it is not\n".
+                        "supported, or is considered as not installable for security reasons.\n".
+                        "To solve this issue, install Symfony with the latest available version by\n".
+                        "specifying no version, or simply using \"latest\" keyword as version name:\n%s",
+                        $this->version,
+                        $this->getExecutedCommand('latest')
+                    ));
+                }
+            }
         }
 
         // 2.0, 2.1, 2.2 and 2.4 cannot be installed because they are unmaintained
@@ -553,12 +577,12 @@ class NewCommand extends Command
     /**
      * Returns the executed command.
      *
+     * @param string $version A version to add to the command as example, if needed.
      * @return string
      */
-    private function getExecutedCommand()
+    private function getExecutedCommand($version = '')
     {
-        $version = '';
-        if ('latest' !== $this->version) {
+        if ('' === $version && 'latest' !== $this->version) {
             $version = $this->version;
         }
 
