@@ -92,7 +92,7 @@ COMMAND_UPDATE_HELP;
      */
     private function getExecutedCommand()
     {
-        $pathDirs = explode(':', $_SERVER['PATH']);
+        $pathDirs = preg_split('/[:;]/', $_SERVER['PATH']);
         $executedCommand = $_SERVER['PHP_SELF'];
         $executedCommandDir = dirname($executedCommand);
 
