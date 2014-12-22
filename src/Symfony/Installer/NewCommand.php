@@ -562,7 +562,7 @@ class NewCommand extends Command
             $version = $this->version;
         }
 
-        $pathDirs = preg_split('/[:;]/', $_SERVER['PATH']);
+        $pathDirs = explode(PATH_SEPARATOR, $_SERVER['PATH']);
         $executedCommand = $_SERVER['PHP_SELF'];
         $executedCommandDir = dirname($executedCommand);
 
