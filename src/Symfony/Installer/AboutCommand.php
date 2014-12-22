@@ -92,8 +92,14 @@ COMMAND_UPDATE_HELP;
      */
     private function getExecutedCommand()
     {
+        $pathDirs = explode(':', $_SERVER['PATH']);
         $executedCommand = $_SERVER['PHP_SELF'];
-        $executedCommand = preg_replace('~/usr/local/bin/~', '', $executedCommand);
+        $executedCommandDir = dirname($executedCommand);
+
+        if (in_array($executedCommandDir, $pathDirs)) {
+            $executedCommand = str_replace($executedCommandDir, '', $executedCommand);
+            $executedCommand = trim($executedCommand, DIRECTORY_SEPARATOR);
+        }
 
         return $executedCommand;
     }
