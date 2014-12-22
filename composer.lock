@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "897ddbf23ac73c1ce722aa54c5e447d9",
+    "hash": "f9aae5de37af72a1add0f2b92732ebdd",
     "packages": [
         {
             "name": "guzzlehttp/guzzle",
@@ -218,16 +218,16 @@
         },
         {
             "name": "raulfraile/distill",
-            "version": "v0.9.1",
+            "version": "v0.9.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/raulfraile/distill.git",
-                "reference": "1deeb843cc3f6ec2d832e7cd5f5934dc883bccb1"
+                "reference": "c5bf5a5c76dbf2d7287bdc6c8beda11d27139bca"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/raulfraile/distill/zipball/1deeb843cc3f6ec2d832e7cd5f5934dc883bccb1",
-                "reference": "1deeb843cc3f6ec2d832e7cd5f5934dc883bccb1",
+                "url": "https://api.github.com/repos/raulfraile/distill/zipball/c5bf5a5c76dbf2d7287bdc6c8beda11d27139bca",
+                "reference": "c5bf5a5c76dbf2d7287bdc6c8beda11d27139bca",
                 "shasum": ""
             },
             "require": {
@@ -282,7 +282,7 @@
                 "xz",
                 "zip"
             ],
-            "time": "2014-12-08 15:46:32"
+            "time": "2014-12-11 23:09:12"
         },
         {
             "name": "symfony/console",
@@ -441,6 +441,7 @@
     "minimum-stability": "stable",
     "stability-flags": [],
     "prefer-stable": false,
+    "prefer-lowest": false,
     "platform": {
         "php": ">=5.4.0"
     },
