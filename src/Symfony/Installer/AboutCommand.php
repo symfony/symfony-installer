@@ -81,7 +81,25 @@ COMMAND_UPDATE_HELP;
         $output->writeln(sprintf($commandHelp,
             $this->appVersion,
             str_repeat('=', 20 + strlen($this->appVersion)),
-            $_SERVER['PHP_SELF']
+            $this->getExecutedCommand()
         ));
+    }
+
+    /**
+     * Returns the executed command.
+     *
+     * @return string
+     */
+    private function getExecutedCommand()
+    {
+        $pathDirs = explode(PATH_SEPARATOR, $_SERVER['PATH']);
+        $executedCommand = $_SERVER['PHP_SELF'];
+        $executedCommandDir = dirname($executedCommand);
+
+        if (in_array($executedCommandDir, $pathDirs)) {
+            $executedCommand = basename($executedCommand);
+        }
+
+        return $executedCommand;
     }
 }
