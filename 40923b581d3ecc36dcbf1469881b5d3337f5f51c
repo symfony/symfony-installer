@@ -1,0 +1,33 @@
+---------------------------------------------------------------------------
+
+by xabbuh at 2014-12-18T13:58:11Z
+
+The issue will hopefully be fixed in the next distill release.
+
+Thanks to @Seldaek for noticing the issue and making me aware of the Composer config `conflict` section.
+
+---------------------------------------------------------------------------
+
+by stof at 2014-12-18T16:34:12Z
+
+It would be better to exclude them in the require directly rather than setting conflicts, because it will allow composer to exclude 0.9.3 and 0.9.4 before adding them to the solver rather than adding an extra conflict rule in the solver
+
+---------------------------------------------------------------------------
+
+by xabbuh at 2014-12-18T17:23:59Z
+
+@stof So, having `~0.9,<0.9.3,>0.9.4` is more efficient?
+
+---------------------------------------------------------------------------
+
+by stof at 2014-12-18T18:49:56Z
+
+@xabbuh what you are suggesting is broken, because you ask to be ``<0.9.3 AND >0.9.4``. The right way to write it would be ``~0.9,!=0.9.3,!=0.9.4``.
+
+And what is less efficient is having conflict rules to restrict your own require rule. Require rules are optimized by searching packages matching them and adding only these to the solver. Using a conflict rule, 0.9.3 and 0.9.4 would be added to the solver, and then other rules would be added to exclude them again, giving more work to the solver
+
+---------------------------------------------------------------------------
+
+by xabbuh at 2014-12-18T19:31:35Z
+
+@stof Thanks for your explanation and the insights of how Composer works. I updated the `require` section accordingly.
