@@ -562,6 +562,9 @@ class NewCommand extends Command
             $version = $this->version;
         }
 
-        return sprintf('%s new %s %s', $_SERVER['PHP_SELF'], $this->projectName, $version);
+        $executedCommand = $_SERVER['PHP_SELF'];
+        $executedCommand = preg_replace('~/usr/local/bin/~', '', $executedCommand);
+
+        return sprintf('%s new %s %s', $executedCommand, $this->projectName, $version);
     }
 }

@@ -81,7 +81,20 @@ COMMAND_UPDATE_HELP;
         $output->writeln(sprintf($commandHelp,
             $this->appVersion,
             str_repeat('=', 20 + strlen($this->appVersion)),
-            $_SERVER['PHP_SELF']
+            $this->getInstallerExecutable()
         ));
+    }
+
+    /**
+     * Returns the executed command.
+     *
+     * @return string
+     */
+    private function getInstallerExecutable()
+    {
+        $executedCommand = $_SERVER['PHP_SELF'];
+        $executedCommand = preg_replace('~/usr/local/bin/~', '', $executedCommand);
+
+        return $executedCommand;
     }
 }
