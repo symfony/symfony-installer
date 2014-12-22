@@ -97,8 +97,7 @@ COMMAND_UPDATE_HELP;
         $executedCommandDir = dirname($executedCommand);
 
         if (in_array($executedCommandDir, $pathDirs)) {
-            $executedCommand = str_replace($executedCommandDir, '', $executedCommand);
-            $executedCommand = trim($executedCommand, DIRECTORY_SEPARATOR);
+            $executedCommand = basename($executedCommand);
         }
 
         return $executedCommand;

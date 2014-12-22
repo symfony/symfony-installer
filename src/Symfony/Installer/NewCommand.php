@@ -567,8 +567,7 @@ class NewCommand extends Command
         $executedCommandDir = dirname($executedCommand);
 
         if (in_array($executedCommandDir, $pathDirs)) {
-            $executedCommand = str_replace($executedCommandDir, '', $executedCommand);
-            $executedCommand = trim($executedCommand, DIRECTORY_SEPARATOR);
+            $executedCommand = basename($executedCommand);
         }
 
         return sprintf('%s new %s %s', $executedCommand, $this->projectName, $version);
