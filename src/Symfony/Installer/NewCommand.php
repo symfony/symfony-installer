@@ -572,9 +572,10 @@ class NewCommand extends Command
      * @param string $version A version to add to the command as example, if needed.
      * @return string
      */
-    private function getExecutedCommand($version = '')
+    private function getExecutedCommand()
     {
-        if ('' === $version && 'latest' !== $this->version) {
+        $version = '';
+        if ('latest' !== $this->version) {
             $version = $this->version;
         }
 
