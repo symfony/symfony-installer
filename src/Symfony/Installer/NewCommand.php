@@ -128,25 +128,17 @@ class NewCommand extends Command
             throw new \RuntimeException('The Symfony version should be 2.N or 2.N.M, where N = 0..9 and M = 0..99');
         }
 
-        if (preg_match('/^2\.\d$/', $this->version)) {
+        if (preg_match('/^(2\.\d\.\d{1,2})|(2\.\d)$/', $this->version)) {
             // Check if we have a minor version
 
-            $json = @file_get_contents('http://symfony.com/versions.json');
+            $client = new Client();
+            $json = $client->get('http://symfony.com/versions.json')->getBody()->getContents();
 
-            if (false !== $json) {
+            if ($json) {
                 $versionsList = GuzzleHttp\json_decode($json, true);
-                if (isset($versionsList[$this->version]) && in_array($versionsList[$this->version], $versionsList['installable'])) {
+                if (isset($versionsList[$this->version])) {
                     // Get the latest installable of the minor version the user asked
                     $this->version = $versionsList[$this->version];
-                } else {
-                    throw new \RuntimeException(sprintf(
-                        "The selected version (%s) cannot be installed because it is not\n".
-                        "supported, or is considered as not installable for security reasons.\n".
-                        "To solve this issue, install Symfony with the latest available version by\n".
-                        "specifying no version, or simply using \"latest\" keyword as version name:\n%s",
-                        $this->version,
-                        $this->getExecutedCommand('latest')
-                    ));
                 }
             }
         }
@@ -265,7 +257,7 @@ class NewCommand extends Command
                 ));
             } else {
                 throw new \RuntimeException(sprintf(
-                    "The selected version (%s) couldn\'t be downloaded because of the following error:\n%s",
+                    "The selected version (%s) couldn't be downloaded because of the following error:\n%s",
                     $this->version,
                     $e->getMessage()
                 ));
