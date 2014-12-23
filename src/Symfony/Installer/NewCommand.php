@@ -124,12 +124,12 @@ class NewCommand extends Command
         }
 
         // validate server syntax
-        if (!preg_match('/^(2\.\d\.\d{1,2}|2\.\d)$/', $this->version)) {
+        if (!preg_match('/^2\.\d(\.\d{1,2})?$/', $this->version)) {
             throw new \RuntimeException('The Symfony version should be 2.N or 2.N.M, where N = 0..9 and M = 0..99');
         }
 
-        if (preg_match('/^(2\.\d\.\d{1,2})|(2\.\d)$/', $this->version)) {
-            // Check if we have a minor version
+        if (preg_match('/^2\.\d$/', $this->version)) {
+            // Check if we have a minor version in order to retrieve the last patch from symfony.com
 
             $client = new Client();
             $json = $client->get('http://symfony.com/versions.json')->getBody()->getContents();
@@ -137,7 +137,7 @@ class NewCommand extends Command
             if ($json) {
                 $versionsList = GuzzleHttp\json_decode($json, true);
                 if (isset($versionsList[$this->version])) {
-                    // Get the latest installable of the minor version the user asked
+                    // Get the latest patch of the minor version the user asked
                     $this->version = $versionsList[$this->version];
                 }
             }
@@ -569,7 +569,6 @@ class NewCommand extends Command
     /**
      * Returns the executed command.
      *
-     * @param string $version A version to add to the command as example, if needed.
      * @return string
      */
     private function getExecutedCommand()
