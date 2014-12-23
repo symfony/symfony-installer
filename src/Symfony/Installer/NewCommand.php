@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of the Symfony Installer package.
+ *
+ * (c) Fabien Potencier <fabien@symfony.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace Symfony\Installer;
 
 use Distill\Distill;
@@ -83,6 +92,8 @@ class NewCommand extends Command
      * given directory.
      *
      * @return NewCommand
+     *
+     * @throws \RuntimeException if a project with the same does already exist
      */
     private function checkProjectName()
     {
@@ -170,8 +181,7 @@ class NewCommand extends Command
      *
      * @return NewCommand
      *
-     * @throws \Distill\Exception\FormatGuesserRequiredException
-     * @throws \Distill\Exception\StrategyRequiredException
+     * @throws \RuntimeException if the Symfony archive could not be downloaded
      */
     private function download()
     {
@@ -263,6 +273,8 @@ class NewCommand extends Command
      * native operating system commands if available or PHP code otherwise.
      *
      * @return NewCommand
+     *
+     * @throws \RuntimeException if the downloaded archive could not be extracted
      */
     private function extract()
     {
@@ -475,6 +487,9 @@ class NewCommand extends Command
     /**
      * Formats the error message contained in the given Requirement item
      * using the optional line length provided.
+     *
+     * @param \Requirement $requirement The Symfony requirements
+     * @param int          $lineSize    The maximum line length
      *
      * @return string
      */
