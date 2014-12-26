@@ -7,7 +7,6 @@ use Distill\Exception\IO\Input\FileCorruptedException;
 use Distill\Exception\IO\Input\FileEmptyException;
 use Distill\Exception\IO\Output\TargetDirectoryNotWritableException;
 use Distill\Strategy\MinimumSize;
-use GuzzleHttp;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Message\Response;
@@ -132,14 +131,11 @@ class NewCommand extends Command
             // Check if we have a minor version in order to retrieve the last patch from symfony.com
 
             $client = new Client();
-            $json = $client->get('http://symfony.com/versions.json')->getBody()->getContents();
+            $versionsList = $client->get('http://symfony.com/versions.json')->json();
 
-            if ($json) {
-                $versionsList = GuzzleHttp\json_decode($json, true);
-                if (isset($versionsList[$this->version])) {
-                    // Get the latest patch of the minor version the user asked
-                    $this->version = $versionsList[$this->version];
-                }
+            if (isset($versionsList[$this->version])) {
+                // Get the latest patch of the minor version the user asked
+                $this->version = $versionsList[$this->version];
             }
         }
 
