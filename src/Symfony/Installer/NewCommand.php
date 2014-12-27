@@ -133,9 +133,19 @@ class NewCommand extends Command
             $client = new Client();
             $versionsList = $client->get('http://symfony.com/versions.json')->json();
 
-            if (isset($versionsList[$this->version])) {
+            if ($versionsList && isset($versionsList[$this->version])) {
                 // Get the latest patch of the minor version the user asked
                 $this->version = $versionsList[$this->version];
+            } elseif ($versionsList && !isset($versionsList[$this->version])) {
+                throw new \RuntimeException(sprintf(
+                    "The selected branch (%s) does not exist, or is not maintained.\n".
+                    "To solve this issue, install Symfony with the latest stable release:\n\n".
+                    '%s %s %s latest',
+                    $this->version,
+                    $_SERVER['PHP_SELF'],
+                    $this->getName(),
+                    $this->projectDir
+                ));
             }
         }
 
