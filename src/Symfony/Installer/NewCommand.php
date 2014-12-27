@@ -123,7 +123,7 @@ class NewCommand extends Command
         }
 
         // validate server syntax
-        if (!preg_match('/^2\.\d(\.\d{1,2})?$/', $this->version)) {
+        if (!preg_match('/^2\.\d(?:\.\d{1,2})?$/', $this->version)) {
             throw new \RuntimeException('The Symfony version should be 2.N or 2.N.M, where N = 0..9 and M = 0..99');
         }
 
