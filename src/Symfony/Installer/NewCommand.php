@@ -140,7 +140,7 @@ class NewCommand extends Command
                 throw new \RuntimeException(sprintf(
                     "The selected branch (%s) does not exist, or is not maintained.\n".
                     "To solve this issue, install Symfony with the latest stable release:\n\n".
-                    '%s %s %s latest',
+                    '%s %s %s',
                     $this->version,
                     $_SERVER['PHP_SELF'],
                     $this->getName(),
