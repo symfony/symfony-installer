@@ -54,6 +54,11 @@ class AboutCommand extends Command
 
    <comment>%s new blog</comment>
 
+ To base your project on a <info>specific Symfony branch</info>, append the branch
+ number at the end of the command:
+
+   <comment>%3\$s new blog 2.3</comment>
+
  To base your project on a <info>specific Symfony version</info>, append the version
  number at the end of the command:
 

@@ -45,9 +45,24 @@ $ symfony new my_project
 $ php symfony.phar new my_project
 ```
 
-**2. Start a new project based on a specific Symfony version**
+**2. Start a new project based on a specific Symfony branch**
 
-Execute the `new` command and provide the name of your project as the first argument followed by the needed version as the second argument:
+Execute the `new` command and provide the name of your project as the first
+argument and the branch number as the second argument. The installer will
+automatically select the most recent version available for the given branch:
+
+```bash
+# Linux, Mac OS X
+$ symfony new my_project 2.3
+
+# Windows
+$ php symfony.phar new my_project 2.3
+```
+
+**3. Start a new project based on a specific Symfony version**
+
+Execute the `new` command and provide the name of your project as the first
+argument and the exact Symfony version as the second argument:
 
 ```bash
 # Linux, Mac OS X
