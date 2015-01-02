@@ -133,9 +133,31 @@ class NewCommand extends Command
             return $this;
         }
 
-        // validate semver syntax
-        if (!preg_match('/^2\.\d\.\d{1,2}$/', $this->version)) {
-            throw new \RuntimeException('The Symfony version should be 2.N.M, where N = 0..9 and M = 0..99');
+        // validate server syntax
+        if (!preg_match('/^2\.\d(?:\.\d{1,2})?$/', $this->version)) {
+            throw new \RuntimeException('The Symfony version should be 2.N or 2.N.M, where N = 0..9 and M = 0..99');
+        }
+
+        if (preg_match('/^2\.\d$/', $this->version)) {
+            // Check if we have a minor version in order to retrieve the last patch from symfony.com
+
+            $client = new Client();
+            $versionsList = $client->get('http://symfony.com/versions.json')->json();
+
+            if ($versionsList && isset($versionsList[$this->version])) {
+                // Get the latest patch of the minor version the user asked
+                $this->version = $versionsList[$this->version];
+            } elseif ($versionsList && !isset($versionsList[$this->version])) {
+                throw new \RuntimeException(sprintf(
+                    "The selected branch (%s) does not exist, or is not maintained.\n".
+                    "To solve this issue, install Symfony with the latest stable release:\n\n".
+                    '%s %s %s',
+                    $this->version,
+                    $_SERVER['PHP_SELF'],
+                    $this->getName(),
+                    $this->projectDir
+                ));
+            }
         }
 
         // 2.0, 2.1, 2.2 and 2.4 cannot be installed because they are unmaintained
@@ -251,7 +273,7 @@ class NewCommand extends Command
                 ));
             } else {
                 throw new \RuntimeException(sprintf(
-                    "The selected version (%s) couldn\'t be downloaded because of the following error:\n%s",
+                    "The selected version (%s) couldn't be downloaded because of the following error:\n%s",
                     $this->version,
                     $e->getMessage()
                 ));
