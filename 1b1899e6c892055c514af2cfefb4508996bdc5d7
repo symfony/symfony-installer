@@ -1,0 +1,44 @@
+---------------------------------------------------------------------------
+
+by Pierstoval at 2014-12-26T19:57:05Z
+
+Voilà ! Relied on the `json()` method from the `ResponseInterface`, in order to facilitate the modification of the Guzzle's Response.
+
+I think we're good for this issue, aren't we ?
+
+---------------------------------------------------------------------------
+
+by Pierstoval at 2014-12-27T09:30:07Z
+
+Fixed @stof's note about the regexp :)
+
+---------------------------------------------------------------------------
+
+by xabbuh at 2014-12-27T09:33:53Z
+
+We should probably provide a sensible error message if the installer wasn't able to find the latest patch version.
+
+---------------------------------------------------------------------------
+
+by Pierstoval at 2014-12-27T17:57:04Z
+
+@xabbuh Here it is :) I added the message only when `$versionsList` is not empty, because if it is, it means that Guzzle couldn't connect to `symfony.com`, so the user won't be able to download Symfony anyway.
+
+---------------------------------------------------------------------------
+
+by Pierstoval at 2015-01-02T14:18:30Z
+
+Hi @xabbuh , is this PR ok for merging ? :smile:
+
+---------------------------------------------------------------------------
+
+by xabbuh at 2015-01-02T14:20:58Z
+
+@Pierstoval I'm not the one to decide, but to me it looks ready. :)
+
+---------------------------------------------------------------------------
+
+by Pierstoval at 2015-01-02T14:22:24Z
+
+Fine, thanks ! We'll just wait for it to be merged, I think it's an awesome feature !
+I just installed a new SF2.6 app some days ago and was surprised that I couldn't do "new app/ 2.6" , when I remembered that it was only available in my local machine :laughing:
