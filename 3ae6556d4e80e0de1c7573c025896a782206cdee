@@ -1,0 +1,5 @@
+---------------------------------------------------------------------------
+
+by xabbuh at 2015-01-02T13:53:33Z
+
+Actually, I first just wanted to update the year in the license, but then I noticed that there was no license file at all. Choosing the MIT license here was done on purpose given that this is already stated in the `composer.json` file and that it is consistent with the rest of the Symfony codebase.
