@@ -489,7 +489,7 @@ class NewCommand extends Command
     /**
      * Utility method to show the number of bytes in a readable format.
      *
-     * @param int     $bytes The number of bytes to format
+     * @param int $bytes The number of bytes to format
      *
      * @return string The human readable string of bytes (e.g. 4.32MB)
      */
@@ -537,6 +537,12 @@ class NewCommand extends Command
             $cmdInfo = fread($cmdHandler, 2096);
             pclose($cmdHandler);
             $cmdInfo = explode("\n", $cmdInfo);
+            for ($i = 0; $i < count($cmdInfo); $i++) {
+                if (trim(substr($cmdInfo[$i], -4, 3)) == "CON") {
+                    $cols = intval(trim(substr($cmdInfo[$i+3], -4, 4)));
+                    break;
+                }
+            }
             $cols = intval(trim(substr($cmdInfo[9], -4, 4)));
         } else {
             $cols = exec('tput cols');
