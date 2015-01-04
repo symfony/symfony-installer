@@ -537,13 +537,13 @@ class NewCommand extends Command
             $cmdInfo = fread($cmdHandler, 2096);
             pclose($cmdHandler);
             $cmdInfo = explode("\n", $cmdInfo);
+            $cols = 80;
             for ($i = 0; $i < count($cmdInfo); $i++) {
                 if (trim(substr($cmdInfo[$i], -4, 3)) == "CON") {
                     $cols = intval(trim(substr($cmdInfo[$i+3], -4, 4)));
                     break;
                 }
             }
-            $cols = intval(trim(substr($cmdInfo[9], -4, 4)));
         } else {
             $cols = exec('tput cols');
         }
