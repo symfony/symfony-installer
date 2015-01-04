@@ -533,7 +533,7 @@ class NewCommand extends Command
     {
         $cols;
         if (defined('PHP_WINDOWS_VERSION_BUILD')) {
-            $cmdHandler = popen('more', 'r');
+            $cmdHandler = popen('mode', 'r');
             $cmdInfo = fread($cmdHandler, 2096);
             pclose($cmdHandler);
             $cmdInfo = explode("\n", $cmdInfo);
