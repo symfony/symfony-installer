@@ -509,14 +509,14 @@ class NewCommand extends Command
     /**
      * Generates the suggested width of the progress bar, based on terminal
      * width.
-     * 
+     *
      * @return int
      */
     private function suggestProgressBarWidth()
     {
         $cols = (!defined('PHP_WINDOWS_VERSION_BUILD')) ? exec('tput cols') : 0;
 
-        if($cols >= 87) {
+        if ($cols >= 87) {
             return 60;
         } else {
             return $cols - 27;
@@ -526,7 +526,7 @@ class NewCommand extends Command
     /**
      * Generates a responsive format for the progress bar, based on terminal
      * width.
-     * 
+     *
      * @return string
      */
     private function suggestProgressBarFormat()
