@@ -236,9 +236,9 @@ class NewCommand extends Command
                 });
 
                 $progressBar = new ProgressBar($this->output, $size);
-                $progressBar->setFormat('%current%/%max% %bar%  %percent:3s%%');
+                $progressBar->setFormat($this->suggestProgressBarFormat());
                 $progressBar->setRedrawFrequency(max(1, floor($size / 1000)));
-                $progressBar->setBarWidth(60);
+                $progressBar->setBarWidth($this->suggestProgressBarWidth());
 
                 if (!defined('PHP_WINDOWS_VERSION_BUILD')) {
                     $progressBar->setEmptyBarCharacter('░'); // light shade character \u2591
@@ -504,6 +504,49 @@ class NewCommand extends Command
         $bytes /= pow(1024, $pow);
 
         return number_format($bytes, 2).' '.$units[$pow];
+    }
+
+    /**
+     * Generates the suggested width of the progress bar, based on terminal
+     * width.
+     * 
+     * @return int
+     */
+    private function suggestProgressBarWidth()
+    {
+        $cols = (!defined('PHP_WINDOWS_VERSION_BUILD')) ? exec('tput cols') : 0;
+
+        if($cols >= 87) {
+            return 60;
+        } else {
+            return $cols - 27;
+        }
+    }
+
+    /**
+     * Generates a responsive format for the progress bar, based on terminal
+     * width.
+     * 
+     * @return string
+     */
+    private function suggestProgressBarFormat()
+    {
+        $cols;
+        if (defined('PHP_WINDOWS_VERSION_BUILD')) {
+            $cmdHandler = popen('more', 'r');
+            $cmdInfo = fread($cmdHandler, 2096);
+            pclose($cmdHandler);
+            $cmdInfo = explode("\n", $cmdInfo);
+            $cols = intval(trim(substr($cmdInfo[9], -4, 4)));
+        } else {
+            $cols = exec('tput cols');
+        }
+
+        if ($cols >= 30) {
+            return '%current%/%max% %bar%  %percent:3s%%';
+        } else {
+            return '%current%/%max% %percent:3s%%';
+        }
     }
 
     /**
