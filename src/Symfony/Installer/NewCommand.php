@@ -97,7 +97,7 @@ class NewCommand extends Command
      */
     private function checkProjectName()
     {
-        if (is_dir($this->projectDir)) {
+        if (is_dir($this->projectDir) && !$this->isEmptyDirectory($this->projectDir)) {
             throw new \RuntimeException(sprintf(
                 "There is already a '%s' project in this directory (%s).\n".
                 "Change your project name or create it in another directory.",
@@ -608,5 +608,16 @@ class NewCommand extends Command
         }
 
         return sprintf('%s new %s %s', $executedCommand, $this->projectName, $version);
+    }
+
+    /**
+     * Checks whether the given directory is empty or not.
+     *
+     * @param  string  $dir the path of the directory to check
+     * @return boolean      True if the directory is empty. False otherwise.
+     */
+    private function isEmptyDirectory($dir)
+    {
+        return 0 === count(glob($dir.'/*', GLOB_NOSORT));
     }
 }
