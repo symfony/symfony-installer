@@ -614,10 +614,12 @@ class NewCommand extends Command
      * Checks whether the given directory is empty or not.
      *
      * @param  string  $dir the path of the directory to check
-     * @return boolean      True if the directory is empty. False otherwise.
+     * @return bool         True if the directory is empty. False otherwise.
      */
     private function isEmptyDirectory($dir)
     {
-        return 0 === count(glob($dir.'/*', GLOB_NOSORT));
+        // glob() cannot be used because it doesn't take into account hidden files
+        // scandir() returns '.'  and '..'  for and empty dir
+        return 2 === count(scandir($dir.'/'));
     }
 }
