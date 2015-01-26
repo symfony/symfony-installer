@@ -614,7 +614,7 @@ class NewCommand extends Command
      * Checks whether the given directory is empty or not.
      *
      * @param  string  $dir the path of the directory to check
-     * @return bool         True if the directory is empty. False otherwise.
+     * @return bool
      */
     private function isEmptyDirectory($dir)
     {
