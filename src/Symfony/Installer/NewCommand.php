@@ -619,7 +619,7 @@ class NewCommand extends Command
     private function isEmptyDirectory($dir)
     {
         // glob() cannot be used because it doesn't take into account hidden files
-        // scandir() returns '.'  and '..'  for and empty dir
+        // scandir() returns '.'  and '..'  for an empty dir
         return 2 === count(scandir($dir.'/'));
     }
 }
