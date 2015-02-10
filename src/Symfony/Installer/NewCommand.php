@@ -359,17 +359,12 @@ class NewCommand extends Command
         $this->fs->remove(dirname($this->compressedFilePath));
 
         try {
-            $this->fs->remove(array(
-                $this->projectDir.'/LICENSE',
-                $this->projectDir.'/UPGRADE.md',
-                $this->projectDir.'/UPGRADE-2.2.md',
-                $this->projectDir.'/UPGRADE-2.3.md',
-                $this->projectDir.'/UPGRADE-2.4.md',
-                $this->projectDir.'/UPGRADE-2.5.md',
-                $this->projectDir.'/UPGRADE-2.6.md',
-                $this->projectDir.'/UPGRADE-2.7.md',
-                $this->projectDir.'/UPGRADE-3.0.md',
-            ));
+            $commonFiles = array($this->projectDir.'/LICENSE', $this->projectDir.'/UPGRADE.md');
+            $upgradeFiles = glob($this->projectDir.'/UPGRADE-*.*.md');
+            $changelogFiles = glob($this->projectDir.'/CHANGELOG-*.*.md');
+
+            $filesToRemove = array_merge($commonFiles, $upgradeFiles, $changelogFiles);
+            $this->fs->remove($filesToRemove);
 
             $now = new \DateTime('now');
             $this->fs->dumpFile(
