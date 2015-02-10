@@ -366,11 +366,8 @@ class NewCommand extends Command
             $filesToRemove = array_merge($commonFiles, $upgradeFiles, $changelogFiles);
             $this->fs->remove($filesToRemove);
 
-            $now = new \DateTime('now');
-            $this->fs->dumpFile(
-                $this->projectDir.'/README.md',
-                sprintf("%s\n%s\n\nA Symfony project created on %s.\n", $this->projectName, str_repeat('=', strlen($this->projectName)), $now->format('F j, Y, g:i a'))
-            );
+            $readmeContents = sprintf("%s\n%s\n\nA Symfony project created on %s.\n", $this->projectName, str_repeat('=', strlen($this->projectName)), date('F j, Y, g:i a'));
+            $this->fs->dumpFile($this->projectDir.'/README.md', $readmeContents);
         } catch (\Exception $e) {
             // don't throw an exception in case any of the Symfony-related files cannot
             // be removed, because this is just an enhancement, not something mandatory
