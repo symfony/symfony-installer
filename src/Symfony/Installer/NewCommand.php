@@ -78,6 +78,7 @@ class NewCommand extends Command
                 ->cleanUp()
                 ->updateParameters()
                 ->updateComposerJson()
+                ->createGitIgnore()
                 ->checkSymfonyRequirements()
                 ->displayInstallationResult()
             ;
@@ -348,13 +349,38 @@ class NewCommand extends Command
 
     /**
      * Removes all the temporary files and directories created to
-     * download and extract Symfony.
+     * download the project and removes Symfony-related files that don't make
+     * sense in a proprietary project.
      *
      * @return NewCommand
      */
     private function cleanUp()
     {
         $this->fs->remove(dirname($this->compressedFilePath));
+
+        try {
+            $this->fs->remove(array(
+                $this->projectDir.'/LICENSE',
+                $this->projectDir.'/UPGRADE.md',
+                $this->projectDir.'/UPGRADE-2.2.md',
+                $this->projectDir.'/UPGRADE-2.3.md',
+                $this->projectDir.'/UPGRADE-2.4.md',
+                $this->projectDir.'/UPGRADE-2.5.md',
+                $this->projectDir.'/UPGRADE-2.6.md',
+                $this->projectDir.'/UPGRADE-2.7.md',
+                $this->projectDir.'/UPGRADE-3.0.md',
+            ));
+
+            $now = new \DateTime('now');
+            $this->fs->dumpFile(
+                $this->projectDir.'/README.md',
+                sprintf("%s\n%s\n\nA Symfony project created on %s.\n", $this->projectName, str_repeat('=', strlen($this->projectName)), $now->format('F j, Y, g:i a'))
+            );
+        } catch (\Exception $e) {
+            // don't throw an exception in case any of the Symfony-related files cannot
+            // be removed, because this is just an enhancement, not something mandatory
+            // for the project
+        }
 
         return $this;
     }
@@ -476,12 +502,46 @@ class NewCommand extends Command
             return $this;
         }
 
-        $ret = str_replace(
-            '"name": "symfony/framework-standard-edition",',
-            sprintf('"name": "%s",', $this->generateComposerProjectName()),
-            file_get_contents($filename)
+        $contents = json_decode(file_get_contents($filename), true);
+
+        $contents['name'] = $this->generateComposerProjectName();
+        $contents['license'] = 'proprietary';
+        unset($contents['description']);
+        unset($contents['extra']['branch-alias']);
+
+        file_put_contents($filename, json_encode($contents, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES)."\n");
+
+        return $this;
+    }
+
+    /**
+     * Creates the appropriate .gitignore file for a Symfony project.
+     *
+     * @return NewCommand
+     */
+    private function createGitIgnore()
+    {
+        $gitIgnoreEntries = array(
+            '/app/bootstrap.php.cache',
+            '/app/cache/*',
+            '!app/cache/.gitkeep',
+            '/app/config/parameters.yml',
+            '/app/logs/*',
+            '!app/logs/.gitkeep',
+            '/app/phpunit.xml',
+            '/bin/',
+            '/build/',
+            '/composer.phar',
+            '/vendor/',
+            '/web/bundles/',
         );
-        file_put_contents($filename, $ret);
+
+        try {
+            $this->fs->dumpFile($this->projectDir.'/.gitignore', implode("\n", $gitIgnoreEntries)."\n");
+        } catch (\Exception $e) {
+            // don't throw an exception in case the .gitignore file cannot be created,
+            // because this is just an enhancement, not something mandatory for the project
+        }
 
         return $this;
     }
