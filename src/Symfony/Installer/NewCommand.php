@@ -498,8 +498,14 @@ class NewCommand extends Command
 
         $contents['name'] = $this->generateComposerProjectName();
         $contents['license'] = 'proprietary';
-        unset($contents['description']);
-        unset($contents['extra']['branch-alias']);
+
+        if (isset($contents['description'])) {
+            unset($contents['description']);
+        }
+
+        if (isset($contents['extra']['branch-alias'])) {
+            unset($contents['extra']['branch-alias']);
+        }
 
         file_put_contents($filename, json_encode($contents, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES)."\n");
 
