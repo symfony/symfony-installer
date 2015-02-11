@@ -359,11 +359,11 @@ class NewCommand extends Command
         $this->fs->remove(dirname($this->compressedFilePath));
 
         try {
-            $commonFiles = array($this->projectDir.'/LICENSE', $this->projectDir.'/UPGRADE.md');
-            $upgradeFiles = glob($this->projectDir.'/UPGRADE-*.*.md');
-            $changelogFiles = glob($this->projectDir.'/CHANGELOG-*.*.md');
+            $licenseFile = array($this->projectDir.'/LICENSE');
+            $upgradeFiles = glob($this->projectDir.'/UPGRADE*.md');
+            $changelogFiles = glob($this->projectDir.'/CHANGELOG*.md');
 
-            $filesToRemove = array_merge($commonFiles, $upgradeFiles, $changelogFiles);
+            $filesToRemove = array_merge($licenseFile, $upgradeFiles, $changelogFiles);
             $this->fs->remove($filesToRemove);
 
             $readmeContents = sprintf("%s\n%s\n\nA Symfony project created on %s.\n", $this->projectName, str_repeat('=', strlen($this->projectName)), date('F j, Y, g:i a'));
