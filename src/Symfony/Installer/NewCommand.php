@@ -16,7 +16,7 @@ use Distill\Exception\IO\Input\FileCorruptedException;
 use Distill\Exception\IO\Input\FileEmptyException;
 use Distill\Exception\IO\Output\TargetDirectoryNotWritableException;
 use Distill\Strategy\MinimumSize;
-use GuzzleHttp\Client;
+use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Message\Response;
 use GuzzleHttp\Subscriber\Progress\Progress;
@@ -36,6 +36,16 @@ use Symfony\Component\Filesystem\Filesystem;
 class NewCommand extends Command
 {
     /**
+     * @var Distill
+     */
+    private $distill;
+
+    /**
+     * @var ClientInterface
+     */
+    private $client;
+
+    /**
      * @var Filesystem
      */
     private $fs;
@@ -49,6 +59,14 @@ class NewCommand extends Command
      * @var OutputInterface
      */
     private $output;
+
+    public function __construct(Distill $distill, ClientInterface $client)
+    {
+        parent::__construct();
+
+        $this->distill = $distill;
+        $this->client = $client;
+    }
 
     protected function configure()
     {
@@ -142,8 +160,7 @@ class NewCommand extends Command
         if (preg_match('/^2\.\d$/', $this->version)) {
             // Check if we have a minor version in order to retrieve the last patch from symfony.com
 
-            $client = new Client();
-            $versionsList = $client->get('http://symfony.com/versions.json')->json();
+            $versionsList = $this->client->get('http://symfony.com/versions.json')->json();
 
             if ($versionsList && isset($versionsList[$this->version])) {
                 // Get the latest patch of the minor version the user asked
@@ -211,9 +228,8 @@ class NewCommand extends Command
         $this->output->writeln("\n Downloading Symfony...");
 
         // decide which is the best compressed version to download
-        $distill = new Distill();
         $baseName = 'http://symfony.com/download?v=Symfony_Standard_Vendors_'.$this->version;
-        $symfonyArchiveFile = $distill
+        $symfonyArchiveFile = $this->distill
             ->getChooser()
             ->setStrategy(new MinimumSize())
             ->addFilesWithDifferentExtensions($baseName, ['zip', 'tgz'])
@@ -253,14 +269,13 @@ class NewCommand extends Command
             $progressBar->setProgress($downloaded);
         };
 
-        $client = new Client();
-        $client->getEmitter()->attach(new Progress(null, $downloadCallback));
+        $this->client->getEmitter()->attach(new Progress(null, $downloadCallback));
 
         // store the file in a temporary hidden directory with a random name
         $this->compressedFilePath = getcwd().DIRECTORY_SEPARATOR.'.'.uniqid(time()).DIRECTORY_SEPARATOR.'symfony.'.pathinfo($symfonyArchiveFile, PATHINFO_EXTENSION);
 
         try {
-            $response = $client->get($symfonyArchiveFile);
+            $response = $this->client->get($symfonyArchiveFile);
         } catch (ClientException $e) {
             if ($e->getCode() === 403 || $e->getCode() === 404) {
                 throw new \RuntimeException(sprintf(
@@ -304,8 +319,7 @@ class NewCommand extends Command
         $this->output->writeln(" Preparing project...\n");
 
         try {
-            $distill = new Distill();
-            $extractionSucceeded = $distill->extractWithoutRootDirectory($this->compressedFilePath, $this->projectDir);
+            $extractionSucceeded = $this->distill->extractWithoutRootDirectory($this->compressedFilePath, $this->projectDir);
         } catch (FileCorruptedException $e) {
             throw new \RuntimeException(sprintf(
                 "Symfony can't be installed because the downloaded package is corrupted.\n".
