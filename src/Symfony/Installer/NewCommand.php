@@ -528,7 +528,6 @@ class NewCommand extends Command
             '!app/logs/.gitkeep',
             '/app/phpunit.xml',
             '/bin/',
-            '/build/',
             '/composer.phar',
             '/vendor/',
             '/web/bundles/',
