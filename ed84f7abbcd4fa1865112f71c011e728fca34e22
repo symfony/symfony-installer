@@ -1,0 +1,29 @@
+---------------------------------------------------------------------------
+
+by stof at 2015-02-10T09:53:58Z
+
+couldn't this been done when generating the archives ?
+
+---------------------------------------------------------------------------
+
+by javiereguiluz at 2015-02-10T09:55:06Z
+
+@stof at first that was the idea, but I think it's easier and more convenient to do it with the installer. For example, this allows us to easily create a `README.md` file with the name of the project being created.
+
+---------------------------------------------------------------------------
+
+by javiereguiluz at 2015-02-10T10:18:20Z
+
+I've refactored the code to use `glob()` to detect the `UPGRADE` and `CHANGELOG` files to remove.
+
+---------------------------------------------------------------------------
+
+by romqin at 2015-02-10T10:54:38Z
+
+:+1:
+
+---------------------------------------------------------------------------
+
+by javiereguiluz at 2015-02-11T07:40:54Z
+
+I made some minor changes to address your comments. This PR is ready for the final review before merging it. Thanks.
