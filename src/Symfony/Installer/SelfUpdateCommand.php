@@ -37,6 +37,14 @@ class SelfUpdateCommand extends Command
         ;
     }
 
+    /**
+     * The self-update command is only available when using the installer via the PHAR file.
+     */
+    public function isEnabled()
+    {
+        return 'phar://' === substr(__DIR__, 0, 7);
+    }
+
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $fs = new Filesystem();
