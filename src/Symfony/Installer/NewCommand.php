@@ -60,7 +60,7 @@ class NewCommand extends Command
         ;
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function initialize(InputInterface $input, OutputInterface $output)
     {
         $this->fs = new Filesystem();
         $directory = rtrim(trim($input->getArgument('directory')), DIRECTORY_SEPARATOR);
@@ -68,7 +68,10 @@ class NewCommand extends Command
         $this->projectName = basename($directory);
         $this->version = trim($input->getArgument('version'));
         $this->output = $output;
+    }
 
+    protected function execute(InputInterface $input, OutputInterface $output)
+    {
         try {
             $this
                 ->checkProjectName()
