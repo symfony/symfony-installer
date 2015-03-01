@@ -42,7 +42,7 @@ class NewCommand extends Command
     {
         $installer = $input->getOption('installer');
         if ($installer) {
-            $installer = require_once($installer);
+            $installer = require_once $installer;
         } else {
             $installer = new Installer();
         }

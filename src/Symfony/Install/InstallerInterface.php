@@ -1,9 +1,8 @@
 <?php
+
 /**
- * Created by PhpStorm.
- * User: renier
- * Date: 28/02/15
- * Time: 22:31
+ * @author: Renier Ricardo Figueredo
+ * @mail: aprezcuba24@gmail.com
  */
 namespace Symfony\Install;
 

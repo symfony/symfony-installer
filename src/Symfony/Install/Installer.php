@@ -1,10 +1,9 @@
 <?php
 
 /**
- * @autor: Renier Ricardo Figueredo
+ * @author: Renier Ricardo Figueredo
  * @mail: aprezcuba24@gmail.com
  */
-
 namespace Symfony\Install;
 
 use Distill\Distill;
@@ -657,4 +656,4 @@ class Installer implements InstallerInterface
         // scandir() returns '.'  and '..'  for an empty dir
         return 2 === count(scandir($dir.'/'));
     }
-} 
+}
