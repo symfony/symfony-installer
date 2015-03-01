@@ -218,16 +218,16 @@
         },
         {
             "name": "raulfraile/distill",
-            "version": "v0.9.2",
+            "version": "v0.9.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/raulfraile/distill.git",
-                "reference": "c5bf5a5c76dbf2d7287bdc6c8beda11d27139bca"
+                "reference": "1920a69bcba9b0834cfe9eb93fe55e19b1a04422"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/raulfraile/distill/zipball/c5bf5a5c76dbf2d7287bdc6c8beda11d27139bca",
-                "reference": "c5bf5a5c76dbf2d7287bdc6c8beda11d27139bca",
+                "url": "https://api.github.com/repos/raulfraile/distill/zipball/1920a69bcba9b0834cfe9eb93fe55e19b1a04422",
+                "reference": "1920a69bcba9b0834cfe9eb93fe55e19b1a04422",
                 "shasum": ""
             },
             "require": {
@@ -238,7 +238,8 @@
             },
             "require-dev": {
                 "mockery/mockery": "0.9.1",
-                "raulfraile/ladybug": "~1.0"
+                "raulfraile/ladybug": "~1.0",
+                "symfony/finder": "~2.4"
             },
             "suggest": {
                 "ext-rar": "Allows to uncompress rar files using RarArchive",
@@ -282,21 +283,21 @@
                 "xz",
                 "zip"
             ],
-            "time": "2014-12-11 23:09:12"
+            "time": "2014-12-23 07:44:16"
         },
         {
             "name": "symfony/console",
-            "version": "v2.6.1",
+            "version": "v2.6.4",
             "target-dir": "Symfony/Component/Console",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/Console.git",
-                "reference": "ef825fd9f809d275926547c9e57cbf14968793e8"
+                "reference": "e44154bfe3e41e8267d7a3794cd9da9a51cfac34"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/Console/zipball/ef825fd9f809d275926547c9e57cbf14968793e8",
-                "reference": "ef825fd9f809d275926547c9e57cbf14968793e8",
+                "url": "https://api.github.com/repos/symfony/Console/zipball/e44154bfe3e41e8267d7a3794cd9da9a51cfac34",
+                "reference": "e44154bfe3e41e8267d7a3794cd9da9a51cfac34",
                 "shasum": ""
             },
             "require": {
@@ -339,21 +340,21 @@
             ],
             "description": "Symfony Console Component",
             "homepage": "http://symfony.com",
-            "time": "2014-12-02 20:19:20"
+            "time": "2015-01-25 04:39:26"
         },
         {
             "name": "symfony/filesystem",
-            "version": "v2.6.1",
+            "version": "v2.6.4",
             "target-dir": "Symfony/Component/Filesystem",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/Filesystem.git",
-                "reference": "ff6efc95256cb33031933729e68b01d720b5436b"
+                "reference": "a1f566d1f92e142fa1593f4555d6d89e3044a9b7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/Filesystem/zipball/ff6efc95256cb33031933729e68b01d720b5436b",
-                "reference": "ff6efc95256cb33031933729e68b01d720b5436b",
+                "url": "https://api.github.com/repos/symfony/Filesystem/zipball/a1f566d1f92e142fa1593f4555d6d89e3044a9b7",
+                "reference": "a1f566d1f92e142fa1593f4555d6d89e3044a9b7",
                 "shasum": ""
             },
             "require": {
@@ -386,21 +387,21 @@
             ],
             "description": "Symfony Filesystem Component",
             "homepage": "http://symfony.com",
-            "time": "2014-12-02 20:19:20"
+            "time": "2015-01-03 21:13:09"
         },
         {
             "name": "symfony/process",
-            "version": "v2.6.1",
+            "version": "v2.6.4",
             "target-dir": "Symfony/Component/Process",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/Process.git",
-                "reference": "bf0c9bd625f13b0b0bbe39919225cf145dfb935a"
+                "reference": "ecfc23e89d9967999fa5f60a1e9af7384396e9ae"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/Process/zipball/bf0c9bd625f13b0b0bbe39919225cf145dfb935a",
-                "reference": "bf0c9bd625f13b0b0bbe39919225cf145dfb935a",
+                "url": "https://api.github.com/repos/symfony/Process/zipball/ecfc23e89d9967999fa5f60a1e9af7384396e9ae",
+                "reference": "ecfc23e89d9967999fa5f60a1e9af7384396e9ae",
                 "shasum": ""
             },
             "require": {
@@ -433,7 +434,7 @@
             ],
             "description": "Symfony Process Component",
             "homepage": "http://symfony.com",
-            "time": "2014-12-02 20:19:20"
+            "time": "2015-01-25 04:39:26"
         }
     ],
     "packages-dev": [],
