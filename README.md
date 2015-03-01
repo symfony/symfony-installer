@@ -72,6 +72,23 @@ $ symfony new my_project 2.5.6
 $ php symfony.phar new my_project 2.5.6
 ```
 
+**4. Start a new project with custom installer
+Execute the `new` command and provide a file where you put a class implements the interface `Symfony\Install\InstallerInterface` or extends of `Symfony\Install\Installer`.
+You must see `https://github.com/symfony/symfony-installer`. The file must return the object. Example.
+
+```php
+namespace CustomInstaller;
+
+use Symfony\Install\Installer;
+
+class CustomInstaller extends Installer
+{
+    protected $skeleton = 'http://custom/installer/Symfony_Standard_Vendors_';
+}
+
+return new CustomInstaller();
+```
+
 Updating the installer
 ----------------------
 
