@@ -49,7 +49,7 @@ $ php symfony.phar new my_project
 
 Execute the `new` command and provide the name of your project as the first
 argument and `lts` as the second argument. The installer will automatically
-select the most recent LTS version available:
+select the most recent LTS (*Long Term Support*) version available:
 
 ```bash
 # Linux, Mac OS X
