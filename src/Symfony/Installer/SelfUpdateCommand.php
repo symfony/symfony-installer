@@ -17,7 +17,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Filesystem\Filesystem;
 
 /**
- * This command is a direct port of the self-update command included
+ * This command is inspired by the self-update command included
  * in the PHP-CS-Fixer library. See:
  * https://github.com/fabpot/PHP-CS-Fixer/blob/master/Symfony/CS/Console/Command/SelfUpdateCommand.php
  *
@@ -27,6 +27,29 @@ use Symfony\Component\Filesystem\Filesystem;
  */
 class SelfUpdateCommand extends Command
 {
+    /** @var Filesystem */
+    private $fs;
+
+    /** @var OutputInterface */
+    private $output;
+
+    private $tempDir;
+
+    /** @var string  the URL where the latest installer version can be downloaded */
+    private $remoteInstallerFile;
+
+    /** @var string the filepath of the installer currently installed in the local machine */
+    private $currentInstallerFile;
+
+    /** @var string the filepath of the new installer downloaded to replace the current installer */
+    private $newInstallerFile;
+
+    /** @var string the filepath of the backup of the current installer in case a rollback is performed */
+    private $currentInstallerBackupFile;
+
+    /** @var bool flag which indicates that, in case of a rollback, it's safe to restore the installer backup because it corresponds to the most recent version */
+    private $restorePreviousInstaller;
+
     protected function configure()
     {
         $this
@@ -45,71 +68,126 @@ class SelfUpdateCommand extends Command
         return 'phar://' === substr(__DIR__, 0, 7);
     }
 
+    protected function initialize(InputInterface $input, OutputInterface $output)
+    {
+        $this->fs = new Filesystem();
+        $this->output = $output;
+
+        $this->remoteInstallerFile = 'http://symfony.com/installer';
+        $this->currentInstallerFile = realpath($_SERVER['argv'][0]) ?: $_SERVER['argv'][0];
+        $this->tempDir = sys_get_temp_dir();
+        $this->currentInstallerBackupFile = basename($this->currentInstallerFile, '.phar').'-backup.phar';
+        $this->newInstallerFile = $this->tempDir.'/'.basename($this->currentInstallerFile, '.phar').'-temp.phar';
+        $this->restorePreviousInstaller = false;
+    }
+
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $fs = new Filesystem();
-
-        $localVersion = $this->getApplication()->getVersion();
-
-        if (false === $remoteVersion = @file_get_contents('http://get.sensiolabs.org/symfony.version')) {
-            $output->writeln('<error>The new version of the Symfony Installer couldn\'t be downloaded from the server.</error>');
-
-            return 1;
-        }
-
-        if ($localVersion === $remoteVersion) {
-            $output->writeln('<info>Symfony Installer is already up to date.</info>');
-
-            return 0;
-        }
-
-        $remoteFilename = 'http://symfony.com/installer';
-        $localFilename = realpath($_SERVER['argv'][0]) ?: $_SERVER['argv'][0];
-        $tempDir = is_writable(dirname($localFilename)) ? dirname($localFilename) : sys_get_temp_dir();
-
-        // check for permissions in local filesystem before start downloading files
-        if (!is_writable($localFilename)) {
-            throw new \RuntimeException('Symfony Installer update failed: the "'.$localFilename.'" file could not be written');
-        }
-        if (!is_writable($tempDir)) {
-            throw new \RuntimeException('Symfony Installer update failed: the "'.$tempDir.'" directory used to download the temporary file could not be written');
-        }
-
-        if (false === @file_get_contents($remoteFilename)) {
-            $output->writeln('<error>The new version of the Symfony Installer couldn\'t be downloaded from the server.</error>');
-
-            return 1;
+        if ($this->installerIsUpdated()) {
+            return;
         }
 
         try {
-            $tempFilename = $tempDir.'/'.basename($localFilename, '.phar').'-temp.phar';
-
-            $fs->copy($remoteFilename, $tempFilename);
-            $fs->chmod($tempFilename, 0777 & ~umask());
-
-            // creating a Phar instance for an existing file is not allowed
-            // when the Phar extension is in readonly mode
-            if (!ini_get('phar.readonly')) {
-                // test the phar validity
-                $phar = new \Phar($tempFilename);
-                // free the variable to unlock the file
-                unset($phar);
-            }
-
-            $fs->rename($tempFilename, $localFilename, true);
-
-            $output->writeln('<info>Symfony Installer was successfully updated.</info>');
-
-            return 0;
+            $this
+                ->downloadNewVersion()
+                ->checkNewVersionIsValid()
+                ->backupCurrentVersion()
+                ->replaceCurrentVersionbyNewVersion()
+                ->cleanUp()
+            ;
         } catch (\Exception $e) {
-            if (!$e instanceof \UnexpectedValueException && !$e instanceof \PharException) {
-                throw $e;
-            }
-            $fs->remove($tempFilename);
-            $output->writeln(sprintf('<error>The downloaded file is corrupted (%s).</error>', $e->getMessage()));
-            $output->writeln('<error>Please re-run the self-update command to try again.</error>');
+            $this->rollback();
+        }
+    }
 
-            return 1;
+    private function installerIsUpdated()
+    {
+        $isUpdated = false;
+        $localVersion = $this->getApplication()->getVersion();
+
+        if (false === $remoteVersion = @file_get_contents('http://get.sensiolabs.org/symfony.version')) {
+            throw new \RuntimeException('The new version of the Symfony Installer couldn\'t be downloaded from the server.');
+        }
+
+        if ($localVersion === $remoteVersion) {
+            $this->output->writeln('<info>Symfony Installer is already up to date.</info>');
+            $isUpdated = true;
+        } else {
+            $this->output->writeln(sprintf('// <info>updating</info> Symfony Installer to <comment>%s</comment> version', $remoteVersion));
+        }
+
+        return $isUpdated;
+    }
+
+    private function downloadNewVersion()
+    {
+        // check for permissions in local filesystem before start downloading files
+        if (!is_writable($this->currentInstallerFile)) {
+            throw new \RuntimeException('Symfony Installer update failed: the "'.$this->currentInstallerFile.'" file could not be written');
+        }
+
+        if (!is_writable($this->tempDir)) {
+            throw new \RuntimeException('Symfony Installer update failed: the "'.$this->tempDir.'" directory used to download files temporarily could not be written');
+        }
+
+        if (false === $newInstaller = @file_get_contents($this->remoteInstallerFile)) {
+            throw new \RuntimeException('The new version of the Symfony Installer couldn\'t be downloaded from the server.');
+        }
+
+        $newInstallerPermissions = $this->currentInstallerFile ? fileperms($this->currentInstallerFile) : 0777 & ~umask();
+        $this->fs->dumpFile($this->newInstallerFile, $newInstaller, $newInstallerPermissions);
+
+        return $this;
+    }
+
+    private function checkNewVersionIsValid()
+    {
+        // creating a Phar instance for an existing file is not allowed
+        // when the Phar extension is in readonly mode
+        if (!ini_get('phar.readonly')) {
+            // test the phar validity
+            $phar = new \Phar($this->newInstallerFile);
+
+            // free the variable to unlock the file
+            unset($phar);
+        }
+
+        return $this;
+    }
+
+    private function backupCurrentVersion()
+    {
+        $this->fs->copy($this->currentInstallerFile, $this->currentInstallerBackupFile, true);
+        $this->restorePreviousInstaller = true;
+
+        return $this;
+    }
+
+    private function replaceCurrentVersionbyNewVersion()
+    {
+        $this->fs->copy($this->newInstallerFile, $this->currentInstallerFile, true);
+
+        return $this;
+    }
+
+    private function cleanUp()
+    {
+        $this->fs->remove(array($this->currentInstallerBackupFile, $this->newInstallerFile));
+    }
+
+    private function rollback()
+    {
+        $this->output->writeln(array(
+            '',
+            'There was an error while updating the installer.',
+            'The previous Symfony Installer version has been restored.',
+            '',
+        ));
+
+        $this->fs->remove($this->newInstallerFile);
+
+        if ($this->restorePreviousInstaller) {
+            $this->fs->copy($this->currentInstallerBackupFile, $this->currentInstallerFile, true);
         }
     }
 }
