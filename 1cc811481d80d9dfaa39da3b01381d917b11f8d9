@@ -1,0 +1,101 @@
+---------------------------------------------------------------------------
+
+by javiereguiluz at 2015-02-20T14:13:31Z
+
+If you want, we can make `lts` version name to work on symfony.com. We already do this for `latest` version name and it would be really easy to do. This way we could simplify a lot the code of this PR. What do you think?
+
+---------------------------------------------------------------------------
+
+by 94noni at 2015-02-20T14:15:34Z
+
+@javiereguiluz exactly what i asked for @stof
+
+> can you please just explain me this:
+> http://symfony.com/download?v=Symfony_Standard_Vendors_latest => can be resolved
+> http://symfony.com/download?v=Symfony_Standard_Vendors_lts => can not be resolved
+> it will be easier (and no more query call for json for the lts) if it is resolved correctly :)
+
+---------------------------------------------------------------------------
+
+by Pierstoval at 2015-02-20T14:16:12Z
+
+This could reduce this PR to two lines of code, I think it's worth the cost :smiley:
+
+---------------------------------------------------------------------------
+
+by javiereguiluz at 2015-02-20T14:17:42Z
+
+OK. The `lts` version is already supported in symfony.com. But we must wait for the related pull request to get approved and deployed in the production website. I'll keep you posted.
+
+---------------------------------------------------------------------------
+
+by xabbuh at 2015-02-20T14:22:38Z
+
+@javiereguiluz Will that be the latest LTS once Symfony 2.7 is released?
+
+---------------------------------------------------------------------------
+
+by javiereguiluz at 2015-02-20T14:28:19Z
+
+@xabbuh yes. It will always point to the most recent LTS version, whichever it is.
+
+---------------------------------------------------------------------------
+
+by stof at 2015-02-20T14:31:30Z
+
+@94noni can you update the PR so that it simply handle ``lts`` in the same way than ``latest`` (which should indeed be a 2 lines patch), even if the archive is not yet in production (it only means we have to wait before merging, but it does not prevent to have the patch ready)
+
+---------------------------------------------------------------------------
+
+by 94noni at 2015-02-20T14:31:37Z
+
+Thank all of you, waiting your go to change this (and PR on the related symfony documentation)
+Edit: ok lets do that, I reverted the code
+
+---------------------------------------------------------------------------
+
+by stof at 2015-02-20T15:22:25Z
+
+Can you revert the other changes being done here to really keep it a 2-line patch (well, maybe 4 because of formatting)
+
+---------------------------------------------------------------------------
+
+by 94noni at 2015-02-20T15:34:28Z
+
+@stof PR finalized, much cleaner with the symfony.com lts version supported now
+
+---------------------------------------------------------------------------
+
+by stof at 2015-02-20T15:35:38Z
+
+:+1:
+
+---------------------------------------------------------------------------
+
+by 94noni at 2015-02-20T16:21:25Z
+
+Just forget the read me. Updated now
+
+---------------------------------------------------------------------------
+
+by javiereguiluz at 2015-02-21T09:23:31Z
+
+The special `lts` version name is already available in production:
+
+```
+http://symfony.com/download?v=Symfony_Standard_Vendors_lts.zip
+http://symfony.com/download?v=Symfony_Standard_Vendors_lts.tgz
+```
+
+---------------------------------------------------------------------------
+
+by stof at 2015-02-27T14:21:37Z
+
+:+1: then
+
+---------------------------------------------------------------------------
+
+by 94noni at 2015-03-01T18:23:18Z
+
+Cool :)
+And is it ok for the https://github.com/symfony/symfony-docs/pull/5032 as well?
