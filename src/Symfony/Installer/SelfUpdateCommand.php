@@ -31,11 +31,18 @@ class SelfUpdateCommand extends Command
     private $fs;
     /** @var OutputInterface */
     private $output;
-    private $remoteInstallerFile;
-    private $localInstallerFile;
-    private $previousInstallerFile;
     private $tempDir;
-    private $tempInstallerFilePath;
+    // URL where the latest installer version can be downloaded
+    private $remoteInstallerFile;
+    // the installer currently installed in the local machine
+    private $currentInstallerFile;
+    // the new installer downloaded to replace the current installer
+    private $newInstallerFile;
+    // a backup of the current installer in case a rollback is performed
+    private $currentInstallerBackupFile;
+    // a boolean flag which indicates that, in case of a rollback, it's safe to
+    // restore the installer backup because it corresponds to the most recent version
+    private $restorePreviousInstaller;
 
     protected function configure()
     {
@@ -61,10 +68,11 @@ class SelfUpdateCommand extends Command
         $this->output = $output;
 
         $this->remoteInstallerFile = 'http://symfony.com/installer';
-        $this->localInstallerFile = realpath($_SERVER['argv'][0]) ?: $_SERVER['argv'][0];
-        $this->previousInstallerFile = $this->localInstallerFile.'-previous';
-        $this->tempDir = is_writable(dirname($this->localInstallerFile)) ? dirname($this->localInstallerFile) : sys_get_temp_dir();
-        $this->tempInstallerFilePath = $this->tempDir.'/'.basename($this->localInstallerFile, '.phar').'-temp.phar';
+        $this->currentInstallerFile = realpath($_SERVER['argv'][0]) ?: $_SERVER['argv'][0];
+        $this->tempDir = is_writable(dirname($this->currentInstallerFile)) ? dirname($this->currentInstallerFile) : sys_get_temp_dir();
+        $this->currentInstallerBackupFile = basename($this->currentInstallerFile, '.phar').'-backup.phar';
+        $this->newInstallerFile = $this->tempDir.'/'.basename($this->currentInstallerFile, '.phar').'-temp.phar';
+        $this->restorePreviousInstaller = false;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -106,8 +114,8 @@ class SelfUpdateCommand extends Command
     private function downloadNewVersion()
     {
         // check for permissions in local filesystem before start downloading files
-        if (!is_writable($this->localInstallerFile)) {
-            throw new \RuntimeException('Symfony Installer update failed: the "'.$this->localInstallerFile.'" file could not be written');
+        if (!is_writable($this->currentInstallerFile)) {
+            throw new \RuntimeException('Symfony Installer update failed: the "'.$this->currentInstallerFile.'" file could not be written');
         }
 
         if (!is_writable($this->tempDir)) {
@@ -118,7 +126,8 @@ class SelfUpdateCommand extends Command
             throw new \RuntimeException('The new version of the Symfony Installer couldn\'t be downloaded from the server.');
         }
 
-        $this->fs->dumpFile($this->tempInstallerFilePath, $newInstaller, 0777 & ~umask());
+        $newInstallerPermissions = $this->currentInstallerFile ? fileperms($this->currentInstallerFile) : 0777 & ~umask();
+        $this->fs->dumpFile($this->newInstallerFile, $newInstaller, $newInstallerPermissions);
 
         return $this;
     }
@@ -129,7 +138,7 @@ class SelfUpdateCommand extends Command
         // when the Phar extension is in readonly mode
         if (!ini_get('phar.readonly')) {
             // test the phar validity
-            $phar = new \Phar($this->tempInstallerFilePath);
+            $phar = new \Phar($this->newInstallerFile);
 
             // free the variable to unlock the file
             unset($phar);
@@ -140,21 +149,27 @@ class SelfUpdateCommand extends Command
 
     private function backupOldVersion()
     {
-        $this->fs->rename($this->localInstallerFile, $this->previousInstallerFile);
+        $this->fs->copy($this->currentInstallerFile, $this->currentInstallerBackupFile, true);
+        $this->fs->copy($this->newInstallerFile, $this->currentInstallerFile, true);
+
+        $this->restorePreviousInstaller = true;
 
         return $this;
     }
 
     private function replaceOldVersionbyNewVersion()
     {
-        $fs->rename($this->tempInstallerFilePath, $this->localInstallerFile, true);
+        $fs->copy($this->newInstallerFile, $this->currentInstallerFile, true);
 
         return $this;
     }
 
     private function rollback()
     {
-        $this->fs->remove($this->tempInstallerFilePath);
-        $this->fs->rename($this->previousInstallerFile, $this->localInstallerFile);
+        $this->fs->remove($this->newInstallerFile);
+
+        if ($this->restorePreviousInstaller) {
+            $this->fs->copy($this->currentInstallerBackupFile, $this->currentInstallerFile, true);
+        }
     }
 }
