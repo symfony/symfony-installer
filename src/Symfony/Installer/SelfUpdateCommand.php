@@ -91,8 +91,8 @@ class SelfUpdateCommand extends Command
             $this
                 ->downloadNewVersion()
                 ->checkNewVersionIsValid()
-                ->backupOldVersion()
-                ->replaceOldVersionbyNewVersion()
+                ->backupCurrentVersion()
+                ->replaceCurrentVersionbyNewVersion()
             ;
         } catch (\Exception $e) {
             $this->rollback();
@@ -153,17 +153,15 @@ class SelfUpdateCommand extends Command
         return $this;
     }
 
-    private function backupOldVersion()
+    private function backupCurrentVersion()
     {
         $this->fs->copy($this->currentInstallerFile, $this->currentInstallerBackupFile, true);
-        $this->fs->copy($this->newInstallerFile, $this->currentInstallerFile, true);
-
         $this->restorePreviousInstaller = true;
 
         return $this;
     }
 
-    private function replaceOldVersionbyNewVersion()
+    private function replaceCurrentVersionbyNewVersion()
     {
         $this->fs->copy($this->newInstallerFile, $this->currentInstallerFile, true);
 
