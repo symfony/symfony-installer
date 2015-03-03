@@ -29,19 +29,25 @@ class SelfUpdateCommand extends Command
 {
     /** @var Filesystem */
     private $fs;
+
     /** @var OutputInterface */
     private $output;
+
     private $tempDir;
-    // URL where the latest installer version can be downloaded
+
+    /** @var string  the URL where the latest installer version can be downloaded */
     private $remoteInstallerFile;
-    // the installer currently installed in the local machine
+
+    /** @var string the filepath of the installer currently installed in the local machine */
     private $currentInstallerFile;
-    // the new installer downloaded to replace the current installer
+
+    /** @var string the filepath of the new installer downloaded to replace the current installer */
     private $newInstallerFile;
-    // a backup of the current installer in case a rollback is performed
+
+    /** @var string the filepath of the backup of the current installer in case a rollback is performed */
     private $currentInstallerBackupFile;
-    // a boolean flag which indicates that, in case of a rollback, it's safe to
-    // restore the installer backup because it corresponds to the most recent version
+
+    /** @var bool flag which indicates that, in case of a rollback, it's safe to restore the installer backup because it corresponds to the most recent version */
     private $restorePreviousInstaller;
 
     protected function configure()
@@ -159,7 +165,7 @@ class SelfUpdateCommand extends Command
 
     private function replaceOldVersionbyNewVersion()
     {
-        $fs->copy($this->newInstallerFile, $this->currentInstallerFile, true);
+        $this->fs->copy($this->newInstallerFile, $this->currentInstallerFile, true);
 
         return $this;
     }
