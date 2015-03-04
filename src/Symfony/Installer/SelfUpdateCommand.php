@@ -75,7 +75,7 @@ class SelfUpdateCommand extends Command
 
         $this->remoteInstallerFile = 'http://symfony.com/installer';
         $this->currentInstallerFile = realpath($_SERVER['argv'][0]) ?: $_SERVER['argv'][0];
-        $this->tempDir = is_writable(dirname($this->currentInstallerFile)) ? dirname($this->currentInstallerFile) : sys_get_temp_dir();
+        $this->tempDir = sys_get_temp_dir();
         $this->currentInstallerBackupFile = basename($this->currentInstallerFile, '.phar').'-backup.phar';
         $this->newInstallerFile = $this->tempDir.'/'.basename($this->currentInstallerFile, '.phar').'-temp.phar';
         $this->restorePreviousInstaller = false;
@@ -93,6 +93,7 @@ class SelfUpdateCommand extends Command
                 ->checkNewVersionIsValid()
                 ->backupCurrentVersion()
                 ->replaceCurrentVersionbyNewVersion()
+                ->cleanUp()
             ;
         } catch (\Exception $e) {
             $this->rollback();
@@ -166,6 +167,11 @@ class SelfUpdateCommand extends Command
         $this->fs->copy($this->newInstallerFile, $this->currentInstallerFile, true);
 
         return $this;
+    }
+
+    private function cleanUp()
+    {
+        $this->fs->remove(array($this->currentInstallerBackupFile, $this->newInstallerFile));
     }
 
     private function rollback()
