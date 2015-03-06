@@ -97,7 +97,6 @@ class SelfUpdateCommand extends Command
             ;
         } catch (\Exception $e) {
             $this->rollback();
-            throw $e;
         }
     }
 
@@ -113,6 +112,8 @@ class SelfUpdateCommand extends Command
         if ($localVersion === $remoteVersion) {
             $this->output->writeln('<info>Symfony Installer is already up to date.</info>');
             $isUpdated = true;
+        } else {
+            $this->output->writeln(sprintf('// <info>updating</info> Symfony Installer to <comment>%s</comment> version', $remoteVersion));
         }
 
         return $isUpdated;
@@ -176,6 +177,13 @@ class SelfUpdateCommand extends Command
 
     private function rollback()
     {
+        $this->output->writeln(array(
+            '',
+            'There was an error while updating the installer.',
+            'The previous Symfony Installer version has been restored.',
+            '',
+        ));
+
         $this->fs->remove($this->newInstallerFile);
 
         if ($this->restorePreviousInstaller) {
