@@ -1,0 +1,11 @@
+---------------------------------------------------------------------------
+
+by javiereguiluz at 2015-03-03T10:37:42Z
+
+I've made a lot of changes as suggested. Please review it again and tell me what you think. Thanks!
+
+---------------------------------------------------------------------------
+
+by javiereguiluz at 2015-03-04T09:38:38Z
+
+I've updated this PR again and with the changes introduced in a3e31ab, I think this is finished and ready to be merged. I've tested it and everything seems to work as expected.
