@@ -57,7 +57,7 @@ class AboutCommand extends Command
  To create a new project called <info>blog</info> in the current directory using
  the <info>long term support version</info> of Symfony, execute the following command:
 
-   <comment>%s new blog lts</comment>
+   <comment>%3\$s new blog lts</comment>
 
  To base your project on a <info>specific Symfony branch</info>, append the branch
  number at the end of the command:
