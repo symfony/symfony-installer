@@ -54,20 +54,21 @@ class AboutCommand extends Command
 
    <comment>%s new blog</comment>
 
- To create a new project called <info>blog</info> in the current directory using
- the <info>long term support version</info> of Symfony, execute the following command:
+ Create a project based on the <info>Symfony Long Term Support version</info> (LTS):
 
    <comment>%3\$s new blog lts</comment>
 
- To base your project on a <info>specific Symfony branch</info>, append the branch
- number at the end of the command:
+ Create a project based on a <info>specific Symfony branch</info>:
 
    <comment>%3\$s new blog 2.3</comment>
 
- To base your project on a <info>specific Symfony version</info>, append the version
- number at the end of the command:
+ Create a project based on a <info>specific Symfony version</info>:
 
    <comment>%3\$s new blog 2.5.6</comment>
+
+ Create a <info>Symfony demo application</info> to learn how it works:
+
+   <comment>%3\$s demo</comment>
 
 COMMAND_HELP;
 
