@@ -13,7 +13,6 @@ namespace Symfony\Installer;
 
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Filesystem\Filesystem;
 
 /**
  * This command creates a full-featured Symfony demo application.
@@ -26,7 +25,6 @@ class DemoCommand extends DownloadCommand
     protected $fs;
     protected $projectName;
     protected $projectDir;
-    protected $remoteFileUrl;
     protected $downloadedFilePath;
     protected $requirementsErrors = array();
     /** @var OutputInterface */
@@ -42,9 +40,8 @@ class DemoCommand extends DownloadCommand
 
     protected function initialize(InputInterface $input, OutputInterface $output)
     {
-        $this->remoteFileUrl = 'http://symfony.com/download?v=Symfony_Demo';
-        $this->output = $output;
-        $this->fs = new Filesystem();
+        parent::initialize($input, $output);
+
         $this->projectDir = getcwd();
 
         $i = 1;
@@ -127,5 +124,15 @@ class DemoCommand extends DownloadCommand
         ));
 
         return $this;
+    }
+
+    protected function getDownloadedApplicationType()
+    {
+        return 'Symfony Demo Application';
+    }
+
+    protected function getRemoteFileUrl()
+    {
+        return 'http://symfony.com/download?v=Symfony_Demo';
     }
 }
