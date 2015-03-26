@@ -1,0 +1,11 @@
+---------------------------------------------------------------------------
+
+by stof at 2015-03-26T18:54:23Z
+
+the advantage of the previous instruction is that it does not run curl as root
+
+---------------------------------------------------------------------------
+
+by JulienItard at 2015-03-26T19:03:47Z
+
+Yes i know but i think that we should have the same installation step here and on the official website.
