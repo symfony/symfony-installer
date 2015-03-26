@@ -24,15 +24,11 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class NewCommand extends DownloadCommand
 {
-    /** @var Filesystem */
-    protected $fs;
     protected $projectName;
     protected $projectDir;
     protected $version;
     protected $downloadedFilePath;
     protected $requirementsErrors = array();
-    /** @var OutputInterface */
-    protected $output;
 
     protected function configure()
     {

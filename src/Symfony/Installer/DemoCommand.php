@@ -21,14 +21,10 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class DemoCommand extends DownloadCommand
 {
-    /** @var Filesystem */
-    protected $fs;
     protected $projectName;
     protected $projectDir;
     protected $downloadedFilePath;
     protected $requirementsErrors = array();
-    /** @var OutputInterface */
-    protected $output;
 
     protected function configure()
     {

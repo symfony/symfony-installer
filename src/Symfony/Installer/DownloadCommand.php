@@ -34,6 +34,11 @@ use Symfony\Component\Filesystem\Filesystem;
  */
 abstract class DownloadCommand extends Command
 {
+    /** @var Filesystem */
+    protected $fs;
+    /** @var OutputInterface */
+    protected $output;
+
     /**
       * Returns the type of the downloaded application in a human readable format.
       * It's mainly used to display readable error messages.
