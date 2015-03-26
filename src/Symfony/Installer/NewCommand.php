@@ -11,6 +11,7 @@
 
 namespace Symfony\Installer;
 
+use GuzzleHttp\Client;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -53,7 +54,6 @@ class NewCommand extends DownloadCommand
         $this->projectDir = $this->fs->isAbsolutePath($directory) ? $directory : getcwd().DIRECTORY_SEPARATOR.$directory;
         $this->projectName = basename($directory);
         $this->version = trim($input->getArgument('version'));
-        $this->remoteFileUrl = 'http://symfony.com/download?v=Symfony_Standard_Vendors_'.$this->version;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -62,6 +62,7 @@ class NewCommand extends DownloadCommand
             $this
                 ->checkProjectName()
                 ->checkSymfonyVersionIsInstallable()
+                ->initializeRemoteFileUrl()
                 ->download()
                 ->extract()
                 ->cleanUp()
@@ -381,5 +382,17 @@ class NewCommand extends DownloadCommand
         }
 
         return $name;
+    }
+
+    /**
+     * Builds the URL of the archive to download based on the validated version number.
+     *
+     * @return NewCommand
+     */
+    private function initializeRemoteFileUrl()
+    {
+        $this->remoteFileUrl = 'http://symfony.com/download?v=Symfony_Standard_Vendors_'.$this->version;
+
+        return $this;
     }
 }
