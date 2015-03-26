@@ -1,0 +1,13 @@
+---------------------------------------------------------------------------
+
+by xabbuh at 2015-03-26T15:46:07Z
+
+ping @javiereguiluz
+
+This should probably be merged asap and published on symfony.com so that people will be able to fully use the command again.
+
+---------------------------------------------------------------------------
+
+by javiereguiluz at 2015-03-26T15:47:48Z
+
+@xabbuh thanks a lot! I like it as an emergency solution. But when we have time, I prefer to define an abstract method called `getRemoteFileUrl()`.
