@@ -13,7 +13,7 @@ This step is only needed the first time you use the installer:
 
 ```bash
 $ sudo curl -LsS http://symfony.com/installer -o /usr/local/bin/symfony
-$ chmod a+x /usr/local/bin/symfony
+$ sudo chmod a+x /usr/local/bin/symfony
 ```
 
 ### Windows
