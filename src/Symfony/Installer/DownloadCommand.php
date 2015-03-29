@@ -22,6 +22,9 @@ use GuzzleHttp\Message\Response;
 use GuzzleHttp\Subscriber\Progress\Progress;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\ProgressBar;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Filesystem\Filesystem;
 
 /**
  * Abstract command used by commands which download and extract compressed Symfony files.
@@ -31,6 +34,29 @@ use Symfony\Component\Console\Helper\ProgressBar;
  */
 abstract class DownloadCommand extends Command
 {
+    /** @var Filesystem */
+    protected $fs;
+    /** @var OutputInterface */
+    protected $output;
+
+    /**
+     * Returns the type of the downloaded application in a human readable format.
+     * It's mainly used to display readable error messages.
+     * @return string
+     */
+    abstract protected function getDownloadedApplicationType();
+
+    /**
+     * Returns the absolute URL of the remote file downloaded by the command.
+     */
+    abstract protected function getRemoteFileUrl();
+
+    protected function initialize(InputInterface $input, OutputInterface $output)
+    {
+        $this->output = $output;
+        $this->fs = new Filesystem();
+    }
+
     /**
      * Chooses the best compressed file format to download (ZIP or TGZ) depending upon the
      * available operating system uncompressing commands and the enabled PHP extensions
@@ -42,14 +68,14 @@ abstract class DownloadCommand extends Command
      */
     protected function download()
     {
-        $this->output->writeln(sprintf("\n Downloading %s...\n", $this->getDownloadedFileName()));
+        $this->output->writeln(sprintf("\n Downloading %s...\n", $this->getDownloadedApplicationType()));
 
         // decide which is the best compressed version to download
         $distill = new Distill();
         $symfonyArchiveFile = $distill
             ->getChooser()
             ->setStrategy(new MinimumSize())
-            ->addFilesWithDifferentExtensions($this->remoteFileUrl, ['tgz', 'zip'])
+            ->addFilesWithDifferentExtensions($this->getRemoteFileUrl(), ['tgz', 'zip'])
             ->getPreferredFile()
         ;
 
@@ -107,7 +133,7 @@ abstract class DownloadCommand extends Command
             } else {
                 throw new \RuntimeException(sprintf(
                     "There was an error downloading %s from symfony.com server:\n%s",
-                    $this->getDownloadedFileName(),
+                    $this->getDownloadedApplicationType(),
                     $e->getMessage()
                 ));
             }
@@ -142,13 +168,13 @@ abstract class DownloadCommand extends Command
             throw new \RuntimeException(sprintf(
                 "%s can't be installed because the downloaded package is corrupted.\n".
                 "To solve this issue, try executing this command again:\n%s",
-                $this->getDownloadedFileName(), $this->getExecutedCommand()
+                $this->getDownloadedApplicationType(), $this->getExecutedCommand()
             ));
         } catch (FileEmptyException $e) {
             throw new \RuntimeException(sprintf(
                 "%s can't be installed because the downloaded package is empty.\n".
                 "To solve this issue, try executing this command again:\n%s",
-                $this->getDownloadedFileName(), $this->getExecutedCommand()
+                $this->getDownloadedApplicationType(), $this->getExecutedCommand()
             ));
         } catch (TargetDirectoryNotWritableException $e) {
             throw new \RuntimeException(sprintf(
@@ -156,7 +182,7 @@ abstract class DownloadCommand extends Command
                 "permissions to uncompress and rename the package contents.\n".
                 "To solve this issue, check the permissions of the %s directory and\n".
                 "try executing this command again:\n%s",
-                $this->getDownloadedFileName(), getcwd(), $this->getExecutedCommand()
+                $this->getDownloadedApplicationType(), getcwd(), $this->getExecutedCommand()
             ));
         } catch (\Exception $e) {
             throw new \RuntimeException(sprintf(
@@ -165,7 +191,7 @@ abstract class DownloadCommand extends Command
                 "rename the package contents.\n".
                 "To solve this issue, check the permissions of the %s directory and\n".
                 "try executing this command again:\n%s",
-                $this->getDownloadedFileName(), getcwd(), $this->getExecutedCommand()
+                $this->getDownloadedApplicationType(), getcwd(), $this->getExecutedCommand()
             ));
         }
 
@@ -173,7 +199,7 @@ abstract class DownloadCommand extends Command
             throw new \RuntimeException(sprintf(
                 "%s can't be installed because the downloaded package is corrupted\n".
                 "or because the uncompress commands of your operating system didn't work.",
-                $this->getDownloadedFileName()
+                $this->getDownloadedApplicationType()
             ));
         }
 
@@ -322,24 +348,5 @@ abstract class DownloadCommand extends Command
         // glob() cannot be used because it doesn't take into account hidden files
         // scandir() returns '.'  and '..'  for an empty dir
         return 2 === count(scandir($dir.'/'));
-    }
-
-    /**
-     * Returns the name of the downloaded file in a human readable format.
-     * @return string
-     */
-    protected function getDownloadedFileName()
-    {
-        $commandName = $this->getName();
-
-        if ('new' === $commandName) {
-            return 'Symfony';
-        }
-
-        if ('demo' === $commandName) {
-            return 'Symfony Demo Application';
-        }
-
-        return '';
     }
 }

@@ -15,7 +15,6 @@ use GuzzleHttp\Client;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Filesystem\Filesystem;
 
 /**
  * This command creates new Symfony projects for the given Symfony version.
@@ -25,15 +24,11 @@ use Symfony\Component\Filesystem\Filesystem;
  */
 class NewCommand extends DownloadCommand
 {
-    /** @var Filesystem */
-    protected $fs;
     protected $projectName;
     protected $projectDir;
     protected $version;
     protected $downloadedFilePath;
     protected $requirementsErrors = array();
-    /** @var OutputInterface */
-    protected $output;
 
     protected function configure()
     {
@@ -47,8 +42,7 @@ class NewCommand extends DownloadCommand
 
     protected function initialize(InputInterface $input, OutputInterface $output)
     {
-        $this->output = $output;
-        $this->fs = new Filesystem();
+        parent::initialize($input, $output);
 
         $directory = rtrim(trim($input->getArgument('directory')), DIRECTORY_SEPARATOR);
         $this->projectDir = $this->fs->isAbsolutePath($directory) ? $directory : getcwd().DIRECTORY_SEPARATOR.$directory;
@@ -62,7 +56,6 @@ class NewCommand extends DownloadCommand
             $this
                 ->checkProjectName()
                 ->checkSymfonyVersionIsInstallable()
-                ->initializeRemoteFileUrl()
                 ->download()
                 ->extract()
                 ->cleanUp()
@@ -384,15 +377,13 @@ class NewCommand extends DownloadCommand
         return $name;
     }
 
-    /**
-     * Builds the URL of the archive to download based on the validated version number.
-     *
-     * @return NewCommand
-     */
-    private function initializeRemoteFileUrl()
+    protected function getDownloadedApplicationType()
     {
-        $this->remoteFileUrl = 'http://symfony.com/download?v=Symfony_Standard_Vendors_'.$this->version;
+        return 'Symfony';
+    }
 
-        return $this;
+    protected function getRemoteFileUrl()
+    {
+        return 'http://symfony.com/download?v=Symfony_Standard_Vendors_'.$this->version;
     }
 }
