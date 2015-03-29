@@ -1,0 +1,19 @@
+---------------------------------------------------------------------------
+
+by javiereguiluz at 2015-03-29T11:56:01Z
+
+@sstok thanks for this improvement. It looks totally safe to merge it, but since I'm not a Windows user, I prefer to wait until any Symfony developer with Windows experience (e.g. @stof or @WouterJ) confirms it. Thanks for your patience.
+
+---------------------------------------------------------------------------
+
+by Pierstoval at 2015-03-29T12:43:15Z
+
+I personally use Windows 7 as my dev environments, and it has never caused me any problem... :confused:
+
+---------------------------------------------------------------------------
+
+by WouterJ at 2015-03-29T12:50:48Z
+
+@javiereguiluz I can confirm that this PR is correct (@sstok and me actually created this PR when helping a windows user with this error on IRC)
+
+@Pierstoval the path env is only used by the command in the help message (if you run `symfony`) or if there was an error during the download. That might explain why you didn't see this message.
