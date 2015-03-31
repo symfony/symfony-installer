@@ -135,7 +135,7 @@ abstract class DownloadCommand extends Command
                     "There was an error downloading %s from symfony.com server:\n%s",
                     $this->getDownloadedApplicationType(),
                     $e->getMessage()
-                ));
+                ), null, $e);
             }
         }
 
@@ -192,7 +192,7 @@ abstract class DownloadCommand extends Command
                 "To solve this issue, check the permissions of the %s directory and\n".
                 "try executing this command again:\n%s",
                 $this->getDownloadedApplicationType(), getcwd(), $this->getExecutedCommand()
-            ));
+            ), null, $e);
         }
 
         if (!$extractionSucceeded) {
