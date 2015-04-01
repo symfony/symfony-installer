@@ -11,7 +11,6 @@
 
 namespace Symfony\Installer;
 
-use GuzzleHttp\Client;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -130,7 +129,7 @@ class NewCommand extends DownloadCommand
         if (preg_match('/^2\.\d$/', $this->version)) {
             // Check if we have a minor version in order to retrieve the last patch from symfony.com
 
-            $client = new Client();
+            $client = $this->getGuzzleClient();
             $versionsList = $client->get('http://symfony.com/versions.json')->json();
 
             if ($versionsList && isset($versionsList[$this->version])) {
