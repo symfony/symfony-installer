@@ -66,7 +66,7 @@ class AboutCommand extends Command
 
    <comment>%3\$s new blog 2.5.6</comment>
 
- Create a <info>Symfony demo application</info> to learn how it works:
+ Create a <info>demo application</info> to learn how a Symfony application works:
 
    <comment>%3\$s demo</comment>
 
