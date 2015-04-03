@@ -42,6 +42,7 @@ abstract class DownloadCommand extends Command
     /**
      * Returns the type of the downloaded application in a human readable format.
      * It's mainly used to display readable error messages.
+     *
      * @return string
      */
     abstract protected function getDownloadedApplicationType();
@@ -112,7 +113,7 @@ abstract class DownloadCommand extends Command
             $progressBar->setProgress($downloaded);
         };
 
-        $client = new Client();
+        $client = $this->getGuzzleClient();
         $client->getEmitter()->attach(new Progress(null, $downloadCallback));
 
         // store the file in a temporary hidden directory with a random name
@@ -147,6 +148,25 @@ abstract class DownloadCommand extends Command
         }
 
         return $this;
+    }
+
+    /**
+     * Returns the Guzzle client configured according to the system environment
+     * (e.g. it takes into account whether it should use a proxy server or not).
+     *
+     * @return Client
+     */
+    protected function getGuzzleClient()
+    {
+        $options = array();
+
+        // check if the client must use a proxy server
+        if (!empty($_SERVER['HTTP_PROXY']) || !empty($_SERVER['http_proxy'])) {
+            $proxy = !empty($_SERVER['http_proxy']) ? $_SERVER['http_proxy'] : $_SERVER['HTTP_PROXY'];
+            $options['proxy'] = $proxy;
+        }
+
+        return new Client($options);
     }
 
     /**
@@ -207,7 +227,7 @@ abstract class DownloadCommand extends Command
     }
 
     /**
-     * Checks if environment meets symfony requirements
+     * Checks if environment meets symfony requirements.
      *
      * @return Command
      */
@@ -298,7 +318,7 @@ abstract class DownloadCommand extends Command
     }
 
     /**
-     * Generates a good random value for Symfony's 'secret' option
+     * Generates a good random value for Symfony's 'secret' option.
      *
      * @return string
      */
@@ -340,7 +360,8 @@ abstract class DownloadCommand extends Command
     /**
      * Checks whether the given directory is empty or not.
      *
-     * @param  string $dir the path of the directory to check
+     * @param string $dir the path of the directory to check
+     *
      * @return bool
      */
     protected function isEmptyDirectory($dir)
