@@ -99,3 +99,10 @@ $ symfony self-update
 # Windows
 c:\> php symfony self-update
 ```
+
+> **NOTE**
+>
+> If your system requires the use of a proxy server to download contents, the
+> installer tries to guess the best proxy settings from the `HTTP_PROXY` and
+> `http_proxy` environment variables. Make sure any of them is set before
+> executing the Symfony Installer.
