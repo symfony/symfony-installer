@@ -1,0 +1,17 @@
+---------------------------------------------------------------------------
+
+by xabbuh at 2015-04-01T17:14:04Z
+
+The `NewCommand` class also uses the Guzzle client to download the list of available versions.
+
+---------------------------------------------------------------------------
+
+by javiereguiluz at 2015-04-01T20:51:33Z
+
+Nice catch! Fixed. Thanks.
+
+---------------------------------------------------------------------------
+
+by javiereguiluz at 2015-04-03T09:02:28Z
+
+I'm going to merge this now and release a new installer version. The code looks "safe enough" to not break anything if you are not using a proxy. And it also looks like we're going to solve the problem at least for some proxy users.
