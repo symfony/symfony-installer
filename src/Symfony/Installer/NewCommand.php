@@ -58,6 +58,7 @@ class NewCommand extends DownloadCommand
                 ->download()
                 ->extract()
                 ->cleanUp()
+                ->dumpReadmeFile()
                 ->updateParameters()
                 ->updateComposerJson()
                 ->createGitIgnore()
@@ -202,9 +203,6 @@ class NewCommand extends DownloadCommand
 
             $filesToRemove = array_merge($licenseFile, $upgradeFiles, $changelogFiles);
             $this->fs->remove($filesToRemove);
-
-            $readmeContents = sprintf("%s\n%s\n\nA Symfony project created on %s.\n", $this->projectName, str_repeat('=', strlen($this->projectName)), date('F j, Y, g:i a'));
-            $this->fs->dumpFile($this->projectDir.'/README.md', $readmeContents);
         } catch (\Exception $e) {
             // don't throw an exception in case any of the Symfony-related files cannot
             // be removed, because this is just an enhancement, not something mandatory
@@ -258,6 +256,25 @@ class NewCommand extends DownloadCommand
             "    * Read the documentation at <comment>http://symfony.com/doc</comment>\n",
             $this->projectDir
         ));
+
+        return $this;
+    }
+
+    /**
+     * Dump a basic README.md file.
+     *
+     * @return NewCommand
+     */
+    protected function dumpReadmeFile()
+    {
+        $readmeContents = sprintf("%s\n%s\n\nA Symfony project created on %s.\n", $this->projectName, str_repeat('=', strlen($this->projectName)), date('F j, Y, g:i a'));
+        try {
+            $this->fs->dumpFile($this->projectDir.'/README.md', $readmeContents);
+        } catch (\Exception $e) {
+            // don't throw an exception in case the file could not be created,
+            // because this is just an enhancement, not something mandatory
+            // for the project
+        }
 
         return $this;
     }
