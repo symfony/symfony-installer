@@ -182,6 +182,15 @@ class NewCommand extends DownloadCommand
             ));
         }
 
+        if (preg_match('/^(\d\.\d)(\.\d{1,2})?-(dev|beta)\d*$/i', $this->version, $matches)) {
+            throw new \RuntimeException(sprintf(
+                "You are trying to install an unstable version (%s).\n".
+                "Please use composer to install such versions:\n\n".
+                'composer create-project symfony/framework-standard-edition %s "%s.*" --stability=%s',
+                $this->version, $this->projectDir, $matches[1], strtolower($matches[3])
+            ));
+        }
+
         return $this;
     }
 
