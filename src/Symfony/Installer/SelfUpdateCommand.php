@@ -15,6 +15,7 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Filesystem\Exception\IOException;
 
 /**
  * This command is inspired by the self-update command included
@@ -95,8 +96,23 @@ class SelfUpdateCommand extends Command
                 ->replaceCurrentVersionbyNewVersion()
                 ->cleanUp()
             ;
+        } catch (IOException $e) {
+            throw new \RuntimeException(sprintf(
+                "The installer couldn't be updated, probably because of a permissions issue.\n".
+                "Try to execute the command again with super user privileges:\n".
+                "  sudo %s\n",
+                $this->getExecutedCommand()
+            ));
+
+            if ($output->isVeryVerbose()) {
+                echo $e->getMessage();
+            }
         } catch (\Exception $e) {
             $this->rollback();
+
+            if ($output->isVeryVerbose()) {
+                echo $e->getMessage();
+            }
         }
     }
 
