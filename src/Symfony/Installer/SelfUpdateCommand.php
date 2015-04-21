@@ -20,7 +20,7 @@ use Symfony\Component\Filesystem\Exception\IOException;
 /**
  * This command is inspired by the self-update command included
  * in the PHP-CS-Fixer library. See:
- * https://github.com/fabpot/PHP-CS-Fixer/blob/master/Symfony/CS/Console/Command/SelfUpdateCommand.php
+ * https://github.com/fabpot/PHP-CS-Fixer/blob/master/Symfony/CS/Console/Command/SelfUpdateCommand.php.
  *
  * @author Igor Wiedler <igor@wiedler.ch>
  * @author Stephane PY <py.stephane1@gmail.com>
