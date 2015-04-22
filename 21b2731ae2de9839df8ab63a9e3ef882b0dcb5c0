@@ -1,0 +1,27 @@
+---------------------------------------------------------------------------
+
+by javiereguiluz at 2015-04-08T15:09:54Z
+
+@leto3087 thanks for creating this pull request.
+
+Since I don't use Windows, before merging it I'll wait for @WouterJ @sstok and other Windows users to review it. Thanks.
+
+---------------------------------------------------------------------------
+
+by WouterJ at 2015-04-08T15:11:17Z
+
+Seems perfectly valid to me.
+
+Btw, can't we simply use `\\` instead of DIRECTORY_SEPARATOR here? As it's only a problem on Windows, we know it's going to be `\\`.
+
+---------------------------------------------------------------------------
+
+by xabbuh at 2015-04-08T15:29:07Z
+
+The current working directory could end with a backslash on other systems. Even if that's not very likely, we should not introduce any possible issues here by hardcoding `\\` instead of the `DIRECTORY_SEPARATOR` constant.
+
+---------------------------------------------------------------------------
+
+by javiereguiluz at 2015-04-22T11:13:39Z
+
+Everybody seems happy with this PR and the code looks correct, so I'm going to merge it so we can test it in real systems. Thanks @leto3087 for fixing this issue!
