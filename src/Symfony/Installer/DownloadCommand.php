@@ -117,7 +117,7 @@ abstract class DownloadCommand extends Command
         $client->getEmitter()->attach(new Progress(null, $downloadCallback));
 
         // store the file in a temporary hidden directory with a random name
-        $this->downloadedFilePath = getcwd().DIRECTORY_SEPARATOR.'.'.uniqid(time()).DIRECTORY_SEPARATOR.'symfony.'.pathinfo($symfonyArchiveFile, PATHINFO_EXTENSION);
+        $this->downloadedFilePath = rtrim(getcwd(), DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR.'.'.uniqid(time()).DIRECTORY_SEPARATOR.'symfony.'.pathinfo($symfonyArchiveFile, PATHINFO_EXTENSION);
 
         try {
             $response = $client->get($symfonyArchiveFile);
