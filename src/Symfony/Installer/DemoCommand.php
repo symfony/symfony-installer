@@ -13,6 +13,7 @@ namespace Symfony\Installer;
 
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Installer\Exception\AbortException;
 
 /**
  * This command creates a full-featured Symfony demo application.
@@ -61,7 +62,21 @@ class DemoCommand extends DownloadCommand
                 ->checkSymfonyRequirements()
                 ->displayInstallationResult()
             ;
+        } catch (AbortException $e) {
+            aborted:
+
+            $output->writeln('');
+            $output->writeln('<error>You aborted the command. We clean up things for you.</>');
+
+            $this->cleanUp();
+
+            return 1;
         } catch (\Exception $e) {
+            // Guzzle can wrap the AbortException in a GuzzleException
+            if ($e->getPrevious() instanceof AbortException) {
+                goto aborted;
+            }
+
             $this->cleanUp();
             throw $e;
         }
