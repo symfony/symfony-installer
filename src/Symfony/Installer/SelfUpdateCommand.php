@@ -75,7 +75,7 @@ class SelfUpdateCommand extends Command
         $this->fs = new Filesystem();
         $this->output = $output;
 
-        $this->remoteInstallerFile = 'http://symfony.com/installer';
+        $this->remoteInstallerFile = 'https://symfony.com/installer';
         $this->currentInstallerFile = realpath($_SERVER['argv'][0]) ?: $_SERVER['argv'][0];
         $this->tempDir = sys_get_temp_dir();
         $this->currentInstallerBackupFile = basename($this->currentInstallerFile, '.phar').'-backup.phar';
@@ -122,7 +122,7 @@ class SelfUpdateCommand extends Command
         $isUpdated = false;
         $localVersion = $this->getApplication()->getVersion();
 
-        if (false === $remoteVersion = @file_get_contents('http://get.sensiolabs.org/symfony.version')) {
+        if (false === $remoteVersion = @file_get_contents('https://get.sensiolabs.org/symfony.version')) {
             throw new \RuntimeException('The new version of the Symfony Installer couldn\'t be downloaded from the server.');
         }
 

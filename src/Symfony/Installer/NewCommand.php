@@ -131,7 +131,7 @@ class NewCommand extends DownloadCommand
             // Check if we have a minor version in order to retrieve the last patch from symfony.com
 
             $client = $this->getGuzzleClient();
-            $versionsList = $client->get('http://symfony.com/versions.json')->json();
+            $versionsList = $client->get('https://symfony.com/versions.json')->json();
 
             if ($versionsList && isset($versionsList[$this->version])) {
                 // Get the latest patch of the minor version the user asked
@@ -253,7 +253,7 @@ class NewCommand extends DownloadCommand
             "    * Run your application:\n".
             "        1. Execute the <comment>php app/console server:run</comment> command.\n".
             "        2. Browse to the <comment>http://localhost:8000</comment> URL.\n\n".
-            "    * Read the documentation at <comment>http://symfony.com/doc</comment>\n",
+            "    * Read the documentation at <comment>https://symfony.com/doc</comment>\n",
             $this->projectDir
         ));
 
@@ -400,6 +400,6 @@ class NewCommand extends DownloadCommand
 
     protected function getRemoteFileUrl()
     {
-        return 'http://symfony.com/download?v=Symfony_Standard_Vendors_'.$this->version;
+        return 'https://symfony.com/download?v=Symfony_Standard_Vendors_'.$this->version;
     }
 }

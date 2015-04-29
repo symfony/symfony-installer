@@ -129,6 +129,6 @@ class DemoCommand extends DownloadCommand
 
     protected function getRemoteFileUrl()
     {
-        return 'http://symfony.com/download?v=Symfony_Demo';
+        return 'https://symfony.com/download?v=Symfony_Demo';
     }
 }
