@@ -376,8 +376,7 @@ class NewCommand extends DownloadCommand
      */
     protected function generateComposerProjectName()
     {
-        $name = preg_replace('{(?:([a-z])([A-Z])|([A-Z])([A-Z][a-z]))}', '\\1\\3-\\2\\4', $this->projectName);
-        $name = strtolower($name);
+        $name = $this->projectName;
 
         if (!empty($_SERVER['USERNAME'])) {
             $name = $_SERVER['USERNAME'].'/'.$name;
@@ -390,7 +389,26 @@ class NewCommand extends DownloadCommand
             $name = $name.'/'.$name;
         }
 
-        return $name;
+        return $this->fixComposerVendorName($name);
+    }
+    
+    /**
+     * Transforms uppercase user names to dash-separated usernames:
+     * FooBar -> foo-bar
+     * 
+     * @param string $name The name to transform
+     * 
+     * @return string
+     */
+    private function fixComposerVendorName($name)
+    {
+        return strtolower(
+            preg_replace(
+                array('/([A-Z]+)([A-Z][a-z])/', '/([a-z\d])([A-Z])/'),
+                array('\\1-\\2', '\\1-\\2'),
+                strtr($name, '-', '.')
+            )
+        );
     }
 
     protected function getDownloadedApplicationType()
