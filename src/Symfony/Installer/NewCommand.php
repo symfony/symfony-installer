@@ -380,17 +380,36 @@ class NewCommand extends DownloadCommand
         $name = strtolower($name);
 
         if (!empty($_SERVER['USERNAME'])) {
-            $name = $_SERVER['USERNAME'].'/'.$name;
+            $name = $this->fixComposerVendorName($_SERVER['USERNAME']).'/'.$name;
         } elseif (true === extension_loaded('posix') && $user = posix_getpwuid(posix_getuid())) {
-            $name = $user['name'].'/'.$name;
+            $name = $this->fixComposerVendorName($user['name']).'/'.$name;
         } elseif (get_current_user()) {
-            $name = get_current_user().'/'.$name;
+            $name = $this->fixComposerVendorName(get_current_user()).'/'.$name;
         } else {
             // package names must be in the format foo/bar
             $name = $name.'/'.$name;
         }
 
         return $name;
+    }
+    
+    /**
+     * Transforms uppercase user names to dash-separated usernames:
+     * FooBar -> foo-bar
+     * 
+     * @param string $name The name to transform
+     * 
+     * @return string
+     */
+    private function fixComposerVendorName($name)
+    {
+        return strtolower(
+            preg_replace(
+                array('/([A-Z]+)([A-Z][a-z])/', '/([a-z\d])([A-Z])/'),
+                array('\\1-\\2', '\\1-\\2'),
+                strtr($name, '-', '.')
+            )
+        );
     }
 
     protected function getDownloadedApplicationType()
