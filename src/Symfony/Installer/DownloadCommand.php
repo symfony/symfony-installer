@@ -25,6 +25,7 @@ use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Installer\Exception\AbortException;
 
 /**
  * Abstract command used by commands which download and extract compressed Symfony files.
@@ -58,6 +59,8 @@ abstract class DownloadCommand extends Command
     {
         $this->output = $output;
         $this->fs = new Filesystem();
+
+        $this->enableSignalHandler();
     }
 
     /**
@@ -384,5 +387,20 @@ abstract class DownloadCommand extends Command
         // glob() cannot be used because it doesn't take into account hidden files
         // scandir() returns '.'  and '..'  for an empty dir
         return 2 === count(scandir($dir.'/'));
+    }
+
+    private function enableSignalHandler()
+    {
+        if (!function_exists('pcntl_signal')) {
+            return;
+        }
+
+        declare(ticks = 1);
+
+        pcntl_signal(SIGINT, function () {
+            error_reporting(0);
+
+            throw new AbortException();
+        });
     }
 }
