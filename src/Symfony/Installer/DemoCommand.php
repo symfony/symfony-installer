@@ -73,7 +73,7 @@ class DemoCommand extends DownloadCommand
             aborted:
 
             $output->writeln('');
-            $output->writeln('<error>You aborted the command. We clean up things for you.</>');
+            $output->writeln('<error>Aborting download and cleaning up temporary directories.</>');
 
             $this->cleanUp();
 
