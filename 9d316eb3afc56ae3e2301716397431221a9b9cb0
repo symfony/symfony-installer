@@ -1,0 +1,82 @@
+---------------------------------------------------------------------------
+
+by javiereguiluz at 2014-11-19T09:30:45Z
+
+@lyrixx thanks for this PR! Y have a question: is this something that you want to have integrated in the first version of the installer? In that case we should finish this PR before the end of this week. Do you think that's enough time to finish it? Thanks.
+
+---------------------------------------------------------------------------
+
+by javiereguiluz at 2015-01-28T18:44:47Z
+
+Is there still any interest in adding this feature to the installe? If not, we could close this issue as *won't fix*.
+
+---------------------------------------------------------------------------
+
+by lyrixx at 2015-02-02T11:15:00Z
+
+> Is there still any interest in adding this feature to the installer
+
+yes ;)
+
+---------------------------------------------------------------------------
+
+by lyrixx at 2015-04-27T20:42:50Z
+
+I updated the code.
+
+Example:
+```
+>(6)[{..}hub.com/symfony/symfony-installer](sig) ./symfony  demo
+
+ Downloading Symfony Demo Application...
+
+   88.29 KB/6.58 MB ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░    1%^C
+You aborted the command. We clean up things for you.
+>(6)[{..}hub.com/symfony/symfony-installer](sig) ./symfony  new blog
+
+ Downloading Symfony...
+
+    4.91 MB/4.91 MB ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓  100%
+
+ Preparing project...
+
+^C
+You aborted the command. We clean up things for you.
+>(6)[{..}hub.com/symfony/symfony-installer](sig) git st
+On branch sig
+Your branch is up-to-date with 'lyrixx/sig'.
+nothing to commit, working directory clean
+```
+
+---------------------------------------------------------------------------
+
+by javiereguiluz at 2015-04-27T20:47:28Z
+
+Cool! Your code uses `declare(ticks = 1);` and `goto` I like it, but some people's heads are going to explode!! :smile:
+
+---------------------------------------------------------------------------
+
+by lyrixx at 2015-04-27T20:49:05Z
+
+haha,
+Let's see what will happen ;)
+
+---------------------------------------------------------------------------
+
+by Pierstoval at 2015-04-28T06:51:19Z
+
+Omg, using `goto` is kind of strange, it reminds me of when I coded BASIC in my very young age :laughing: :boom:
+
+---------------------------------------------------------------------------
+
+by javiereguiluz at 2015-04-28T06:52:47Z
+
+@Pierstoval Symfony itself uses `goto` (in the routing matcher) and most of the complex application in the world use gotos (for example, the source code of Linux includes more than 10,000 goto instructions).
+
+---------------------------------------------------------------------------
+
+by Pierstoval at 2015-04-28T06:54:26Z
+
+Yep I know that (I made an emotional-explosive issue some time ago to see if we could rely on something different than `goto`s in the routing matcher), but PHP is not a language where we most use `goto`s that's why it still surprises me when someone uses this language structure :yum:
+
+Anyway it's a great feature you made @lyrixx :+1:
