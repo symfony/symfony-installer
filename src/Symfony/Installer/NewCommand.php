@@ -23,8 +23,6 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class NewCommand extends DownloadCommand
 {
-    protected $projectName;
-    protected $projectDir;
     protected $version;
     protected $downloadedFilePath;
     protected $requirementsErrors = array();
@@ -84,7 +82,7 @@ class NewCommand extends DownloadCommand
         if (is_dir($this->projectDir) && !$this->isEmptyDirectory($this->projectDir)) {
             throw new \RuntimeException(sprintf(
                 "There is already a '%s' project in this directory (%s).\n".
-                "Change your project name or create it in another directory.",
+                'Change your project name or create it in another directory.',
                 $this->projectName, $this->projectDir
             ));
         }
@@ -155,7 +153,7 @@ class NewCommand extends DownloadCommand
                 "The selected version (%s) cannot be installed because it belongs\n".
                 "to an unmaintained Symfony branch which is not compatible with this installer.\n".
                 "To solve this issue install Symfony manually executing the following command:\n\n".
-                "composer create-project symfony/framework-standard-edition %s %s",
+                'composer create-project symfony/framework-standard-edition %s %s',
                 $this->version, $this->projectDir, $this->version
             ));
         }
@@ -166,7 +164,7 @@ class NewCommand extends DownloadCommand
                 "The selected version (%s) cannot be installed because this installer\n".
                 "is compatible with Symfony 2.3 versions starting from 2.3.21.\n".
                 "To solve this issue install Symfony manually executing the following command:\n\n".
-                "composer create-project symfony/framework-standard-edition %s %s",
+                'composer create-project symfony/framework-standard-edition %s %s',
                 $this->version, $this->projectDir, $this->version
             ));
         }
@@ -177,7 +175,7 @@ class NewCommand extends DownloadCommand
                 "The selected version (%s) cannot be installed because this installer\n".
                 "is compatible with Symfony 2.5 versions starting from 2.5.6.\n".
                 "To solve this issue install Symfony manually executing the following command:\n\n".
-                "composer create-project symfony/framework-standard-edition %s %s",
+                'composer create-project symfony/framework-standard-edition %s %s',
                 $this->version, $this->projectDir, $this->version
             ));
         }

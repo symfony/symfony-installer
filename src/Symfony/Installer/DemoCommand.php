@@ -11,6 +11,7 @@
 
 namespace Symfony\Installer;
 
+use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -21,8 +22,6 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class DemoCommand extends DownloadCommand
 {
-    protected $projectName;
-    protected $projectDir;
     protected $downloadedFilePath;
     protected $requirementsErrors = array();
 
@@ -30,6 +29,7 @@ class DemoCommand extends DownloadCommand
     {
         $this
             ->setName('demo')
+            ->addArgument('directory', InputArgument::OPTIONAL, 'Directory where the new project will be created.', 'symfony_demo')
             ->setDescription('Creates a demo Symfony project.')
         ;
     }
@@ -38,22 +38,29 @@ class DemoCommand extends DownloadCommand
     {
         parent::initialize($input, $output);
 
-        $this->projectDir = getcwd();
+        if (!$input->getArgument('directory')) {
+            $this->projectDir = getcwd();
 
-        $i = 1;
-        $projectName = 'symfony_demo';
-        while (file_exists($this->projectDir.DIRECTORY_SEPARATOR.$projectName)) {
-            $projectName = 'symfony_demo_'.(++$i);
+            $i = 1;
+            $projectName = 'symfony_demo';
+            while (file_exists($this->projectDir.DIRECTORY_SEPARATOR.$projectName)) {
+                $projectName = 'symfony_demo_'.(++$i);
+            }
+
+            $this->projectName = $projectName;
+            $this->projectDir = $this->projectDir.DIRECTORY_SEPARATOR.$projectName;
+        } else {
+            $directory = rtrim(trim($input->getArgument('directory')), DIRECTORY_SEPARATOR);
+            $this->projectDir = $this->fs->isAbsolutePath($directory) ? $directory : getcwd().DIRECTORY_SEPARATOR.$directory;
+            $this->projectName = basename($directory);
         }
-
-        $this->projectName = $projectName;
-        $this->projectDir = $this->projectDir.DIRECTORY_SEPARATOR.$projectName;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         try {
             $this
+                ->checkProjectName()
                 ->download()
                 ->extract()
                 ->cleanUp()

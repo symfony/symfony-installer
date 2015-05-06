@@ -38,6 +38,8 @@ abstract class DownloadCommand extends Command
     protected $fs;
     /** @var OutputInterface */
     protected $output;
+    protected $projectName;
+    protected $projectDir;
 
     /**
      * Returns the type of the downloaded application in a human readable format.
@@ -145,6 +147,19 @@ abstract class DownloadCommand extends Command
         if (null !== $progressBar) {
             $progressBar->finish();
             $this->output->writeln("\n");
+        }
+
+        return $this;
+    }
+
+    protected function checkProjectName()
+    {
+        if (is_dir($this->projectDir) && !$this->isEmptyDirectory($this->projectDir)) {
+            throw new \RuntimeException(sprintf(
+                "There is already a '%s' project in this directory (%s).\n".
+                'Change your project name or create it in another directory.',
+                $this->projectName, $this->projectDir
+            ));
         }
 
         return $this;
