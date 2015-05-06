@@ -381,18 +381,18 @@ class NewCommand extends DownloadCommand
             $name = $name.'/'.$name;
         }
 
-        return $this->fixComposerVendorName($name);
+        return $this->fixComposerPackageName($name);
     }
-    
+
     /**
-     * Transforms uppercase user names to dash-separated usernames:
-     * FooBar -> foo-bar
-     * 
-     * @param string $name The name to transform
-     * 
+     * Transforms uppercase strings into dash-separated strings
+     * (e.g. FooBar -> foo-bar) to comply with Composer rules for package names.
+     *
+     * @param string $name The project name to transform
+     *
      * @return string
      */
-    private function fixComposerVendorName($name)
+    private function fixComposerPackageName($name)
     {
         return strtolower(
             preg_replace(
