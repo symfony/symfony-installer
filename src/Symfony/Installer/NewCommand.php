@@ -85,27 +85,6 @@ class NewCommand extends DownloadCommand
     }
 
     /**
-     * Checks whether it's safe to create a new project for the given name in the
-     * given directory.
-     *
-     * @return NewCommand
-     *
-     * @throws \RuntimeException if a project with the same does already exist
-     */
-    protected function checkProjectName()
-    {
-        if (is_dir($this->projectDir) && !$this->isEmptyDirectory($this->projectDir)) {
-            throw new \RuntimeException(sprintf(
-                "There is already a '%s' project in this directory (%s).\n".
-                'Change your project name or create it in another directory.',
-                $this->projectName, $this->projectDir
-            ));
-        }
-
-        return $this;
-    }
-
-    /**
      * Checks whether the given Symfony version is installable by the installer.
      * Due to the changes introduced in the Icu/Intl components
      * (see http://symfony.com/blog/new-in-symfony-2-6-farewell-to-icu-component)
