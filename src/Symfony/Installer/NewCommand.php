@@ -376,21 +376,20 @@ class NewCommand extends DownloadCommand
      */
     protected function generateComposerProjectName()
     {
-        $name = preg_replace('{(?:([a-z])([A-Z])|([A-Z])([A-Z][a-z]))}', '\\1\\3-\\2\\4', $this->projectName);
-        $name = strtolower($name);
+        $name = $this->projectName;
 
         if (!empty($_SERVER['USERNAME'])) {
-            $name = $this->fixComposerVendorName($_SERVER['USERNAME']).'/'.$name;
+            $name = $_SERVER['USERNAME'].'/'.$name;
         } elseif (true === extension_loaded('posix') && $user = posix_getpwuid(posix_getuid())) {
-            $name = $this->fixComposerVendorName($user['name']).'/'.$name;
+            $name = $user['name'].'/'.$name;
         } elseif (get_current_user()) {
-            $name = $this->fixComposerVendorName(get_current_user()).'/'.$name;
+            $name = get_current_user().'/'.$name;
         } else {
             // package names must be in the format foo/bar
             $name = $name.'/'.$name;
         }
 
-        return $name;
+        return $this->fixComposerVendorName($name);
     }
     
     /**
