@@ -1,0 +1,24 @@
+---------------------------------------------------------------------------
+
+by javiereguiluz at 2015-05-06T07:20:15Z
+
+@Ma27 thanks for preparing this PR. I have a question about it: should we apply the new method to the entire package name instead of just to the vendor part? Thanks.
+
+---------------------------------------------------------------------------
+
+by Ma27 at 2015-05-06T12:47:30Z
+
+well actually you are right.
+I would remove the following lines https://github.com/Ma27/symfony-installer/blob/patch-1/src/Symfony/Installer/NewCommand.php#L379-L380 and apply the fixComposerVendorName to the whole package name and attach this commit to the pull request
+
+---------------------------------------------------------------------------
+
+by stof at 2015-05-06T12:54:53Z
+
+@javiereguiluz we should generate lowercase package names. Composer will treat them as lowercase anyway.
+
+---------------------------------------------------------------------------
+
+by javiereguiluz at 2015-05-06T15:02:35Z
+
+With the latest changes I think this is ready to merge it because now we generate lowercased and dash-separated package names. Thanks @Ma27 for working on this!
