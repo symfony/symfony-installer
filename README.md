@@ -12,14 +12,14 @@ This step is only needed the first time you use the installer:
 ### Linux and Mac OS X
 
 ```bash
-$ sudo curl -LsS http://symfony.com/installer -o /usr/local/bin/symfony
+$ sudo curl -LsS https://symfony.com/installer -o /usr/local/bin/symfony
 $ sudo chmod a+x /usr/local/bin/symfony
 ```
 
 ### Windows
 
 ```bash
-c:\> php -r "readfile('http://symfony.com/installer');" > symfony
+c:\> php -r "readfile('https://symfony.com/installer');" > symfony
 ```
 
 Move the downloaded `symfony` file to your projects directory and execute
