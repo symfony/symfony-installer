@@ -15,6 +15,7 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Installer\Exception\AbortException;
+use Symfony\Component\Console\Question\ConfirmationQuestion;
 
 /**
  * This command creates new Symfony projects for the given Symfony version.
@@ -54,6 +55,7 @@ class NewCommand extends DownloadCommand
             $this
                 ->checkProjectName()
                 ->checkSymfonyVersionIsInstallable()
+                ->askUserConfirmation($input, $output)
                 ->download()
                 ->extract()
                 ->cleanUp()
@@ -68,7 +70,7 @@ class NewCommand extends DownloadCommand
             aborted:
 
             $output->writeln('');
-            $output->writeln('<error>Aborting download and cleaning up temporary directories.</>');
+            $output->writeln('<error>Aborting download and cleaning up temporary directories.</error>');
 
             $this->cleanUp();
 
@@ -103,20 +105,17 @@ class NewCommand extends DownloadCommand
      */
     protected function checkSymfonyVersionIsInstallable()
     {
+        // Available at the moment of installing Symfony with this installer.
         // 'latest' is a special version name that refers to the latest stable version
-        // available at the moment of installing Symfony
-        if ('latest' === $this->version) {
-            return $this;
-        }
-
         // 'lts' is a special version name that refers to the current long term support version
-        if ('lts' === $this->version) {
+        // 'dev' is a special version name that refers to the current development version
+        if (in_array($this->version, array('latest', 'lts', 'dev'))) {
             return $this;
         }
 
         // validate semver syntax
-        if (!preg_match('/^2\.\d(?:\.\d{1,2})?$/', $this->version)) {
-            throw new \RuntimeException('The Symfony version should be 2.N or 2.N.M, where N = 0..9 and M = 0..99');
+        if (!preg_match('/^2\.\d(?:\.\d{1,2})?(-(dev|BETA)\d*)?$/', $this->version)) {
+            throw new \RuntimeException('The Symfony version should be 2.N or 2.N.M, where N = 0..9 and M = 0..99.');
         }
 
         if (preg_match('/^2\.\d$/', $this->version)) {
@@ -172,6 +171,31 @@ class NewCommand extends DownloadCommand
                 'composer create-project symfony/framework-standard-edition %s %s',
                 $this->version, $this->projectDir, $this->version
             ));
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param InputInterface  $input
+     * @param OutputInterface $output
+     *
+     * @return NewCommand
+     *
+     * @throws AbortException If the user wants to stop the download process in case of dev/BETA versions
+     */
+    protected function askUserConfirmation(InputInterface $input, OutputInterface $output)
+    {
+        if (preg_match('/^(\d\.\d)(\.\d{1,2})?-(dev|BETA)\d*$/', $this->version)) {
+            $helper = $this->getHelper('question');
+            $question = new ConfirmationQuestion(
+                sprintf('<question>You are trying to install an unstable version (%s). Do you confirm this action? [y/n]</question>', $this->version),
+                false
+            );
+
+            if (!$helper->ask($input, $output, $question)) {
+                throw new AbortException();
+            }
         }
 
         return $this;
