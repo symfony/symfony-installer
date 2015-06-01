@@ -29,6 +29,14 @@ it as follows:
 c:\> php symfony
 ```
 
+> **TIP**: Create a Global Executable
+>
+> `c:\> (echo @ECHO OFF & echo php "%~dp0symfony" %*) > symfony.bat`
+>
+> You can then move `symfony` and `symfony.bat` to a location in your path,
+> allowing you to run `symfony` from anywhere
+
+
 Using the installer
 -------------------
 
