@@ -1,0 +1,13 @@
+---------------------------------------------------------------------------
+
+by weaverryan at 2015-06-09T23:33:23Z
+
+we should open an issue or a PR on the SE to remind fabpot to update the SE to the latest edition of the distribution bundle to fix this. I'd hate to have 2.7.1 released without it.
+
+I'm +1 for this - we might as well fix it here to solve issues. We can remove it later when it's only affecting old versions. For a tool that's meant to help people, I think not merging this would be a little counter productive. So, yes for me :)
+
+---------------------------------------------------------------------------
+
+by javiereguiluz at 2015-06-10T06:32:27Z
+
+This is really nice @xabbuh. Thanks a lot for working on this. And I agree with @weaverryan, we should fix this problem upstream in Symfony as soon as possible.
