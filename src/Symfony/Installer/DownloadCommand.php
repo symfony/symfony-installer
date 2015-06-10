@@ -25,6 +25,7 @@ use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Intl\Exception\MethodArgumentValueNotImplementedException;
 use Symfony\Installer\Exception\AbortException;
 
 /**
@@ -251,13 +252,17 @@ abstract class DownloadCommand extends Command
      */
     protected function checkSymfonyRequirements()
     {
-        require $this->projectDir.'/app/SymfonyRequirements.php';
-        $symfonyRequirements = new \SymfonyRequirements();
-        $this->requirementsErrors = array();
-        foreach ($symfonyRequirements->getRequirements() as $req) {
-            if ($helpText = $this->getErrorMessage($req)) {
-                $this->requirementsErrors[] = $helpText;
+        try {
+            require $this->projectDir.'/app/SymfonyRequirements.php';
+            $symfonyRequirements = new \SymfonyRequirements();
+            $this->requirementsErrors = array();
+            foreach ($symfonyRequirements->getRequirements() as $req) {
+                if ($helpText = $this->getErrorMessage($req)) {
+                    $this->requirementsErrors[] = $helpText;
+                }
             }
+        } catch (MethodArgumentValueNotImplementedException $e) {
+            // workaround https://github.com/symfony/symfony-installer/issues/163
         }
 
         return $this;
