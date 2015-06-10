@@ -30,7 +30,7 @@ class DemoCommand extends DownloadCommand
     {
         $this
             ->setName('demo')
-            ->addArgument('directory', InputArgument::OPTIONAL, 'Directory where the new project will be created.', 'symfony_demo')
+            ->addArgument('directory', InputArgument::OPTIONAL, 'Directory where the new project will be created.')
             ->setDescription('Creates a demo Symfony project.')
         ;
     }
