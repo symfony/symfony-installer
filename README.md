@@ -19,7 +19,7 @@ $ sudo chmod a+x /usr/local/bin/symfony
 ### Windows
 
 ```bash
-c:\> php -r "readfile('http://symfony.com/installer');" > symfony
+c:\> php -r "file_put_contents('symfony', file_get_contents('http://symfony.com/installer'));"
 ```
 
 Move the downloaded `symfony` file to your projects directory and execute
