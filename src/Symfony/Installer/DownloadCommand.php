@@ -207,13 +207,13 @@ abstract class DownloadCommand extends Command
             throw new \RuntimeException(sprintf(
                 "%s can't be installed because the downloaded package is corrupted.\n".
                 "To solve this issue, try executing this command again:\n%s",
-                $this->getDownloadedApplicationType(), $this->getExecutedCommand()
+                ucfirst($this->getDownloadedApplicationType()), $this->getExecutedCommand()
             ));
         } catch (FileEmptyException $e) {
             throw new \RuntimeException(sprintf(
                 "%s can't be installed because the downloaded package is empty.\n".
                 "To solve this issue, try executing this command again:\n%s",
-                $this->getDownloadedApplicationType(), $this->getExecutedCommand()
+                ucfirst($this->getDownloadedApplicationType()), $this->getExecutedCommand()
             ));
         } catch (TargetDirectoryNotWritableException $e) {
             throw new \RuntimeException(sprintf(
@@ -221,7 +221,7 @@ abstract class DownloadCommand extends Command
                 "permissions to uncompress and rename the package contents.\n".
                 "To solve this issue, check the permissions of the %s directory and\n".
                 "try executing this command again:\n%s",
-                $this->getDownloadedApplicationType(), getcwd(), $this->getExecutedCommand()
+                ucfirst($this->getDownloadedApplicationType()), getcwd(), $this->getExecutedCommand()
             ));
         } catch (\Exception $e) {
             throw new \RuntimeException(sprintf(
@@ -230,7 +230,7 @@ abstract class DownloadCommand extends Command
                 "rename the package contents.\n".
                 "To solve this issue, check the permissions of the %s directory and\n".
                 "try executing this command again:\n%s",
-                $this->getDownloadedApplicationType(), getcwd(), $this->getExecutedCommand()
+                ucfirst($this->getDownloadedApplicationType()), getcwd(), $this->getExecutedCommand()
             ), null, $e);
         }
 
@@ -238,7 +238,7 @@ abstract class DownloadCommand extends Command
             throw new \RuntimeException(sprintf(
                 "%s can't be installed because the downloaded package is corrupted\n".
                 "or because the uncompress commands of your operating system didn't work.",
-                $this->getDownloadedApplicationType()
+                ucfirst($this->getDownloadedApplicationType())
             ));
         }
 

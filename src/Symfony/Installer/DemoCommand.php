@@ -146,7 +146,7 @@ class DemoCommand extends DownloadCommand
 
     protected function getDownloadedApplicationType()
     {
-        return 'Symfony Demo Application';
+        return 'the Symfony Demo Application';
     }
 
     protected function getRemoteFileUrl()
