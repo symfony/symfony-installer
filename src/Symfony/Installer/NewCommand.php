@@ -424,8 +424,7 @@ class NewCommand extends DownloadCommand
         $composerFileContents = file_get_contents($this->projectDir.'/composer.json');
         $lockFileContents = json_decode(file_get_contents($this->projectDir.'/composer.lock'), true);
 
-        $hash = md5($composerFileContents);
-        $lockFileContents['hash'] = $hash;
+        $lockFileContents['hash'] = md5($composerFileContents);
 
         file_put_contents($this->projectDir.'/composer.lock', json_encode($lockFileContents, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES)."\n");
     }
