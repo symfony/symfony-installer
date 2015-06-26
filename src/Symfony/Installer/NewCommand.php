@@ -336,6 +336,8 @@ class NewCommand extends DownloadCommand
 
         file_put_contents($filename, json_encode($contents, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES)."\n");
 
+        $this->syncComposerLockFile();
+
         return $this;
     }
 
@@ -411,5 +413,19 @@ class NewCommand extends DownloadCommand
     protected function getRemoteFileUrl()
     {
         return 'http://symfony.com/download?v=Symfony_Standard_Vendors_'.$this->version;
+    }
+
+    /**
+     * Updates the 'hash' value stored in composer.lock to avoid out-of-sync
+     * problems when the composer.json file contents are changed.
+     */
+    private function syncComposerLockFile()
+    {
+        $composerFileContents = file_get_contents($this->projectDir.'/composer.json');
+        $lockFileContents = json_decode(file_get_contents($this->projectDir.'/composer.lock'), true);
+
+        $lockFileContents['hash'] = md5($composerFileContents);
+
+        file_put_contents($this->projectDir.'/composer.lock', json_encode($lockFileContents, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES)."\n");
     }
 }
