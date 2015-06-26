@@ -29,13 +29,15 @@ it as follows:
 c:\> php symfony
 ```
 
-> **TIP**: Create a Global Executable
->
-> `c:\> (echo @ECHO OFF & echo php "%~dp0symfony" %*) > symfony.bat`
->
-> You can then move `symfony` and `symfony.bat` to a location in your path,
-> allowing you to run `symfony` from anywhere
+If you prefer to create a global `symfony` command, execute the following:
 
+```bash
+c:\> (echo @ECHO OFF & echo php "%~dp0symfony" %*) > symfony.bat
+```
+
+Then, move both files (`symfony` and `symfony.bat`) to any location included
+in your execution path. Now you can run the `symfony` command anywhere on your
+system.
 
 Using the installer
 -------------------
