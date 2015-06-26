@@ -1,0 +1,12 @@
+---------------------------------------------------------------------------
+
+by stof at 2015-06-25T10:00:38Z
+
+@javiereguiluz reimplementing the composer hashing here has a drawback though: the logic will become much more complex once composer improves its hashing by hashing only the relevant informations (which would require you to update a second hash for the new API).
+But anyway, I guess we can live with this solution for now. Nobody is currently working on improving the hash computation, so it won't be there soon AFAICT. So :+1: from me
+
+---------------------------------------------------------------------------
+
+by javiereguiluz at 2015-06-26T15:51:53Z
+
+@stof I agree with you. Let's merge this for now and if someday Composer changes the hashing algorithm, we'll match their implementation or drop this feature, whichever is easier for us.
