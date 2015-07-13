@@ -1,0 +1,29 @@
+---------------------------------------------------------------------------
+
+by xabbuh at 2015-07-13T10:49:06Z
+
+Shouldn't we rather fix this in Distill? Otherwise we start to make assumptions on the library's internal behaviour.
+
+---------------------------------------------------------------------------
+
+by javiereguiluz at 2015-07-13T12:56:01Z
+
+@xabbuh thanks for your comment. To be honest, I'm not sure what to say about this. Making this check in the installer is easy and pragmatic ... but passing this responsibility upstream is even more pragmatic. What should we do?
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2015-07-13T13:03:14Z
+
+:+1: and then we can open an issue/PR upstream. I *do* think that there should be some way (e.g. a try-catch) of knowing if the unzip fails and - preferably - why.
+
+---------------------------------------------------------------------------
+
+by javiereguiluz at 2015-07-13T13:06:30Z
+
+@weaverryan most of the errors related to unzipping the contents are handled by the great work done by @raulfraile in https://github.com/symfony/symfony-installer/blob/master/src/Symfony/Installer/DownloadCommand.php#L206-234  but we also want to detect some errors *before* downloading the ZIP file.
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2015-07-13T14:27:18Z
+
+Oh yea, that's already really great stuff from Distill. So, I'm +1 for this one, simple check beforehand as an earlier warning.
