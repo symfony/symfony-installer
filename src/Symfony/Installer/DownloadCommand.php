@@ -177,15 +177,19 @@ abstract class DownloadCommand extends Command
      */
     protected function getGuzzleClient()
     {
-        $options = array();
+        $defaults = array();
 
         // check if the client must use a proxy server
         if (!empty($_SERVER['HTTP_PROXY']) || !empty($_SERVER['http_proxy'])) {
             $proxy = !empty($_SERVER['http_proxy']) ? $_SERVER['http_proxy'] : $_SERVER['HTTP_PROXY'];
-            $options['proxy'] = $proxy;
+            $defaults['proxy'] = $proxy;
         }
 
-        return new Client($options);
+        if ($this->output->getVerbosity() >= OutputInterface::VERBOSITY_DEBUG) {
+            $defaults['debug'] = true;
+        }
+
+        return new Client(array('defaults' => $defaults));
     }
 
     /**
@@ -334,7 +338,7 @@ abstract class DownloadCommand extends Command
             return;
         }
 
-        $errorMessage  = wordwrap($requirement->getTestMessage(), $lineSize - 3, PHP_EOL.'   ').PHP_EOL;
+        $errorMessage = wordwrap($requirement->getTestMessage(), $lineSize - 3, PHP_EOL.'   ').PHP_EOL;
         $errorMessage .= '   > '.wordwrap($requirement->getHelpText(), $lineSize - 5, PHP_EOL.'   > ').PHP_EOL;
 
         return $errorMessage;
