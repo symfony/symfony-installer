@@ -177,15 +177,20 @@ abstract class DownloadCommand extends Command
      */
     protected function getGuzzleClient()
     {
-        $options = array();
+        $defaults = array();
 
         // check if the client must use a proxy server
         if (!empty($_SERVER['HTTP_PROXY']) || !empty($_SERVER['http_proxy'])) {
             $proxy = !empty($_SERVER['http_proxy']) ? $_SERVER['http_proxy'] : $_SERVER['HTTP_PROXY'];
-            $options['proxy'] = $proxy;
+            $defaults['proxy'] = $proxy;
         }
 
-        return new Client($options);
+        // enable request debugging if the command is in verbosity mode
+        if ($this->output->getVerbosity() >= OutputInterface::VERBOSITY_VERBOSE) {
+            $defaults['debug'] = true;
+        }
+
+        return new Client(array('defaults' => $defaults));
     }
 
     /**
