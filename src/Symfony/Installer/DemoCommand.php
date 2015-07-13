@@ -62,6 +62,7 @@ class DemoCommand extends DownloadCommand
         try {
             $this
                 ->checkProjectName()
+                ->checkPermissions()
                 ->download()
                 ->extract()
                 ->cleanUp()

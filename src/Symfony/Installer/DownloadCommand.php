@@ -24,6 +24,7 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Filesystem\Exception\IOException;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Intl\Exception\MethodArgumentValueNotImplementedException;
 use Symfony\Installer\Exception\AbortException;
@@ -294,6 +295,20 @@ abstract class DownloadCommand extends Command
         } catch (\Exception $e) {
             // don't throw an exception in case the .gitignore file cannot be created,
             // because this is just an enhancement, not something mandatory for the project
+        }
+
+        return $this;
+    }
+
+    /**
+     * Checks if the installer has enough permissions to create the project.
+     */
+    protected function checkPermissions()
+    {
+        $projectParentDirectory = dirname($this->projectDir);
+
+        if (!is_writable($projectParentDirectory)) {
+            throw new IOException(sprintf('Installer does not have enough permissions to write to the "%s" directory.', $projectParentDirectory));
         }
 
         return $this;
