@@ -54,6 +54,7 @@ class NewCommand extends DownloadCommand
             $this
                 ->checkProjectName()
                 ->checkSymfonyVersionIsInstallable()
+                ->checkPermissions()
                 ->download()
                 ->extract()
                 ->cleanUp()
