@@ -68,7 +68,7 @@ class IntegrationTest extends \PHPUnit_Framework_TestCase
      * Runs the given string as a command and returns the resulting output.
      * The CWD is set to the root project directory to simplify command paths.
      *
-     * @param  string $command
+     * @param string $command
      *
      * @return string
      *
