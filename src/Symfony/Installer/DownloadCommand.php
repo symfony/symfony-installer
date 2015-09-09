@@ -89,9 +89,12 @@ abstract class DownloadCommand extends Command
 
         /** @var ProgressBar|null $progressBar */
         $progressBar = null;
-        $downloadCallback = function ($size, $downloaded, $client, $request, Response $response) use (&$progressBar) {
-            // Don't initialize the progress bar for redirects as the size is much smaller
-            if ($response->getStatusCode() >= 300) {
+        $downloadCallback = function (ProgressEvent $event) use (&$progressBar) {
+            $downloadSize = $event->downloadSize;
+            $downloaded = $event->downloaded;
+
+            // progress bar is only displayed for files larger than 1MB
+            if ($downloadSize < 1 * 1024 * 1024) {
                 return;
             }
 
@@ -103,9 +106,9 @@ abstract class DownloadCommand extends Command
                     return str_pad($this->formatSize($bar->getStep()), 11, ' ', STR_PAD_LEFT);
                 });
 
-                $progressBar = new ProgressBar($this->output, $size);
+                $progressBar = new ProgressBar($this->output, $downloadSize);
                 $progressBar->setFormat('%current%/%max% %bar%  %percent:3s%%');
-                $progressBar->setRedrawFrequency(max(1, floor($size / 1000)));
+                $progressBar->setRedrawFrequency(max(1, floor($downloadSize / 1000)));
                 $progressBar->setBarWidth(60);
 
                 if (!defined('PHP_WINDOWS_VERSION_BUILD')) {
