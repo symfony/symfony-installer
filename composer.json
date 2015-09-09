@@ -18,11 +18,11 @@
         "guzzlehttp/progress-subscriber": "~1.1",
         "symfony/console": "~2.5",
         "symfony/filesystem": "~2.5",
-        "raulfraile/distill": "~0.9,!=0.9.3,!=0.9.4",
-        "symfony/process": "^2.7"
+        "raulfraile/distill": "~0.9,!=0.9.3,!=0.9.4"
     },
     "require-dev": {
-        "kherge/box": "~2.5"
+        "kherge/box": "~2.5",
+        "symfony/process": "~2.5"
     },
     "extra": {
         "branch-alias": {

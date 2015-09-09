@@ -44,7 +44,7 @@ class IntegrationTest extends \PHPUnit_Framework_TestCase
         $this->assertContains('Symfony Demo Application was successfully installed.', $output);
 
         $output = $this->runCommand(sprintf('cd %s && php app/console --version', $projectDir));
-        $this->assertRegExp('/Symfony version (2|3)\.\d+\.\d+ - app\/dev\/debug/', $output);
+        $this->assertRegExp('/Symfony version 2\.\d+\.\d+ - app\/dev\/debug/', $output);
     }
 
     /**
