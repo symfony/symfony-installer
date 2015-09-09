@@ -18,8 +18,7 @@ use Distill\Exception\IO\Output\TargetDirectoryNotWritableException;
 use Distill\Strategy\MinimumSize;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
-use GuzzleHttp\Message\Response;
-use GuzzleHttp\Subscriber\Progress\Progress;
+use GuzzleHttp\Event\ProgressEvent;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Input\InputInterface;
@@ -89,9 +88,12 @@ abstract class DownloadCommand extends Command
 
         /** @var ProgressBar|null $progressBar */
         $progressBar = null;
-        $downloadCallback = function ($size, $downloaded, $client, $request, Response $response) use (&$progressBar) {
-            // Don't initialize the progress bar for redirects as the size is much smaller
-            if ($response->getStatusCode() >= 300) {
+        $downloadCallback = function (ProgressEvent $event) use (&$progressBar) {
+            $downloadSize = $event->downloadSize;
+            $downloaded = $event->downloaded;
+
+            // progress bar is only displayed for files larger than 1MB
+            if ($downloadSize < 1 * 1024 * 1024) {
                 return;
             }
 
@@ -103,9 +105,9 @@ abstract class DownloadCommand extends Command
                     return str_pad($this->formatSize($bar->getStep()), 11, ' ', STR_PAD_LEFT);
                 });
 
-                $progressBar = new ProgressBar($this->output, $size);
+                $progressBar = new ProgressBar($this->output, $downloadSize);
                 $progressBar->setFormat('%current%/%max% %bar%  %percent:3s%%');
-                $progressBar->setRedrawFrequency(max(1, floor($size / 1000)));
+                $progressBar->setRedrawFrequency(max(1, floor($downloadSize / 1000)));
                 $progressBar->setBarWidth(60);
 
                 if (!defined('PHP_WINDOWS_VERSION_BUILD')) {
@@ -121,13 +123,14 @@ abstract class DownloadCommand extends Command
         };
 
         $client = $this->getGuzzleClient();
-        $client->getEmitter()->attach(new Progress(null, $downloadCallback));
 
         // store the file in a temporary hidden directory with a random name
         $this->downloadedFilePath = rtrim(getcwd(), DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR.'.'.uniqid(time()).DIRECTORY_SEPARATOR.'symfony.'.pathinfo($symfonyArchiveFile, PATHINFO_EXTENSION);
 
         try {
-            $response = $client->get($symfonyArchiveFile);
+            $request = $client->createRequest('GET', $symfonyArchiveFile);
+            $request->getEmitter()->on('progress', $downloadCallback);
+            $response = $client->send($request);
         } catch (ClientException $e) {
             if ('new' === $this->getName() && ($e->getCode() === 403 || $e->getCode() === 404)) {
                 throw new \RuntimeException(sprintf(
