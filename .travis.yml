@@ -1,0 +1,24 @@
+language: php
+sudo: false
+
+cache:
+  directories:
+    - $HOME/.composer/cache/files
+
+matrix:
+  fast_finish: true
+  include:
+    - php: 5.3
+    - php: 5.4
+    - php: 5.5
+    - php: 5.6
+    - php: hhvm
+    - php: nightly
+  allow_failures:
+    - php: hhvm
+
+install:
+  - composer install
+
+script:
+  - phpunit -c app
