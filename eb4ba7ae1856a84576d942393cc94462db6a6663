@@ -1,0 +1,23 @@
+---------------------------------------------------------------------------
+
+by javiereguiluz at 2015-09-10T08:01:15Z
+
+@fabpot when you have some free time, please enable Travis for this repository. Thanks!
+
+---------------------------------------------------------------------------
+
+by fabpot at 2015-09-10T08:07:46Z
+
+@javiereguiluz done
+
+---------------------------------------------------------------------------
+
+by javiereguiluz at 2015-09-10T10:38:07Z
+
+Tests are finally green! @stof do you have any other comment before the merge? Thanks!
+
+---------------------------------------------------------------------------
+
+by javiereguiluz at 2015-09-10T11:23:25Z
+
+All comments have beeen addressed and tests are green. Merging!
