@@ -20,6 +20,9 @@
         "symfony/filesystem": "~2.5",
         "raulfraile/distill": "~0.9,!=0.9.3,!=0.9.4"
     },
+    "require-dev": {
+        "symfony/process": "~2.5"
+    },
     "extra": {
         "branch-alias": {
             "dev-master": "1.0-dev"
