@@ -18,21 +18,16 @@ use Symfony\Component\Process\Exception\ProcessFailedException;
 
 class IntegrationTest extends \PHPUnit_Framework_TestCase
 {
-    private static $rootDir = __DIR__.'/../../../../';
+    private $rootDir = __DIR__.'/../../../../';
     private $fs;
 
     public function setUp()
     {
         $this->fs = new Filesystem();
 
-        $this->fs->remove(self::$rootDir.'/symfony.phar');
-        $this->runCommand('php box build');
-    }
-
-    public static function tearDownAfterClass()
-    {
-        $fs = new Filesystem();
-        $fs->remove(self::$rootDir.'/symfony.phar');
+        if (!$this->fs->exists($this->rootDir.'/symfony.phar')) {
+            throw new \RuntimeException(sprintf("Before running the tests, make sure that the Symfony Installer is available as a 'symfony.phar' file in the '%s' directory.", $this->rootDir));
+        }
     }
 
     public function testDemoApplicationInstallation()
@@ -78,7 +73,7 @@ class IntegrationTest extends \PHPUnit_Framework_TestCase
     private function runCommand($command)
     {
         $process = new Process($command);
-        $process->setWorkingDirectory(self::$rootDir);
+        $process->setWorkingDirectory($this->rootDir);
         $process->mustRun();
 
         return $process->getOutput();
