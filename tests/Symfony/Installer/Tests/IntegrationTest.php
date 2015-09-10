@@ -23,7 +23,7 @@ class IntegrationTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->rootDir =  __DIR__.'/../../../../';
+        $this->rootDir = __DIR__.'/../../../../';
         $this->fs = new Filesystem();
 
         if (!$this->fs->exists($this->rootDir.'/symfony.phar')) {
