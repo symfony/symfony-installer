@@ -18,11 +18,12 @@ use Symfony\Component\Process\Exception\ProcessFailedException;
 
 class IntegrationTest extends \PHPUnit_Framework_TestCase
 {
-    private $rootDir = __DIR__.'/../../../../';
+    private $rootDir;
     private $fs;
 
     public function setUp()
     {
+        $this->rootDir =  __DIR__.'/../../../../';
         $this->fs = new Filesystem();
 
         if (!$this->fs->exists($this->rootDir.'/symfony.phar')) {
