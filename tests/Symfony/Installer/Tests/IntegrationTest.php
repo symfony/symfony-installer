@@ -14,6 +14,7 @@ namespace Symfony\Installer\Tests;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Process\Process;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Process\Exception\ProcessFailedException;
 
 class IntegrationTest extends \PHPUnit_Framework_TestCase
 {
@@ -25,7 +26,7 @@ class IntegrationTest extends \PHPUnit_Framework_TestCase
         $this->fs = new Filesystem();
 
         $this->fs->remove(self::$rootDir.'/symfony.phar');
-        $this->runCommand('./vendor/bin/box build');
+        $this->runCommand('php box build');
     }
 
     public static function tearDownAfterClass()
@@ -39,7 +40,7 @@ class IntegrationTest extends \PHPUnit_Framework_TestCase
         $projectDir = sprintf('%s/my_test_project', sys_get_temp_dir());
         $this->fs->remove($projectDir);
 
-        $output = $this->runCommand(sprintf('./symfony.phar demo %s', $projectDir));
+        $output = $this->runCommand(sprintf('php symfony.phar demo %s', $projectDir));
         $this->assertContains('Downloading the Symfony Demo Application', $output);
         $this->assertContains('Symfony Demo Application was successfully installed.', $output);
 
@@ -56,7 +57,7 @@ class IntegrationTest extends \PHPUnit_Framework_TestCase
         $this->fs->remove($projectDir);
 
         $commonArguments = sprintf('new %s', $projectDir);
-        $output = $this->runCommand(sprintf('./symfony.phar %s %s', $commonArguments, $additionalArguments));
+        $output = $this->runCommand(sprintf('php symfony.phar %s %s', $commonArguments, $additionalArguments));
         $this->assertContains('Downloading Symfony...', $output);
         $this->assertRegExp($messageRegexp, $output);
 
@@ -72,17 +73,13 @@ class IntegrationTest extends \PHPUnit_Framework_TestCase
      *
      * @return string
      *
-     * @throws RuntimeException in case the command execution is not successful
+     * @throws ProcessFailedException in case the command execution is not successful
      */
     private function runCommand($command)
     {
         $process = new Process($command);
         $process->setWorkingDirectory(self::$rootDir);
-        $process->run();
-
-        if (!$process->isSuccessful()) {
-            throw new \RuntimeException($process->getErrorOutput());
-        }
+        $process->mustRun();
 
         return $process->getOutput();
     }
