@@ -15,6 +15,7 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Process\Process;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Process\Exception\ProcessFailedException;
+use Symfony\Component\Process\ProcessUtils;
 
 class IntegrationTest extends \PHPUnit_Framework_TestCase
 {
@@ -23,7 +24,7 @@ class IntegrationTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->rootDir = __DIR__.'/../../../../';
+        $this->rootDir = realpath(__DIR__.'/../../../../');
         $this->fs = new Filesystem();
 
         if (!$this->fs->exists($this->rootDir.'/symfony.phar')) {
@@ -36,28 +37,27 @@ class IntegrationTest extends \PHPUnit_Framework_TestCase
         $projectDir = sprintf('%s/my_test_project', sys_get_temp_dir());
         $this->fs->remove($projectDir);
 
-        $output = $this->runCommand(sprintf('php symfony.phar demo %s', $projectDir));
+        $output = $this->runCommand(sprintf('php symfony.phar demo %s', ProcessUtils::escapeArgument($projectDir)));
         $this->assertContains('Downloading the Symfony Demo Application', $output);
         $this->assertContains('Symfony Demo Application was successfully installed.', $output);
 
-        $output = $this->runCommand(sprintf('cd %s && php app/console --version', $projectDir));
+        $output = $this->runCommand('php app/console --version', $projectDir);
         $this->assertRegExp('/Symfony version 2\.\d+\.\d+ - app\/dev\/debug/', $output);
     }
 
     /**
      * @dataProvider provideSymfonyInstallationData
      */
-    public function testSymfonyInstallation($additionalArguments, $messageRegexp, $versionRegexp)
+    public function testSymfonyInstallation($commandArguments, $messageRegexp, $versionRegexp)
     {
         $projectDir = sprintf('%s/my_test_project', sys_get_temp_dir());
         $this->fs->remove($projectDir);
 
-        $commonArguments = sprintf('new %s', $projectDir);
-        $output = $this->runCommand(sprintf('php symfony.phar %s %s', $commonArguments, $additionalArguments));
+        $output = $this->runCommand(sprintf('php symfony.phar new %s %s', ProcessUtils::escapeArgument($projectDir), $commandArguments));
         $this->assertContains('Downloading Symfony...', $output);
         $this->assertRegExp($messageRegexp, $output);
 
-        $output = $this->runCommand(sprintf('cd %s && php app/console --version', $projectDir));
+        $output = $this->runCommand('php app/console --version', $projectDir);
         $this->assertRegExp($versionRegexp, $output);
     }
 
@@ -71,10 +71,10 @@ class IntegrationTest extends \PHPUnit_Framework_TestCase
      *
      * @throws ProcessFailedException in case the command execution is not successful
      */
-    private function runCommand($command)
+    private function runCommand($command, $workingDirectory = null)
     {
         $process = new Process($command);
-        $process->setWorkingDirectory($this->rootDir);
+        $process->setWorkingDirectory($workingDirectory ?: $this->rootDir);
         $process->mustRun();
 
         return $process->getOutput();

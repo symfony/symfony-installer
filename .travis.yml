@@ -18,7 +18,7 @@ matrix:
 
 before_install:
   - composer self-update
-  - curl -LSs http://box-project.github.io/box2/installer.php | php
+  - curl -LSs https://box-project.github.io/box2/installer.php | php
   - mv box.phar box
   - chmod 755 box
 
@@ -28,7 +28,3 @@ install:
 
 script:
   - phpunit
-
-after_script:
-  - rm box
-  - rm symfony.phar
