@@ -17,13 +17,14 @@ matrix:
     - php: hhvm
 
 before_install:
+  - composer self-update
   - curl -LSs http://box-project.github.io/box2/installer.php | php
   - mv box.phar box
   - chmod 755 box
-  - php box build
 
 install:
   - composer install
+  - php box build
 
 script:
   - phpunit
