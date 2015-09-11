@@ -171,6 +171,11 @@ class NewCommand extends DownloadCommand
             ));
         }
 
+        // warn the user when downloading an unstable version
+        if (preg_match('/^.*\-(dev|BETA)\d*$/', $this->version)) {
+            $this->output->writeln("\n <bg=red> WARNING </> You are downloading an unstable Symfony version.");
+        }
+
         return $this;
     }
 
