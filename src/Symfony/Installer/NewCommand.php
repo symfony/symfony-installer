@@ -70,7 +70,7 @@ class NewCommand extends DownloadCommand
             aborted:
 
             $output->writeln('');
-            $output->writeln('<error>Aborting download and cleaning up temporary directories.</error>');
+            $output->writeln('<error>Aborting download and cleaning up temporary directories.</>');
 
             $this->cleanUp();
 
@@ -105,11 +105,9 @@ class NewCommand extends DownloadCommand
      */
     protected function checkSymfonyVersionIsInstallable()
     {
-        // Available at the moment of installing Symfony with this installer.
         // 'latest' is a special version name that refers to the latest stable version
         // 'lts' is a special version name that refers to the current long term support version
-        // 'dev' is a special version name that refers to the current development version
-        if (in_array($this->version, array('latest', 'lts', 'dev'))) {
+        if (in_array($this->version, array('latest', 'lts'))) {
             return $this;
         }
 
@@ -171,31 +169,6 @@ class NewCommand extends DownloadCommand
                 'composer create-project symfony/framework-standard-edition %s %s',
                 $this->version, $this->projectDir, $this->version
             ));
-        }
-
-        return $this;
-    }
-
-    /**
-     * @param InputInterface  $input
-     * @param OutputInterface $output
-     *
-     * @return NewCommand
-     *
-     * @throws AbortException If the user wants to stop the download process in case of dev/BETA versions
-     */
-    protected function askUserConfirmation(InputInterface $input, OutputInterface $output)
-    {
-        if (preg_match('/^(\d\.\d)(\.\d{1,2})?-(dev|BETA)\d*$/', $this->version)) {
-            $helper = $this->getHelper('question');
-            $question = new ConfirmationQuestion(
-                sprintf('<question>You are trying to install an unstable version (%s). Do you confirm this action? [y/n]</question>', $this->version),
-                false
-            );
-
-            if (!$helper->ask($input, $output, $question)) {
-                throw new AbortException();
-            }
         }
 
         return $this;
