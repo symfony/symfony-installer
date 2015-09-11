@@ -15,7 +15,6 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Installer\Exception\AbortException;
-use Symfony\Component\Console\Question\ConfirmationQuestion;
 
 /**
  * This command creates new Symfony projects for the given Symfony version.
@@ -178,7 +177,7 @@ class NewCommand extends DownloadCommand
                 "been published as a package yet. Read the following article for\n".
                 "an alternative installation method:\n\n".
                 "> How to Install or Upgrade to the Latest, Unreleased Symfony Version\n".
-                "> http://symfony.com/doc/current/cookbook/install/unstable_versions.html",
+                '> http://symfony.com/doc/current/cookbook/install/unstable_versions.html',
                 $this->version
             ));
         }
