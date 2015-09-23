@@ -111,7 +111,7 @@ class NewCommand extends DownloadCommand
         }
 
         // validate semver syntax
-        if (!preg_match('/^2\.\d(?:\.\d{1,2})?(-(dev|BETA)\d*)?$/', $this->version)) {
+        if (!preg_match('/^2\.\d(?:\.\d{1,2})?(-(dev|BETA\d*))?$/', $this->version)) {
             throw new \RuntimeException('The Symfony version should be 2.N or 2.N.M, where N = 0..9 and M = 0..99. The special "-dev" or "-BETA" suffixes are also supported.');
         }
 
