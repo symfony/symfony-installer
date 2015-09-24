@@ -111,7 +111,7 @@ class NewCommand extends DownloadCommand
         }
 
         // validate semver syntax
-        if (!preg_match('/^2\.\d(?:\.\d{1,2})?(-(dev|BETA\d*))?$/', $this->version)) {
+        if (!preg_match('/^2\.\d(?:\.\d{1,2})?(-(dev|BETA\d*))?$/i', $this->version)) {
             throw new \RuntimeException('The Symfony version should be 2.N or 2.N.M, where N = 0..9 and M = 0..99. The special "-dev" or "-BETA" suffixes are also supported.');
         }
 
@@ -171,7 +171,7 @@ class NewCommand extends DownloadCommand
         }
 
         // "-dev" versions are not supported because Symfony doesn't provide packages for them
-        if (preg_match('/^.*\-dev$/', $this->version)) {
+        if (preg_match('/^.*\-dev$/i', $this->version)) {
             throw new \RuntimeException(sprintf(
                 "The selected version (%s) cannot be installed because it hasn't\n".
                 "been published as a package yet. Read the following article for\n".
@@ -183,7 +183,7 @@ class NewCommand extends DownloadCommand
         }
 
         // warn the user when downloading an unstable version
-        if (preg_match('/^.*\-BETA\d*$/', $this->version)) {
+        if (preg_match('/^.*\-BETA\d*$/i', $this->version)) {
             $this->output->writeln("\n <bg=red> WARNING </> You are downloading an unstable Symfony version.");
         }
 
