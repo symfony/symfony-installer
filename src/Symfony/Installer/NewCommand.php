@@ -111,8 +111,8 @@ class NewCommand extends DownloadCommand
         }
 
         // validate semver syntax
-        if (!preg_match('/^2\.\d(?:\.\d{1,2})?(-(dev|BETA\d*))?$/i', $this->version)) {
-            throw new \RuntimeException('The Symfony version should be 2.N or 2.N.M, where N = 0..9 and M = 0..99. The special "-dev" or "-BETA" suffixes are also supported.');
+        if (!preg_match('/^2\.\d(?:\.\d{1,2})?(?:-(?:dev|BETA\d*|RC\d*))?$/i', $this->version)) {
+            throw new \RuntimeException('The Symfony version should be 2.N or 2.N.M, where N = 0..9 and M = 0..99. The special "-dev" "-BETA" and "-RC" suffixes are also supported.');
         }
 
         if (preg_match('/^2\.\d$/', $this->version)) {
@@ -183,8 +183,10 @@ class NewCommand extends DownloadCommand
         }
 
         // warn the user when downloading an unstable version
-        if (preg_match('/^.*\-BETA\d*$/i', $this->version)) {
+        if (preg_match('/^.*\-(BETA|RC)\d*$/i', $this->version)) {
             $this->output->writeln("\n <bg=red> WARNING </> You are downloading an unstable Symfony version.");
+            // versions provided by the download server are case sensitive
+            $this->version = strtoupper($this->version);
         }
 
         return $this;
