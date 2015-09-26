@@ -185,8 +185,7 @@ abstract class DownloadCommand extends Command
             $defaults['proxy'] = $proxy;
         }
 
-        // enable request debugging if the command is in verbosity mode
-        if ($this->output->getVerbosity() >= OutputInterface::VERBOSITY_VERBOSE) {
+        if ($this->output->getVerbosity() >= OutputInterface::VERBOSITY_DEBUG) {
             $defaults['debug'] = true;
         }
 
