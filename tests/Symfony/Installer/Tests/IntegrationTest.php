@@ -108,7 +108,7 @@ class IntegrationTest extends \PHPUnit_Framework_TestCase
             ),
 
             array(
-                '2.7-BETA1',
+                '2.7.0-BETA1',
                 '/.*Symfony 2\.7\.0\-BETA1 was successfully installed.*/',
                 '/Symfony version 2\.7\-BETA1 - app\/dev\/debug/',
             ),
