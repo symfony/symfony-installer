@@ -1,0 +1,78 @@
+---------------------------------------------------------------------------
+
+by javiereguiluz at 2015-09-15T11:39:06Z
+
+I'd like to merge this change soon because I want to test it well before we enter into the most intense release period in Symfony history (including a major version change). Please add any comment or review that you may have. Thanks!
+
+---------------------------------------------------------------------------
+
+by xabbuh at 2015-09-23T14:20:34Z
+
+@javiereguiluz SO we can now download archives of all beta versions? Does this include all beta versions that have been released in the past?
+
+---------------------------------------------------------------------------
+
+by javiereguiluz at 2015-09-23T14:37:14Z
+
+@xabbuh yes, we can download any past beta package. For example:
+
+```bash
+$ symfony new my_project 2.6.0-BETA1
+```
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2015-09-23T16:05:26Z
+
+:+1: as is - it'll be great to be able to show people how to create a new beta project for testing when the beta's are released.
+
+---------------------------------------------------------------------------
+
+by javiereguiluz at 2015-09-24T16:15:44Z
+
+After @xabbuh's comments, I can confirm that Composer is case insensitive at least on Mac OS. These commands result in the same installation:
+
+```
+$ composer create-project symfony/framework-standard-edition my_project 2.7.0-BETA1
+$ composer create-project symfony/framework-standard-edition my_project 2.7.0-beta1
+```
+
+That's why in 31765ca I've changed all `dev` and `BETA` comparisons to case insentivity. I'll merge this last version unless someone tells me not to. Thanks!
+
+---------------------------------------------------------------------------
+
+by stof at 2015-09-24T17:28:29Z
+
+> I can confirm that Composer is case insensitive at least on Mac OS
+
+it is on all systems. It normalizes the case of stability specifiers: https://github.com/composer/composer/blob/15face5432d7b7334db6ac69fac0190971cafa6e/src/Composer/Package/Version/VersionParser.php#L49
+
+---------------------------------------------------------------------------
+
+by stof at 2015-09-24T17:29:41Z
+
+@javiereguiluz what about ``RC`` versions ?
+
+---------------------------------------------------------------------------
+
+by stof at 2015-09-24T17:31:14Z
+
+@javiereguiluz shouldn't you normalize the case of ``BETA`` for the generated archive URL though ? Or is it case insensitive on the server too ?
+
+---------------------------------------------------------------------------
+
+by javiereguiluz at 2015-09-24T17:46:11Z
+
+In https://github.com/symfony/symfony-installer/commit/b26b217c24c6ee713694e633391c2ac5f6af24ca I've added support for RC versions and I've normalized the version names before downloading them from the server.
+
+---------------------------------------------------------------------------
+
+by xabbuh at 2015-09-28T06:21:29Z
+
+:+1:
+
+---------------------------------------------------------------------------
+
+by javiereguiluz at 2015-09-28T06:22:01Z
+
+@xabbuh thanks for the review. I'm gonna merge it now, so we have time to test it well before the 2.8.0-BETA1 release. Thanks!
