@@ -105,19 +105,14 @@ class NewCommand extends DownloadCommand
     protected function checkSymfonyVersionIsInstallable()
     {
         // 'latest' is a special version name that refers to the latest stable version
-        // available at the moment of installing Symfony
-        if ('latest' === $this->version) {
-            return $this;
-        }
-
         // 'lts' is a special version name that refers to the current long term support version
-        if ('lts' === $this->version) {
+        if (in_array($this->version, array('latest', 'lts'))) {
             return $this;
         }
 
         // validate semver syntax
-        if (!preg_match('/^2\.\d(?:\.\d{1,2})?$/', $this->version)) {
-            throw new \RuntimeException('The Symfony version should be 2.N or 2.N.M, where N = 0..9 and M = 0..99');
+        if (!preg_match('/^2\.\d(?:\.\d{1,2})?(?:-(?:dev|BETA\d*|RC\d*))?$/i', $this->version)) {
+            throw new \RuntimeException('The Symfony version must be 2.N or 2.N.M (where N and M are positive integers). The special "-dev", "-BETA" and "-RC" versions are also supported.');
         }
 
         if (preg_match('/^2\.\d$/', $this->version)) {
@@ -173,6 +168,25 @@ class NewCommand extends DownloadCommand
                 'composer create-project symfony/framework-standard-edition %s %s',
                 $this->version, $this->projectDir, $this->version
             ));
+        }
+
+        // "-dev" versions are not supported because Symfony doesn't provide packages for them
+        if (preg_match('/^.*\-dev$/i', $this->version)) {
+            throw new \RuntimeException(sprintf(
+                "The selected version (%s) cannot be installed because it hasn't\n".
+                "been published as a package yet. Read the following article for\n".
+                "an alternative installation method:\n\n".
+                "> How to Install or Upgrade to the Latest, Unreleased Symfony Version\n".
+                '> http://symfony.com/doc/current/cookbook/install/unstable_versions.html',
+                $this->version
+            ));
+        }
+
+        // warn the user when downloading an unstable version
+        if (preg_match('/^.*\-(BETA|RC)\d*$/i', $this->version)) {
+            $this->output->writeln("\n <bg=red> WARNING </> You are downloading an unstable Symfony version.");
+            // versions provided by the download server are case sensitive
+            $this->version = strtoupper($this->version);
         }
 
         return $this;
