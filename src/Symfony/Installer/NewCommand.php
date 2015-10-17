@@ -254,14 +254,18 @@ class NewCommand extends DownloadCommand
             ));
         }
 
+        if ('.' !== $this->projectDir) {
+            $this->output->writeln(sprintf(
+                "    * Change your current directory to <comment>%s</comment>\n\n", $this->projectDir
+            ));
+        }
+
         $this->output->writeln(sprintf(
-            "    * Change your current directory to <comment>%s</comment>\n\n".
             "    * Configure your application in <comment>app/config/parameters.yml</comment> file.\n\n".
             "    * Run your application:\n".
             "        1. Execute the <comment>php app/console server:run</comment> command.\n".
             "        2. Browse to the <comment>http://localhost:8000</comment> URL.\n\n".
-            "    * Read the documentation at <comment>http://symfony.com/doc</comment>\n",
-            $this->projectDir
+            "    * Read the documentation at <comment>http://symfony.com/doc</comment>\n"
         ));
 
         return $this;
