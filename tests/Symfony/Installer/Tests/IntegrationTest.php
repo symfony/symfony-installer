@@ -67,9 +67,7 @@ class IntegrationTest extends \PHPUnit_Framework_TestCase
         $this->fs->remove($projectDir);
         $this->fs->mkdir($projectDir);
 
-        $this->runCommand(sprintf('cd %s', ProcessUtils::escapeArgument($projectDir)));
-
-        $output = $this->runCommand('php symfony.phar new .');
+        $output = $this->runCommand('php symfony.phar new .', $projectDir);
         $this->assertContains('Downloading Symfony...', $output);
         $this->assertRegExp($messageRegexp, $output);
 
