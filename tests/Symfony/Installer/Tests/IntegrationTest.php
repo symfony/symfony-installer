@@ -67,12 +67,11 @@ class IntegrationTest extends \PHPUnit_Framework_TestCase
         $this->fs->remove($projectDir);
         $this->fs->mkdir($projectDir);
 
-        $output = $this->runCommand(sprintf('php %s/symfony.phar new .', $this->rootDir), $projectDir);
+        $output = $this->runCommand(sprintf('php %s/symfony.phar new . 2.7.5', $this->rootDir), $projectDir);
         $this->assertContains('Downloading Symfony...', $output);
-        $this->assertRegExp($messageRegexp, $output);
 
         $output = $this->runCommand('php app/console --version', $projectDir);
-        $this->assertRegExp($versionRegexp, $output);
+        $this->assertContains('Symfony version 2.7.5 - app/dev/debug', $output);
     }
 
     /**
