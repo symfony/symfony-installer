@@ -65,6 +65,7 @@ class IntegrationTest extends \PHPUnit_Framework_TestCase
     {
         $projectDir = sprintf('%s/my_test_project', sys_get_temp_dir());
         $this->fs->remove($projectDir);
+        $this->fs->mkdir($projectDir);
 
         $this->runCommand(sprintf('cd %s', ProcessUtils::escapeArgument($projectDir)));
 
