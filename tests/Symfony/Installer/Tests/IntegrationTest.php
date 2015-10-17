@@ -61,6 +61,21 @@ class IntegrationTest extends \PHPUnit_Framework_TestCase
         $this->assertRegExp($versionRegexp, $output);
     }
 
+    public function testSymfonyInstallationInCurrentDirectory()
+    {
+        $projectDir = sprintf('%s/my_test_project', sys_get_temp_dir());
+        $this->fs->remove($projectDir);
+
+        $this->runCommand(sprintf('cd %s', ProcessUtils::escapeArgument($projectDir)));
+
+        $output = $this->runCommand('php symfony.phar new .');
+        $this->assertContains('Downloading Symfony...', $output);
+        $this->assertRegExp($messageRegexp, $output);
+
+        $output = $this->runCommand('php app/console --version', $projectDir);
+        $this->assertRegExp($versionRegexp, $output);
+    }
+
     /**
      * Runs the given string as a command and returns the resulting output.
      * The CWD is set to the root project directory to simplify command paths.
