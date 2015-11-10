@@ -126,7 +126,7 @@ class SelfUpdateCommand extends Command
             throw new \RuntimeException('The new version of the Symfony Installer couldn\'t be downloaded from the server.');
         }
 
-        if ($localVersion === $remoteVersion) {
+        if (version_compare($localVersion, $remoteVersion, '>=')) {
             $this->output->writeln('<info>Symfony Installer is already up to date.</info>');
             $isUpdated = true;
         } else {
