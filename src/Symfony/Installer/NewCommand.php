@@ -435,7 +435,7 @@ class NewCommand extends DownloadCommand
     }
 
     /**
-     * Updates the 'hash' value stored in composer.lock to avoid out-of-sync
+     * Updates the hash values stored in composer.lock to avoid out-of-sync
      * problems when the composer.json file contents are changed.
      */
     private function syncComposerLockFile()
@@ -443,8 +443,55 @@ class NewCommand extends DownloadCommand
         $composerFileContents = file_get_contents($this->projectDir.'/composer.json');
         $lockFileContents = json_decode(file_get_contents($this->projectDir.'/composer.lock'), true);
 
-        $lockFileContents['hash'] = md5($composerFileContents);
+        if (array_key_exists('hash', $lockFileContents)) {
+            $lockFileContents['hash'] = md5($composerFileContents);
+        }
+
+        if (array_key_exists('content-hash', $lockFileContents)) {
+            $lockFileContents['content-hash'] = $this->getComposerContentHash($composerFileContents);
+        }
 
         file_put_contents($this->projectDir.'/composer.lock', json_encode($lockFileContents, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES)."\n");
+    }
+
+    /**
+     * Returns the md5 hash of the sorted content of the composer file.
+     * @see  https://github.com/composer/composer/blob/master/src/Composer/Package/Locker.php#L394-L431
+     *
+     * @param string $composerFileContents The contents of the composer file.
+     *
+     * @return string
+     */
+    private function getComposerContentHash($composerFileContents)
+    {
+        $content = json_decode($composerFileContents, true);
+
+        $relevantKeys = array(
+            'name',
+            'version',
+            'require',
+            'require-dev',
+            'conflict',
+            'replace',
+            'provide',
+            'minimum-stability',
+            'prefer-stable',
+            'repositories',
+            'extra',
+        );
+
+        $relevantContent = array();
+
+        foreach (array_intersect($relevantKeys, array_keys($content)) as $key) {
+            $relevantContent[$key] = $content[$key];
+        }
+
+        if (isset($content['config']['platform'])) {
+            $relevantContent['config']['platform'] = $content['config']['platform'];
+        }
+
+        ksort($relevantContent);
+
+        return md5(json_encode($relevantContent));
     }
 }
