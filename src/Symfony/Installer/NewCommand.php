@@ -397,8 +397,8 @@ class NewCommand extends DownloadCommand
     {
         return strtolower(
             preg_replace(
-                array('/([A-Z]+)([A-Z][a-z])/', '/([a-z\d])([A-Z])/'),
-                array('\\1-\\2', '\\1-\\2'),
+                array('~[^\w.-]~iu', '~([A-Z]+)([A-Z][a-z])~u', '~([a-z\d])([A-Z])~u'),
+                array('', '\\1-\\2', '\\1-\\2'),
                 strtr($name, '-', '.')
             )
         );
