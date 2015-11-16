@@ -111,11 +111,11 @@ class NewCommand extends DownloadCommand
         }
 
         // validate semver syntax
-        if (!preg_match('/^2\.\d(?:\.\d{1,2})?(?:-(?:dev|BETA\d*|RC\d*))?$/i', $this->version)) {
-            throw new \RuntimeException('The Symfony version must be 2.N or 2.N.M (where N and M are positive integers). The special "-dev", "-BETA" and "-RC" versions are also supported.');
+        if (!preg_match('/^[23]\.\d(?:\.\d{1,2})?(?:-(?:dev|BETA\d*|RC\d*))?$/i', $this->version)) {
+            throw new \RuntimeException('The Symfony version must be 2.N, 2.N.M, 3.N or 3.N.M (where N and M are positive integers). The special "-dev", "-BETA" and "-RC" versions are also supported.');
         }
 
-        if (preg_match('/^2\.\d$/', $this->version)) {
+        if (preg_match('/^[23]\.\d$/', $this->version)) {
             // Check if we have a minor version in order to retrieve the last patch from symfony.com
 
             $client = $this->getGuzzleClient();
