@@ -125,6 +125,12 @@ class IntegrationTest extends \PHPUnit_Framework_TestCase
                 '/.*Symfony 2\.7\.0\-BETA1 was successfully installed.*/',
                 '/Symfony version 2\.7\.0\-BETA1 - app\/dev\/debug/',
             ),
+
+            array(
+                '3.0.0-BETA1',
+                '/.*Symfony 3\.0\.0\-BETA1 was successfully installed.*/',
+                '/Symfony version 3\.0\.0\-BETA1 - app\/dev\/debug/',
+            ),
         );
     }
 }
