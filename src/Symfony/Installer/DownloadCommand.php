@@ -261,7 +261,8 @@ abstract class DownloadCommand extends Command
     protected function checkSymfonyRequirements()
     {
         try {
-            require $this->projectDir.'/app/SymfonyRequirements.php';
+            $requirementsDir = $this->isSymfony3() ? 'var' : 'app';
+            require $this->projectDir.'/'.$requirementsDir.'/SymfonyRequirements.php';
             $symfonyRequirements = new \SymfonyRequirements();
             $this->requirementsErrors = array();
             foreach ($symfonyRequirements->getRequirements() as $req) {
@@ -284,18 +285,32 @@ abstract class DownloadCommand extends Command
     protected function createGitIgnore()
     {
         $gitIgnoreEntries = array(
-            '/app/bootstrap.php.cache',
-            '/app/cache/*',
-            '!app/cache/.gitkeep',
             '/app/config/parameters.yml',
-            '/app/logs/*',
-            '!app/logs/.gitkeep',
-            '/app/phpunit.xml',
             '/bin/',
+            '/build/',
             '/composer.phar',
             '/vendor/',
             '/web/bundles/',
         );
+        if ($this->isSymfony3()) {
+            $gitIgnoreEntries = array_merge($gitIgnoreEntries, array(
+                '/var/',
+                '!var/cache/.gitkeep',
+                '!var/logs/.gitkeep',
+                '!var/sessions/.gitkeep',
+                '/phpunit.xml',
+            ));
+        } else {
+            $gitIgnoreEntries = array_merge($gitIgnoreEntries, array(
+                '/app/bootstrap.php.cache',
+                '/app/cache/*',
+                '!app/cache/.gitkeep',
+                '/app/config/parameters.yml',
+                '/app/logs/*',
+                '!app/logs/.gitkeep',
+                '/app/phpunit.xml',
+            ));
+        }
 
         try {
             $this->fs->dumpFile($this->projectDir.'/.gitignore', implode("\n", $gitIgnoreEntries)."\n");
@@ -414,6 +429,16 @@ abstract class DownloadCommand extends Command
         // glob() cannot be used because it doesn't take into account hidden files
         // scandir() returns '.'  and '..'  for an empty dir
         return 2 === count(scandir($dir.'/'));
+    }
+
+    /**
+     * Checks that the asked version is in the 3.x branch.
+     *
+     * @return bool
+     */
+    protected function isSymfony3()
+    {
+        return strpos($this->version, '3') === 0;
     }
 
     private function enableSignalHandler()

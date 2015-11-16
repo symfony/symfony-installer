@@ -246,11 +246,13 @@ class NewCommand extends DownloadCommand
                 $this->output->writeln(' * '.$helpText);
             }
 
+            $checkFile = $this->isSymfony3() ? 'bin/symfony_requirements' : 'app/check.php';
+
             $this->output->writeln(sprintf(
                 " After fixing these issues, re-check Symfony requirements executing this command:\n\n".
-                "   <comment>php %s/app/check.php</comment>\n\n".
+                "   <comment>php %s/%s</comment>\n\n".
                 " Then, you can:\n",
-                $this->projectName
+                $this->projectName, $checkFile
             ));
         }
 
@@ -260,10 +262,12 @@ class NewCommand extends DownloadCommand
             ));
         }
 
+        $consoleDir = ($this->isSymfony3() ? 'bin' : 'app');
+
         $this->output->writeln(sprintf(
             "    * Configure your application in <comment>app/config/parameters.yml</comment> file.\n\n".
             "    * Run your application:\n".
-            "        1. Execute the <comment>php app/console server:run</comment> command.\n".
+            "        1. Execute the <comment>php $consoleDir/console server:run</comment> command.\n".
             "        2. Browse to the <comment>http://localhost:8000</comment> URL.\n\n".
             "    * Read the documentation at <comment>http://symfony.com/doc</comment>\n"
         ));
