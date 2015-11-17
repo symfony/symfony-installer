@@ -267,9 +267,10 @@ class NewCommand extends DownloadCommand
         $this->output->writeln(sprintf(
             "    * Configure your application in <comment>app/config/parameters.yml</comment> file.\n\n".
             "    * Run your application:\n".
-            "        1. Execute the <comment>php $consoleDir/console server:run</comment> command.\n".
+            "        1. Execute the <comment>php %s/console server:run</comment> command.\n".
             "        2. Browse to the <comment>http://localhost:8000</comment> URL.\n\n".
-            "    * Read the documentation at <comment>http://symfony.com/doc</comment>\n"
+            "    * Read the documentation at <comment>http://symfony.com/doc</comment>\n",
+            $consoleDir
         ));
 
         return $this;
