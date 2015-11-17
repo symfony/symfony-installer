@@ -456,6 +456,7 @@ class NewCommand extends DownloadCommand
 
     /**
      * Returns the md5 hash of the sorted content of the composer file.
+     *
      * @see  https://github.com/composer/composer/blob/master/src/Composer/Package/Locker.php#L394-L431
      *
      * @param string $composerFileContents The contents of the composer file.
