@@ -440,32 +440,32 @@ class NewCommand extends DownloadCommand
      */
     private function syncComposerLockFile()
     {
-        $composerFileContents = file_get_contents($this->projectDir.'/composer.json');
-        $lockFileContents = json_decode(file_get_contents($this->projectDir.'/composer.lock'), true);
+        $composerJsonFileContents = file_get_contents($this->projectDir.'/composer.json');
+        $composerLockFileContents = json_decode(file_get_contents($this->projectDir.'/composer.lock'), true);
 
-        if (array_key_exists('hash', $lockFileContents)) {
-            $lockFileContents['hash'] = md5($composerFileContents);
+        if (array_key_exists('hash', $composerLockFileContents)) {
+            $composerLockFileContents['hash'] = md5($composerJsonFileContents);
         }
 
-        if (array_key_exists('content-hash', $lockFileContents)) {
-            $lockFileContents['content-hash'] = $this->getComposerContentHash($composerFileContents);
+        if (array_key_exists('content-hash', $composerLockFileContents)) {
+            $composerLockFileContents['content-hash'] = $this->getComposerContentHash($composerJsonFileContents);
         }
 
-        file_put_contents($this->projectDir.'/composer.lock', json_encode($lockFileContents, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES)."\n");
+        file_put_contents($this->projectDir.'/composer.lock', json_encode($composerLockFileContents, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES)."\n");
     }
 
     /**
      * Returns the md5 hash of the sorted content of the composer file.
      *
-     * @see  https://github.com/composer/composer/blob/master/src/Composer/Package/Locker.php#L394-L431
+     * @see https://github.com/composer/composer/blob/master/src/Composer/Package/Locker.php (getContentHash() method)
      *
-     * @param string $composerFileContents The contents of the composer file.
+     * @param string $composerJsonFileContents The contents of the composer.json file.
      *
      * @return string
      */
-    private function getComposerContentHash($composerFileContents)
+    private function getComposerContentHash($composerJsonFileContents)
     {
-        $content = json_decode($composerFileContents, true);
+        $content = json_decode($composerJsonFileContents, true);
 
         $relevantKeys = array(
             'name',
