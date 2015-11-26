@@ -111,11 +111,11 @@ class NewCommand extends DownloadCommand
         }
 
         // validate semver syntax
-        if (!preg_match('/^2\.\d(?:\.\d{1,2})?(?:-(?:dev|BETA\d*|RC\d*))?$/i', $this->version)) {
-            throw new \RuntimeException('The Symfony version must be 2.N or 2.N.M (where N and M are positive integers). The special "-dev", "-BETA" and "-RC" versions are also supported.');
+        if (!preg_match('/^[23]\.\d(?:\.\d{1,2})?(?:-(?:dev|BETA\d*|RC\d*))?$/i', $this->version)) {
+            throw new \RuntimeException('The Symfony version must be 2.N, 2.N.M, 3.N or 3.N.M (where N and M are positive integers). The special "-dev", "-BETA" and "-RC" versions are also supported.');
         }
 
-        if (preg_match('/^2\.\d$/', $this->version)) {
+        if (preg_match('/^[23]\.\d$/', $this->version)) {
             // Check if we have a minor version in order to retrieve the last patch from symfony.com
 
             $client = $this->getGuzzleClient();
@@ -246,26 +246,31 @@ class NewCommand extends DownloadCommand
                 $this->output->writeln(' * '.$helpText);
             }
 
+            $checkFile = $this->isSymfony3() ? 'bin/symfony_requirements' : 'app/check.php';
+
             $this->output->writeln(sprintf(
                 " After fixing these issues, re-check Symfony requirements executing this command:\n\n".
-                "   <comment>php %s/app/check.php</comment>\n\n".
+                "   <comment>php %s/%s</comment>\n\n".
                 " Then, you can:\n",
-                $this->projectName
+                $this->projectName, $checkFile
             ));
         }
 
         if ('.' !== $this->projectDir) {
             $this->output->writeln(sprintf(
-                "    * Change your current directory to <comment>%s</comment>\n\n", $this->projectDir
+                "    * Change your current directory to <comment>%s</comment>\n", $this->projectDir
             ));
         }
+
+        $consoleDir = ($this->isSymfony3() ? 'bin' : 'app');
 
         $this->output->writeln(sprintf(
             "    * Configure your application in <comment>app/config/parameters.yml</comment> file.\n\n".
             "    * Run your application:\n".
-            "        1. Execute the <comment>php app/console server:run</comment> command.\n".
+            "        1. Execute the <comment>php %s/console server:run</comment> command.\n".
             "        2. Browse to the <comment>http://localhost:8000</comment> URL.\n\n".
-            "    * Read the documentation at <comment>http://symfony.com/doc</comment>\n"
+            "    * Read the documentation at <comment>http://symfony.com/doc</comment>\n",
+            $consoleDir
         ));
 
         return $this;
