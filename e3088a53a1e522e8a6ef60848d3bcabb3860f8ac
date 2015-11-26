@@ -1,0 +1,63 @@
+---------------------------------------------------------------------------
+
+by javiereguiluz at 2015-11-16T15:42:46Z
+
+@Pierstoval thanks for this! A new test for 3.0 version would be great. You just need to add a new item to this data provider: https://github.com/symfony/symfony-installer/blob/master/tests/Symfony/Installer/Tests/IntegrationTest.php#L96
+
+---------------------------------------------------------------------------
+
+by Pierstoval at 2015-11-16T15:49:58Z
+
+@javiereguiluz I added the test but it'd need more integration to make it succeed, because of Symfony3 different structure, so it'll need more updates on the tests :)
+
+---------------------------------------------------------------------------
+
+by javiereguiluz at 2015-11-16T16:00:04Z
+
+@Pierstoval and *that's* why the installer didn't have support for Symfony 3 yet. It's not a matter of changing just a number :)
+
+---------------------------------------------------------------------------
+
+by Pierstoval at 2015-11-16T16:00:22Z
+
+I'm on it ;)
+
+---------------------------------------------------------------------------
+
+by Pierstoval at 2015-11-16T16:13:00Z
+
+Done it!
+
+Just, there's still a problem: the `composer.lock` stores a version code as `dev-master`, whereas it should be `3.0.0-BETA1` as well as any other beta version (this is why the test fails)
+
+Plus, I don't know when it'll be available (I don't know this info about the release process) but the http://symfony.com/versions.json should be updated in order to show the state of the `3.0` branch, but I don't know if we need a proper release for this or if the beta is sufficient.
+
+---------------------------------------------------------------------------
+
+by Pierstoval at 2015-11-17T11:15:40Z
+
+If needed, I can patch a workaround for the `composer.lock` version problem, but I don't know Symfony policy about 3.0 releases.
+Anyway it would make the tests succeed and a new release of the installer could be done.
+
+---------------------------------------------------------------------------
+
+by javiereguiluz at 2015-11-25T17:12:01Z
+
+I've tested this PR and everything works fine for me. I'll merge it soon unless someone raises a valid concern.
+
+@Pierstoval I'd like to do just a minor change:
+
+```diff
+-                "    * Change your current directory to <comment>%s</comment>\n\n", $this->projectDir
++                "    * Change your current directory to <comment>%s</comment>\n", $this->projectDir
+```
+
+This change prevents the ugly double blank line in the command output:
+
+![excessive_blank_lines](https://cloud.githubusercontent.com/assets/73419/11403979/f4c7c298-939f-11e5-9d33-36543bf3cfd2.png)
+
+---------------------------------------------------------------------------
+
+by Pierstoval at 2015-11-26T11:38:50Z
+
+Done in eba3537 :smile:
