@@ -258,7 +258,7 @@ class NewCommand extends DownloadCommand
 
         if ('.' !== $this->projectDir) {
             $this->output->writeln(sprintf(
-                "    * Change your current directory to <comment>%s</comment>\n\n", $this->projectDir
+                "    * Change your current directory to <comment>%s</comment>\n", $this->projectDir
             ));
         }
 
