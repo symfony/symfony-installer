@@ -58,6 +58,10 @@ class IntegrationTest extends \PHPUnit_Framework_TestCase
         $this->assertRegExp($messageRegexp, $output);
 
         if ('3' === substr($versionToInstall, 0, 1)) {
+            if (PHP_VERSION_ID < 50500) {
+                $this->markTestSkipped('Symfony 3 requires PHP 5.5.9 or higher.');
+            }
+
             $output = $this->runCommand('php bin/console --version', $projectDir);
         } else {
             $output = $this->runCommand('php app/console --version', $projectDir);
