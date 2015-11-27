@@ -48,16 +48,20 @@ class IntegrationTest extends \PHPUnit_Framework_TestCase
     /**
      * @dataProvider provideSymfonyInstallationData
      */
-    public function testSymfonyInstallation($commandArguments, $messageRegexp, $versionRegexp)
+    public function testSymfonyInstallation($versionToInstall, $messageRegexp, $versionRegexp)
     {
         $projectDir = sprintf('%s/my_test_project', sys_get_temp_dir());
         $this->fs->remove($projectDir);
 
-        $output = $this->runCommand(sprintf('php symfony.phar new %s %s', ProcessUtils::escapeArgument($projectDir), $commandArguments));
+        $output = $this->runCommand(sprintf('php symfony.phar new %s %s', ProcessUtils::escapeArgument($projectDir), $versionToInstall));
         $this->assertContains('Downloading Symfony...', $output);
         $this->assertRegExp($messageRegexp, $output);
 
-        $output = $this->runCommand('php app/console --version', $projectDir);
+        if ('2' === $versionToInstall[0]) {
+            $output = $this->runCommand('php app/console --version', $projectDir);
+        } elseif ('3' === $versionToInstall[0]) {
+            $output = $this->runCommand('php bin/console --version', $projectDir);
+        }
         $this->assertRegExp($versionRegexp, $output);
     }
 
