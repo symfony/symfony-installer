@@ -57,11 +57,12 @@ class IntegrationTest extends \PHPUnit_Framework_TestCase
         $this->assertContains('Downloading Symfony...', $output);
         $this->assertRegExp($messageRegexp, $output);
 
-        if ('2' === $versionToInstall[0]) {
-            $output = $this->runCommand('php app/console --version', $projectDir);
-        } elseif ('3' === $versionToInstall[0]) {
+        if ('3' === substr($versionToInstall, 0, 1)) {
             $output = $this->runCommand('php bin/console --version', $projectDir);
+        } else {
+            $output = $this->runCommand('php app/console --version', $projectDir);
         }
+
         $this->assertRegExp($versionRegexp, $output);
     }
 
