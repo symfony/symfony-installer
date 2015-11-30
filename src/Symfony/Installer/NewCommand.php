@@ -39,6 +39,7 @@ class NewCommand extends DownloadCommand
         parent::initialize($input, $output);
 
         $directory = rtrim(trim($input->getArgument('directory')), DIRECTORY_SEPARATOR);
+        $this->version = trim($input->getArgument('version'));
         $this->projectDir = $this->fs->isAbsolutePath($directory) ? $directory : getcwd().DIRECTORY_SEPARATOR.$directory;
         $this->projectName = basename($directory);
     }
