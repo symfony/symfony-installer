@@ -1,0 +1,16 @@
+---------------------------------------------------------------------------
+
+by ogizanagi at 2015-11-30T15:00:02Z
+
+:+1: Always wondered why it was like it. BTW, you could also move `$downloadedFilePath` and `$requirementsErrors` IMO.
+
+Also, it makes no sense the `DownloadCommand` has methods with `@return NewCommand` in the PhpDoc block and deals bad with IDE autocompletion (should be `@return $this`).
+
+Those were the changes I was going to push : https://github.com/symfony/symfony-installer/compare/master...ogizanagi:move_to_download
+Feel free to integrate them if it makes sense to you.
+
+---------------------------------------------------------------------------
+
+by Pierstoval at 2015-11-30T15:22:46Z
+
+@ogizanagi done :)
