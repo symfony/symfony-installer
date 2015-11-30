@@ -42,6 +42,7 @@ abstract class DownloadCommand extends Command
     protected $output;
     protected $projectName;
     protected $projectDir;
+    protected $version;
 
     /**
      * Returns the type of the downloaded application in a human readable format.
@@ -438,7 +439,7 @@ abstract class DownloadCommand extends Command
      */
     protected function isSymfony3()
     {
-        return '3' === $this->version[0];
+        return $this->version && '3' === $this->version[0];
     }
 
     private function enableSignalHandler()

@@ -24,7 +24,6 @@ use Symfony\Installer\Exception\AbortException;
  */
 class NewCommand extends DownloadCommand
 {
-    protected $version;
     protected $downloadedFilePath;
     protected $requirementsErrors = array();
 
