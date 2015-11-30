@@ -36,13 +36,40 @@ use Symfony\Installer\Exception\AbortException;
  */
 abstract class DownloadCommand extends Command
 {
-    /** @var Filesystem */
+    /**
+     * @var Filesystem
+     */
     protected $fs;
-    /** @var OutputInterface */
+
+    /**
+     * @var OutputInterface
+     */
     protected $output;
+
+    /**
+     * @var string
+     */
     protected $projectName;
+
+    /**
+     * @var string
+     */
     protected $projectDir;
+
+    /**
+     * @var string
+     */
     protected $version;
+
+    /**
+     * @var string
+     */
+    protected $downloadedFilePath;
+
+    /**
+     * @var array
+     */
+    protected $requirementsErrors = array();
 
     /**
      * Returns the type of the downloaded application in a human readable format.
@@ -201,7 +228,7 @@ abstract class DownloadCommand extends Command
      * Extracts the compressed Symfony file (ZIP or TGZ) using the
      * native operating system commands if available or PHP code otherwise.
      *
-     * @return NewCommand
+     * @return DownloadCommand
      *
      * @throws \RuntimeException if the downloaded archive could not be extracted
      */
