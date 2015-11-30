@@ -24,10 +24,6 @@ use Symfony\Installer\Exception\AbortException;
  */
 class NewCommand extends DownloadCommand
 {
-    protected $version;
-    protected $downloadedFilePath;
-    protected $requirementsErrors = array();
-
     protected function configure()
     {
         $this
@@ -45,7 +41,6 @@ class NewCommand extends DownloadCommand
         $directory = rtrim(trim($input->getArgument('directory')), DIRECTORY_SEPARATOR);
         $this->projectDir = $this->fs->isAbsolutePath($directory) ? $directory : getcwd().DIRECTORY_SEPARATOR.$directory;
         $this->projectName = basename($directory);
-        $this->version = trim($input->getArgument('version'));
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
