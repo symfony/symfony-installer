@@ -23,9 +23,6 @@ use Symfony\Installer\Exception\AbortException;
  */
 class DemoCommand extends DownloadCommand
 {
-    protected $downloadedFilePath;
-    protected $requirementsErrors = array();
-
     protected function configure()
     {
         $this
