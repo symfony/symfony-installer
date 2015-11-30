@@ -39,6 +39,8 @@ class DemoCommand extends DownloadCommand
     {
         parent::initialize($input, $output);
 
+        $this->version = 'lts';
+
         if (!$input->getArgument('directory')) {
             $this->projectDir = getcwd();
 
