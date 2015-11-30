@@ -1,0 +1,23 @@
+---------------------------------------------------------------------------
+
+by javiereguiluz at 2015-11-30T21:54:22Z
+
+Are you using the most recent release of the installer? The latest is 1.4.2.
+
+---------------------------------------------------------------------------
+
+by ogizanagi at 2015-11-30T22:01:12Z
+
+@javiereguiluz : I'm currently using the master branch of the repository.
+
+---------------------------------------------------------------------------
+
+by javiereguiluz at 2015-11-30T22:02:31Z
+
+OK. I'm going to merge and release a new version. Thanks for fixing this issue @ogizanagi.
+
+---------------------------------------------------------------------------
+
+by iagomelanias at 2015-11-30T22:02:35Z
+
+Same problem here. I also can't run the command `symfony new [name] 3.0`.
