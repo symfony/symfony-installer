@@ -90,6 +90,8 @@ abstract class DownloadCommand extends Command
         $this->fs = new Filesystem();
 
         $this->enableSignalHandler();
+
+        $this->version = $input->hasArgument('version') ? trim($input->getArgument('version')) : 'latest';
     }
 
     /**
@@ -97,7 +99,7 @@ abstract class DownloadCommand extends Command
      * available operating system uncompressing commands and the enabled PHP extensions
      * and it downloads the file.
      *
-     * @return Command
+     * @return $this
      *
      * @throws \RuntimeException if the Symfony archive could not be downloaded
      */
@@ -284,7 +286,7 @@ abstract class DownloadCommand extends Command
     /**
      * Checks if environment meets symfony requirements.
      *
-     * @return Command
+     * @return $this
      */
     protected function checkSymfonyRequirements()
     {
@@ -308,7 +310,7 @@ abstract class DownloadCommand extends Command
     /**
      * Creates the appropriate .gitignore file for a Symfony project.
      *
-     * @return Command
+     * @return $this
      */
     protected function createGitIgnore()
     {
