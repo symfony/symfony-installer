@@ -468,7 +468,7 @@ abstract class DownloadCommand extends Command
      */
     protected function isSymfony3()
     {
-        return $this->version && '3' === $this->version[0];
+        return '3' === $this->version[0] || 'latest' === $this->version;
     }
 
     private function enableSignalHandler()
