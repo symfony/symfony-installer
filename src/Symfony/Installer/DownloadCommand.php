@@ -59,7 +59,7 @@ abstract class DownloadCommand extends Command
     /**
      * @var string
      */
-    protected $version;
+    protected $version = 'latest';
 
     /**
      * @var string
@@ -90,8 +90,6 @@ abstract class DownloadCommand extends Command
         $this->fs = new Filesystem();
 
         $this->enableSignalHandler();
-
-        $this->version = $input->hasArgument('version') ? trim($input->getArgument('version')) : 'latest';
     }
 
     /**

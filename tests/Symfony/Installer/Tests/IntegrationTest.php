@@ -57,7 +57,7 @@ class IntegrationTest extends \PHPUnit_Framework_TestCase
         $this->assertContains('Downloading Symfony...', $output);
         $this->assertRegExp($messageRegexp, $output);
 
-        if ('3' === substr($versionToInstall, 0, 1)) {
+        if ('3' === substr($versionToInstall, 0, 1) || '' === $versionToInstall) {
             if (PHP_VERSION_ID < 50500) {
                 $this->markTestSkipped('Symfony 3 requires PHP 5.5.9 or higher.');
             }
@@ -107,14 +107,14 @@ class IntegrationTest extends \PHPUnit_Framework_TestCase
         return array(
             array(
                 '',
-                '/.*Symfony 2\.7\.\d+ was successfully installed.*/',
-                '/Symfony version 2\.7\.\d+ - app\/dev\/debug/',
+                '/.*Symfony 3\.0\.\d+ was successfully installed.*/',
+                '/Symfony version 3\.0\.\d+ - app\/dev\/debug/',
             ),
 
             array(
                 'lts',
-                '/.*Symfony 2\.7\.\d+ was successfully installed.*/',
-                '/Symfony version 2\.7\.\d+ - app\/dev\/debug/',
+                '/.*Symfony 2\.8\.\d+ was successfully installed.*/',
+                '/Symfony version 2\.8\.\d+ - app\/dev\/debug/',
             ),
 
             array(
