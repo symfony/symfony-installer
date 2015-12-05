@@ -20,13 +20,13 @@ use Symfony\Component\Console\Application as ConsoleApplication;
  */
 class Application extends ConsoleApplication
 {
-    const VERSIONS_URL = 'http://get.sensiolabs.org/symfony.version';
+    const VERSIONS_URL = 'http://get.symfony.com/symfony.version';
 
     public function doRun(InputInterface $input, OutputInterface $output)
     {
         $commandName = $this->getCommandName($input);
 
-        if ($this->isInPharMode() && $commandName != 'self-update' && $commandName == 'selfupdate') {
+        if ($this->isInPharMode() && $commandName != 'self-update' && $commandName != 'selfupdate') {
             if (!$this->checkIfInstallerIsUpdated()) {
                 $output->writeln(
                     sprintf(
