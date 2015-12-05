@@ -26,7 +26,7 @@ class Application extends ConsoleApplication
     {
         $commandName = $this->getCommandName($input);
 
-        if ($this->isInPharMode() && $commandName != 'self-update' && $commandName != 'selfupdate') {
+        if ($this->isInPharMode() && !in_array($commandName, array('self-update', 'selfupdate'), true)) {
             if (!$this->checkIfInstallerIsUpdated()) {
                 $output->writeln(
                     sprintf(
@@ -52,7 +52,7 @@ class Application extends ConsoleApplication
         $localVersion = $this->getVersion();
 
         if (false === $remoteVersion = @file_get_contents(self::VERSIONS_URL)) {
-            // as this is simple checking - we don't here care here if versions file is unavailable
+            // as this is simple checking - we don't care here if versions file is unavailable
             return true;
         }
 
