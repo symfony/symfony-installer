@@ -7,37 +7,29 @@ full-stack framework.**
 Installing the installer
 ------------------------
 
-This step is only needed the first time you use the installer:
+To install `Symfony Installer` its recommended to first install [Composer](https://getcomposer.org/doc/00-intro.md#installation-linux-unix-osx). If you do not wish to use composer to manage the `Symfony Installer` you can check out the [alternative installation method](alternative-installation.md).
 
-### Linux and Mac OS X
+If you have composer installed you can install `Symfony Installer`:
 
-```bash
-$ sudo curl -LsS http://symfony.com/installer -o /usr/local/bin/symfony
-$ sudo chmod a+x /usr/local/bin/symfony
-```
-
-### Windows
 
 ```bash
-c:\> php -r "file_put_contents('symfony', file_get_contents('http://symfony.com/installer'));"
+$ composer require symfony/symfony-installer --dev
 ```
 
-Move the downloaded `symfony` file to your projects directory and execute
-it as follows:
+To allow you to call the command you eather have to use the command: 
 
 ```bash
-c:\> php symfony
+./vendor/bin/symfony
 ```
 
-If you prefer to create a global `symfony` command, execute the following:
+Or add the `./vendor/bin` to your path. On Linux and Mac OSX you can do this by the following command:
 
 ```bash
-c:\> (echo @ECHO OFF & echo php "%~dp0symfony" %*) > symfony.bat
+export PATH=$PATH./vendor/bin
 ```
 
-Then, move both files (`symfony` and `symfony.bat`) to any location included
-in your execution path. Now you can run the `symfony` command anywhere on your
-system.
+It's recommended to add this line to you `.bashrc` or `.zshrc` file so you don't have to run it every time you open a new terminal.
+
 
 Using the installer
 -------------------
@@ -99,20 +91,8 @@ c:\> php symfony new my_project 2.5.6
 Updating the installer
 ----------------------
 
-New versions of the Symfony Installer are released regularly. To update your
-installer version, execute the following command:
+To update simply re-run:
 
 ```bash
-# Linux, Mac OS X
-$ symfony self-update
-
-# Windows
-c:\> php symfony self-update
+$ composer require symfony/symfony-installer --dev
 ```
-
-> **NOTE**
->
-> If your system requires the use of a proxy server to download contents, the
-> installer tries to guess the best proxy settings from the `HTTP_PROXY` and
-> `http_proxy` environment variables. Make sure any of them is set before
-> executing the Symfony Installer.
