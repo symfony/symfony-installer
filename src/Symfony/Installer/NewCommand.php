@@ -362,27 +362,6 @@ class NewCommand extends DownloadCommand
     }
 
     /**
-     * Returns the full Symfony version number of the project by getting
-     * it from the composer.lock file.
-     *
-     * @return string
-     */
-    protected function getInstalledSymfonyVersion()
-    {
-        $composer = json_decode(file_get_contents($this->projectDir.'/composer.lock'), true);
-
-        foreach ($composer['packages'] as $package) {
-            if ('symfony/symfony' === $package['name']) {
-                if ('v' === substr($package['version'], 0, 1)) {
-                    return substr($package['version'], 1);
-                };
-
-                return $package['version'];
-            }
-        }
-    }
-
-    /**
      * Generates a good Composer project name based on the application name
      * and on the user name.
      *

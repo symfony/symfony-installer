@@ -306,48 +306,46 @@ abstract class DownloadCommand extends Command
     }
 
     /**
-     * Creates the appropriate .gitignore file for a Symfony project.
+     * Creates the appropriate .gitignore file for a Symfony project if it doesn't exist.
      *
      * @return $this
      */
     protected function createGitIgnore()
     {
-        $gitIgnoreEntries = array(
-            '/app/config/parameters.yml',
-            '/bin/',
-            '/build/',
-            '/composer.phar',
-            '/vendor/',
-            '/web/bundles/',
-        );
-        if ($this->isSymfony3()) {
-            $gitIgnoreEntries = array_merge($gitIgnoreEntries, array(
-                '/var/',
-                '!var/cache/.gitkeep',
-                '!var/logs/.gitkeep',
-                '!var/sessions/.gitkeep',
-                '/phpunit.xml',
-            ));
-        } else {
-            $gitIgnoreEntries = array_merge($gitIgnoreEntries, array(
-                '/app/bootstrap.php.cache',
-                '/app/cache/*',
-                '!app/cache/.gitkeep',
-                '/app/config/parameters.yml',
-                '/app/logs/*',
-                '!app/logs/.gitkeep',
-                '/app/phpunit.xml',
-            ));
-        }
-
-        try {
-            $this->fs->dumpFile($this->projectDir.'/.gitignore', implode("\n", $gitIgnoreEntries)."\n");
-        } catch (\Exception $e) {
-            // don't throw an exception in case the .gitignore file cannot be created,
-            // because this is just an enhancement, not something mandatory for the project
+        if (!is_file($path = $this->projectDir.'/.gitignore')) {
+            try {
+                $this->fs->dumpFile($path, @file_get_contents(sprintf(
+                    'https://raw.githubusercontent.com/symfony/symfony-standard/v%s/.gitignore',
+                    $this->getInstalledSymfonyVersion()
+                )));
+            } catch (\Exception $e) {
+                // don't throw an exception in case the .gitignore file cannot be created,
+                // because this is just an enhancement, not something mandatory for the project
+            }
         }
 
         return $this;
+    }
+
+    /**
+     * Returns the full Symfony version number of the project by getting
+     * it from the composer.lock file.
+     *
+     * @return string
+     */
+    protected function getInstalledSymfonyVersion()
+    {
+        $composer = json_decode(file_get_contents($this->projectDir.'/composer.lock'), true);
+
+        foreach ($composer['packages'] as $package) {
+            if ('symfony/symfony' === $package['name']) {
+                if ('v' === substr($package['version'], 0, 1)) {
+                    return substr($package['version'], 1);
+                };
+
+                return $package['version'];
+            }
+        }
     }
 
     /**
