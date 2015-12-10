@@ -17,6 +17,8 @@ use Symfony\Component\Console\Application as ConsoleApplication;
 
 /**
  * This is main Symfony Installer console application class.
+ *
+ * @author Jerzy Zawadzki <zawadzki.jerzy@gmail.com>
  */
 class Application extends ConsoleApplication
 {
@@ -28,15 +30,12 @@ class Application extends ConsoleApplication
 
         if ($this->isInPharMode() && in_array($commandName, array('new', 'demo'), true)) {
             if (!$this->checkIfInstallerIsUpdated()) {
-                $output->writeln(
-                    sprintf(
-                        " <comment>[WARNING]</comment> You are using outdated version of Symfony Installer.\n".
-                        ' It is recommended to update it by running "%s selfupdate" to get the latest version.',
-                        $_SERVER['PHP_SELF']
-                    )
-                );
+                $output->writeln(sprintf(
+                    " <comment>[WARNING]</comment> Your Symfony Installer version is outdated.\n".
+                    ' Execute the command "%s selfupdate" to get the latest version.',
+                    $_SERVER['PHP_SELF']
+                ));
             }
-
         }
 
         return parent::doRun($input, $output);
@@ -62,5 +61,4 @@ class Application extends ConsoleApplication
 
         return false;
     }
-
 }
