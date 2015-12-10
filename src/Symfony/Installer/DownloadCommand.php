@@ -19,6 +19,7 @@ use Distill\Strategy\MinimumSize;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Event\ProgressEvent;
+use GuzzleHttp\Utils;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Input\InputInterface;
@@ -221,7 +222,15 @@ abstract class DownloadCommand extends Command
             $defaults['debug'] = true;
         }
 
-        return new Client(array('defaults' => $defaults));
+        try {
+            $handler = Utils::getDefaultHandler();
+        } catch (\RuntimeException $e) {
+            throw new \RuntimeException(
+                'The Symfony installer requires the php-curl extension or the allow_url_fopen ini setting.'
+            );
+        }
+
+        return new Client(array('defaults' => $defaults, 'handler' => $handler));
     }
 
     /**
