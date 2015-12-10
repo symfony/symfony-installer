@@ -1,0 +1,63 @@
+---------------------------------------------------------------------------
+
+by Pierstoval at 2015-12-04T13:27:22Z
+
+So you just wrote the "raw" .gitignore files that are used in both 2.x and 3.x branches then, it sounds better :+1:
+
+---------------------------------------------------------------------------
+
+by ogizanagi at 2015-12-04T13:53:43Z
+
+@Pierstoval : Yes, and your comment also made me think the array syntax is useless now, so here is the nowdoc alternative.
+Even if nothing is done about #211, it is then more straightforward to update.
+
+---------------------------------------------------------------------------
+
+by Pierstoval at 2015-12-04T13:54:44Z
+
+I love this string format even if it looks a bit ugly in the first sight :D I'm :+1: on this
+
+---------------------------------------------------------------------------
+
+by javiereguiluz at 2015-12-05T11:15:36Z
+
+I'm not sure about the new format. I think it's a bit ugly :(
+
+---------------------------------------------------------------------------
+
+by ogizanagi at 2015-12-05T13:44:36Z
+
+@javiereguiluz: I can make those two ugly strings constants or dedicated files tonight if you think it's better. But I think the string format should be kept over the array entries for maintainability.
+
+---------------------------------------------------------------------------
+
+by ogizanagi at 2015-12-05T21:02:10Z
+
+@javiereguiluz : PR updated with two new proposals:
+
+- 76b6b40 avoid ugly strings by adding both `.gitignore` files as resources in the phar archive (cannot let the leading dot, because box does not allow easily to not ignore dot files currently).
+- 0cd9785 retrieve `.gitinore` files directly from github. (If no connection available, it should generate an empty `.gitignore` file)
+IMHO, that's not the best option for the future, because I'd like to avoid extra HTTP requests, in case we add cache later, and allow to use the installer potentially without any connection.
+So it doesn't fully solve #211, and I still think those files should be part of the generated archives instead.
+
+---------------------------------------------------------------------------
+
+by javiereguiluz at 2015-12-08T16:37:11Z
+
+@ogizanagi thanks for working on this. I like the last proposal that retrieves the `.gitignore` from GitHub.
+
+In order to solve the original error, I'm trying to modify the build script to maintain the `.gitignore` file (see https://github.com/sensiolabs/SensioDistributionBundle/pull/246). If this change gets approved, we'll have the `.gitignore` for **new** packages only, because the old packages won't be recreated.
+
+That's why I ask you: should we add a check in your code to verify if the `.gitignore` file exists before trying to download it from GitHub? Thanks!
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2015-12-08T16:43:13Z
+
+:+1: for your idea Javier. I was wondering (until you explained it) why we weren't just using the `.gitignore` from the SE.
+
+---------------------------------------------------------------------------
+
+by ogizanagi at 2015-12-09T01:54:08Z
+
+@javiereguiluz: Done.
