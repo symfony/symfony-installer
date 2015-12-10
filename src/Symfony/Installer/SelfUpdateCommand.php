@@ -122,7 +122,7 @@ class SelfUpdateCommand extends Command
         $isUpdated = false;
         $localVersion = $this->getApplication()->getVersion();
 
-        if (false === $remoteVersion = @file_get_contents('http://get.symfony.com/symfony.version')) {
+        if (false === $remoteVersion = @file_get_contents(Application::VERSIONS_URL)) {
             throw new \RuntimeException('The new version of the Symfony Installer couldn\'t be downloaded from the server.');
         }
 
