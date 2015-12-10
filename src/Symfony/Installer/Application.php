@@ -26,7 +26,7 @@ class Application extends ConsoleApplication
     {
         $commandName = $this->getCommandName($input);
 
-        if ($this->isInPharMode() && !in_array($commandName, array('self-update', 'selfupdate'), true)) {
+        if ($this->isInPharMode() && in_array($commandName, array('new', 'demo'), true)) {
             if (!$this->checkIfInstallerIsUpdated()) {
                 $output->writeln(
                     sprintf(
