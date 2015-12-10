@@ -18,7 +18,7 @@ require file_exists(__DIR__.'/vendor/autoload.php')
     ? __DIR__.'/vendor/autoload.php'
     : __DIR__.'/../../autoload.php';
 
-$appVersion = '1.5.0';
+$appVersion = '1.5.1-DEV';
 
 // Windows uses Path instead of PATH
 if (!isset($_SERVER['PATH']) && isset($_SERVER['Path'])) {
