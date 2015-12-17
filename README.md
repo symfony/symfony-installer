@@ -1,7 +1,7 @@
 Symfony Installer
 =================
 
-**This is the official installer to start new projects based on the Symfony 
+**This is the official installer to start new projects based on the Symfony
 full-stack framework.**
 
 Installing the installer
@@ -12,14 +12,14 @@ This step is only needed the first time you use the installer:
 ### Linux and Mac OS X
 
 ```bash
-$ sudo curl -LsS http://symfony.com/installer -o /usr/local/bin/symfony
+$ sudo curl -LsS https://symfony.com/installer -o /usr/local/bin/symfony
 $ sudo chmod a+x /usr/local/bin/symfony
 ```
 
 ### Windows
 
 ```bash
-c:\> php -r "file_put_contents('symfony', file_get_contents('http://symfony.com/installer'));"
+c:\> php -r "file_put_contents('symfony', file_get_contents('https://symfony.com/installer'));"
 ```
 
 Move the downloaded `symfony` file to your projects directory and execute
