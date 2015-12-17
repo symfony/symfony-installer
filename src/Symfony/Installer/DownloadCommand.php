@@ -214,8 +214,7 @@ abstract class DownloadCommand extends Command
 
         // check if the client must use a proxy server
         if (!empty($_SERVER['HTTP_PROXY']) || !empty($_SERVER['http_proxy'])) {
-            $proxy = !empty($_SERVER['http_proxy']) ? $_SERVER['http_proxy'] : $_SERVER['HTTP_PROXY'];
-            $defaults['proxy'] = $proxy;
+            $defaults['proxy'] = !empty($_SERVER['http_proxy']) ? $_SERVER['http_proxy'] : $_SERVER['HTTP_PROXY'];
         }
 
         if ($this->output->getVerbosity() >= OutputInterface::VERBOSITY_DEBUG) {
@@ -225,9 +224,7 @@ abstract class DownloadCommand extends Command
         try {
             $handler = Utils::getDefaultHandler();
         } catch (\RuntimeException $e) {
-            throw new \RuntimeException(
-                'The Symfony installer requires the php-curl extension or the allow_url_fopen ini setting.'
-            );
+            throw new \RuntimeException('The Symfony installer requires the php-curl extension or the allow_url_fopen ini setting.');
         }
 
         return new Client(array('defaults' => $defaults, 'handler' => $handler));
