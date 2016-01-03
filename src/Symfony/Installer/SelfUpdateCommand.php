@@ -57,7 +57,7 @@ class SelfUpdateCommand extends Command
         $this
             ->setName('self-update')
             ->setAliases(array('selfupdate'))
-            ->setDescription('Update the installer to the latest version.')
+            ->setDescription('Update the Symfony Installer to the latest version.')
             ->setHelp('The <info>%command.name%</info> command updates the installer to the latest available version.')
         ;
     }
