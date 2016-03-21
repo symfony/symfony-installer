@@ -321,7 +321,7 @@ abstract class DownloadCommand extends Command
         if (!is_file($path = $this->projectDir.'/.gitignore')) {
             try {
                 $this->fs->dumpFile($path, @file_get_contents(sprintf(
-                    'https://raw.githubusercontent.com/symfony/symfony-standard/v%s/.gitignore',
+                    'https://raw.githubusercontent.com/symfony/symfony-standard/%s/.gitignore',
                     $this->getInstalledSymfonyVersion()
                 )));
             } catch (\Exception $e) {
