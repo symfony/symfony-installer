@@ -1,0 +1,19 @@
+---------------------------------------------------------------------------
+
+by stof at 2016-03-21T16:24:52Z
+
+please revert the permission change. This file has no reason to be executable.
+
+If you are using Windows, see http://stackoverflow.com/questions/1580596/how-do-i-make-git-ignore-file-mode-chmod-changes for the way to tell git to ignore them (as Windows does not support Unix permissions). I think GitBash configures this by default, but maybe not other installers.
+
+---------------------------------------------------------------------------
+
+by mariuspuiu at 2016-03-21T17:48:08Z
+
+Done. Windows always gets me!
+
+---------------------------------------------------------------------------
+
+by xabbuh at 2016-03-22T13:28:26Z
+
+:+1:
