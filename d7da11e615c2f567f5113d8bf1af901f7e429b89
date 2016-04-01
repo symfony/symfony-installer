@@ -1,0 +1,70 @@
+---------------------------------------------------------------------------
+
+by WouterJ at 2016-01-30T22:55:30Z
+
+:+1:
+
+---------------------------------------------------------------------------
+
+by xabbuh at 2016-02-05T10:09:08Z
+
+ping @symfony/deciders
+
+This seems to cause issues for people not familiar with the platform config in Composer (see https://github.com/composer/composer/issues/4319#issuecomment-180273853).
+
+---------------------------------------------------------------------------
+
+by Tobion at 2016-02-05T10:28:53Z
+
+Does this result in a warning that "composer.json is not in sync with lock file"? Or is this config option not considered for this sync check by composer?
+
+---------------------------------------------------------------------------
+
+by xabbuh at 2016-02-05T10:44:00Z
+
+The lock file is synchronised after the `composer.json` file has been changed: https://github.com/xabbuh/symfony-installer/blob/issue-234/src/Symfony/Installer/NewCommand.php#L371
+
+---------------------------------------------------------------------------
+
+by Tobion at 2016-02-05T10:58:52Z
+
+LGTM :+1:
+
+---------------------------------------------------------------------------
+
+by Pierstoval at 2016-02-05T11:02:19Z
+
+:+1:
+
+---------------------------------------------------------------------------
+
+by Seldaek at 2016-02-05T11:44:13Z
+
+Just FYI https://github.com/composer/composer/pull/4881 should solve the confusion side.. I'd argue having platform config is a good thing but obviously if people don't take care of setting it correctly it's a bad idea, so maybe not having one by default is better.
+
+---------------------------------------------------------------------------
+
+by stof at 2016-02-05T11:47:26Z
+
+@Seldaek but having it set to 5.3 in new Symfony 2.8 projects is not a good idea. symfony standard-edition needs this value because of its min supported version, but I hope new projects actually target higher PHP runtimes when deploying.
+So keeping the Symfony setting is not a good idea. People needing this setting would need to configure it according to their need anyway. and relying on the current runtime is a better behavior for people not aware of this composer feature.
+
+So :+1: for this change
+
+---------------------------------------------------------------------------
+
+by xabbuh at 2016-02-09T23:27:44Z
+
+@javiereguiluz What do you think?
+
+---------------------------------------------------------------------------
+
+by Pierstoval at 2016-02-09T23:32:35Z
+
+I think it can be merged now and released for newcomers to avoid this issue :+1:
+
+---------------------------------------------------------------------------
+
+by dunglas at 2016-02-10T21:57:27Z
+
+:+1:
