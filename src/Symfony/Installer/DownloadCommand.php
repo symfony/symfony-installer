@@ -320,10 +320,14 @@ abstract class DownloadCommand extends Command
     {
         if (!is_file($path = $this->projectDir.'/.gitignore')) {
             try {
-                $this->fs->dumpFile($path, @file_get_contents(sprintf(
+                $client = $this->getGuzzleClient();
+
+                $response = $client->get(sprintf(
                     'https://raw.githubusercontent.com/symfony/symfony-standard/v%s/.gitignore',
                     $this->getInstalledSymfonyVersion()
-                )));
+                ));
+
+                $this->fs->dumpFile($path, $response->getBody()->getContents());
             } catch (\Exception $e) {
                 // don't throw an exception in case the .gitignore file cannot be created,
                 // because this is just an enhancement, not something mandatory for the project
