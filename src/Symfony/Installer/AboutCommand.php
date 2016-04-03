@@ -60,11 +60,11 @@ class AboutCommand extends Command
 
  Create a project based on a <info>specific Symfony branch</info>:
 
-   <comment>%3\$s new blog 2.3</comment>
+   <comment>%3\$s new blog 2.8</comment> or <comment>%3\$s new blog 3.0</comment>
 
  Create a project based on a <info>specific Symfony version</info>:
 
-   <comment>%3\$s new blog 2.5.6</comment>
+   <comment>%3\$s new blog 2.8.1</comment> or <comment>%3\$s new blog 3.0.1</comment>
 
  Create a <info>demo application</info> to learn how a Symfony application works:
 

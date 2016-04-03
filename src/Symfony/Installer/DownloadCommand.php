@@ -429,7 +429,7 @@ abstract class DownloadCommand extends Command
 
     /**
      * Returns the executed command with all its arguments
-     * (e.g. "symfony new blog 2.3.6").
+     * (e.g. "symfony new blog 2.8.1").
      *
      * @return string
      */

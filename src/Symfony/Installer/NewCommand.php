@@ -83,16 +83,17 @@ class NewCommand extends DownloadCommand
 
     /**
      * Checks whether the given Symfony version is installable by the installer.
+     * (see http://symfony.com/roadmap)
      * Due to the changes introduced in the Icu/Intl components
      * (see http://symfony.com/blog/new-in-symfony-2-6-farewell-to-icu-component)
      * not all the previous Symfony versions are installable by the installer.
      *
      * The rules to decide if the version is installable are as follows:
      *
-     *   - 2.0, 2.1, 2.2 and 2.4 cannot be installed because they are unmaintained.
+     *   - 2.0, 2.1, 2.2, 2.4, 2.5 and 2.6 cannot be installed because they are unmaintained.
      *   - 2.3 can be installed starting from version 2.3.21 (inclusive)
-     *   - 2.5 can be installed starting from version 2.5.6 (inclusive)
-     *   - 2.6, 2.7, 2.8 and 2.9 can be installed regardless the version.
+     *   - 2.7 and 2.8 can be installed regardless the version.
+     *   - 3.0 can be installed regardless the version.
      *
      * @return NewCommand
      *
@@ -133,8 +134,8 @@ class NewCommand extends DownloadCommand
             }
         }
 
-        // 2.0, 2.1, 2.2 and 2.4 cannot be installed because they are unmaintained
-        if (preg_match('/^2\.[0124]\.\d{1,2}$/', $this->version)) {
+        // 2.0, 2.1, 2.2, 2.4, 2.5 and 2.6 cannot be installed because they are unmaintained
+        if (preg_match('/^2\.[012456]\.\d{1,2}$/', $this->version)) {
             throw new \RuntimeException(sprintf(
                 "The selected version (%s) cannot be installed because it belongs\n".
                 "to an unmaintained Symfony branch which is not compatible with this installer.\n".
@@ -149,17 +150,6 @@ class NewCommand extends DownloadCommand
             throw new \RuntimeException(sprintf(
                 "The selected version (%s) cannot be installed because this installer\n".
                 "is compatible with Symfony 2.3 versions starting from 2.3.21.\n".
-                "To solve this issue install Symfony manually executing the following command:\n\n".
-                'composer create-project symfony/framework-standard-edition %s %s',
-                $this->version, $this->projectDir, $this->version
-            ));
-        }
-
-        // 2.5 can be installed starting from version 2.5.6 (inclusive)
-        if (preg_match('/^2\.5\.\d{1,2}$/', $this->version) && version_compare($this->version, '2.5.6', '<')) {
-            throw new \RuntimeException(sprintf(
-                "The selected version (%s) cannot be installed because this installer\n".
-                "is compatible with Symfony 2.5 versions starting from 2.5.6.\n".
                 "To solve this issue install Symfony manually executing the following command:\n\n".
                 'composer create-project symfony/framework-standard-edition %s %s',
                 $this->version, $this->projectDir, $this->version
