@@ -350,18 +350,6 @@ class NewCommand extends DownloadCommand
             unset($contents['description']);
         }
 
-        if (isset($contents['config']['platform']['php'])) {
-            unset($contents['config']['platform']['php']);
-
-            if (empty($contents['config']['platform'])) {
-                unset($contents['config']['platform']);
-            }
-
-            if (empty($contents['config'])) {
-                unset($contents['config']);
-            }
-        }
-
         if (isset($contents['extra']['branch-alias'])) {
             unset($contents['extra']['branch-alias']);
         }
