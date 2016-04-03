@@ -96,9 +96,10 @@ $ symfony new my_project 2.8.1
 c:\> php symfony new my_project 2.8.1
 ```
 
-**5. Start a new project based on the Symfony demo version (lts)**
+**5. Install the Symfony demo application**
 
-Execute the `demo` command:
+The Symfony Demo is a reference application developed using the official Symfony
+Best Practices:
 
 ```bash
 # Linux, Mac OS X
