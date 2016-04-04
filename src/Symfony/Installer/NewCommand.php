@@ -48,6 +48,7 @@ class NewCommand extends DownloadCommand
     {
         try {
             $this
+                ->checkIfInstallerIsUpdated()
                 ->checkProjectName()
                 ->checkSymfonyVersionIsInstallable()
                 ->checkPermissions()

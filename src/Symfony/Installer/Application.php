@@ -26,39 +26,6 @@ class Application extends ConsoleApplication
 
     public function doRun(InputInterface $input, OutputInterface $output)
     {
-        $commandName = $this->getCommandName($input);
-
-        if ($this->isInPharMode() && in_array($commandName, array('new', 'demo'), true)) {
-            if (!$this->checkIfInstallerIsUpdated()) {
-                $output->writeln(sprintf(
-                    " <comment>[WARNING]</comment> Your Symfony Installer version is outdated.\n".
-                    ' Execute the command "%s selfupdate" to get the latest version.',
-                    $_SERVER['PHP_SELF']
-                ));
-            }
-        }
-
         return parent::doRun($input, $output);
-    }
-
-    public function isInPharMode()
-    {
-        return 'phar://' === substr(__DIR__, 0, 7);
-    }
-
-    private function checkIfInstallerIsUpdated()
-    {
-        $localVersion = $this->getVersion();
-
-        if (false === $remoteVersion = @file_get_contents(self::VERSIONS_URL)) {
-            // as this is simple checking - we don't care here if versions file is unavailable
-            return true;
-        }
-
-        if (version_compare($localVersion, $remoteVersion, '>=')) {
-            return true;
-        }
-
-        return false;
     }
 }
