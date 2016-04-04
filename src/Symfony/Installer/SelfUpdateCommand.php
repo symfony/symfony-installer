@@ -11,7 +11,6 @@
 
 namespace Symfony\Installer;
 
-use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Filesystem\Filesystem;
@@ -98,16 +97,16 @@ class SelfUpdateCommand extends DownloadCommand
                 ->cleanUp()
             ;
         } catch (IOException $e) {
+            if ($output->isVeryVerbose()) {
+                echo $e->getMessage();
+            }
+
             throw new \RuntimeException(sprintf(
                 "The installer couldn't be updated, probably because of a permissions issue.\n".
                 "Try to execute the command again with super user privileges:\n".
                 "  sudo %s\n",
                 $this->getExecutedCommand()
             ));
-
-            if ($output->isVeryVerbose()) {
-                echo $e->getMessage();
-            }
         } catch (\Exception $e) {
             $this->rollback();
 
