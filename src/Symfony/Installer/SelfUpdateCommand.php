@@ -27,15 +27,12 @@ use Symfony\Component\Filesystem\Exception\IOException;
  * @author Stephane PY <py.stephane1@gmail.com>
  * @author Grégoire Pineau <lyrixx@lyrixx.info>
  */
-class SelfUpdateCommand extends Command
+class SelfUpdateCommand extends DownloadCommand
 {
-    /** @var Filesystem */
-    private $fs;
-
-    /** @var OutputInterface */
-    private $output;
-
     private $tempDir;
+
+    /** @var string */
+    private $latestInstallerVersion;
 
     /** @var string  the URL where the latest installer version can be downloaded */
     private $remoteInstallerFile;
@@ -75,6 +72,7 @@ class SelfUpdateCommand extends Command
         $this->fs = new Filesystem();
         $this->output = $output;
 
+        $this->latestInstallerVersion = $this->getUrlContents(Application::VERSIONS_URL);
         $this->remoteInstallerFile = 'http://symfony.com/installer';
         $this->currentInstallerFile = realpath($_SERVER['argv'][0]) ?: $_SERVER['argv'][0];
         $this->tempDir = sys_get_temp_dir();
@@ -85,8 +83,10 @@ class SelfUpdateCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        if ($this->installerIsUpdated()) {
-            return;
+        if ($this->isInstallerUpdated()) {
+            $this->output->writeln(sprintf('// Symfony Installer is <info>already updated</info> to the latest version (%s).', $this->latestInstallerVersion));
+        } else {
+            $this->output->writeln(sprintf('// <info>updating</info> Symfony Installer to <info>%s</info> version', $this->latestInstallerVersion));
         }
 
         try {
@@ -117,25 +117,6 @@ class SelfUpdateCommand extends Command
         }
     }
 
-    private function installerIsUpdated()
-    {
-        $isUpdated = false;
-        $localVersion = $this->getApplication()->getVersion();
-
-        if (false === $remoteVersion = @file_get_contents(Application::VERSIONS_URL)) {
-            throw new \RuntimeException('The new version of the Symfony Installer couldn\'t be downloaded from the server.');
-        }
-
-        if (version_compare($localVersion, $remoteVersion, '>=')) {
-            $this->output->writeln('<info>Symfony Installer is already up to date.</info>');
-            $isUpdated = true;
-        } else {
-            $this->output->writeln(sprintf('// <info>updating</info> Symfony Installer to <comment>%s</comment> version', $remoteVersion));
-        }
-
-        return $isUpdated;
-    }
-
     private function downloadNewVersion()
     {
         // check for permissions in local filesystem before start downloading files
@@ -147,7 +128,7 @@ class SelfUpdateCommand extends Command
             throw new \RuntimeException('Symfony Installer update failed: the "'.$this->tempDir.'" directory used to download files temporarily could not be written');
         }
 
-        if (false === $newInstaller = @file_get_contents($this->remoteInstallerFile)) {
+        if (false === $newInstaller = $this->getUrlContents($this->remoteInstallerFile)) {
             throw new \RuntimeException('The new version of the Symfony Installer couldn\'t be downloaded from the server.');
         }
 
@@ -206,5 +187,15 @@ class SelfUpdateCommand extends Command
         if ($this->restorePreviousInstaller) {
             $this->fs->copy($this->currentInstallerBackupFile, $this->currentInstallerFile, true);
         }
+    }
+
+    protected function getDownloadedApplicationType()
+    {
+        return 'Symfony Installer';
+    }
+
+    protected function getRemoteFileUrl()
+    {
+        return 'http://symfony.com/installer';
     }
 }

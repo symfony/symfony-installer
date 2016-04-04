@@ -60,7 +60,7 @@ class DemoCommand extends DownloadCommand
     {
         try {
             $this
-                ->checkIfInstallerIsUpdated()
+                ->checkInstallerVersion()
                 ->checkProjectName()
                 ->checkPermissions()
                 ->download()
