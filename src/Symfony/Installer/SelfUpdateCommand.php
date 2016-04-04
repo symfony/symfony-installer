@@ -84,6 +84,8 @@ class SelfUpdateCommand extends DownloadCommand
     {
         if ($this->isInstallerUpdated()) {
             $this->output->writeln(sprintf('// Symfony Installer is <info>already updated</info> to the latest version (%s).', $this->latestInstallerVersion));
+
+            return;
         } else {
             $this->output->writeln(sprintf('// <info>updating</info> Symfony Installer to <info>%s</info> version', $this->latestInstallerVersion));
         }
