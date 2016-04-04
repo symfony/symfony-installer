@@ -97,8 +97,8 @@ class SelfUpdateCommand extends DownloadCommand
                 ->cleanUp()
             ;
         } catch (IOException $e) {
-            if ($output->isVeryVerbose()) {
-                echo $e->getMessage();
+            if ($this->output->isVeryVerbose()) {
+                $this->output->writeln($e->getMessage());
             }
 
             throw new \RuntimeException(sprintf(
@@ -110,8 +110,8 @@ class SelfUpdateCommand extends DownloadCommand
         } catch (\Exception $e) {
             $this->rollback();
 
-            if ($output->isVeryVerbose()) {
-                echo $e->getMessage();
+            if ($this->output->isVeryVerbose()) {
+                $this->output->writeln($e->getMessage());
             }
         }
     }
