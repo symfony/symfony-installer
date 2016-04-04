@@ -484,7 +484,7 @@ abstract class DownloadCommand extends Command
             return $this;
         }
 
-        $installedVersion = '1.4.0';// $this->getApplication()->getVersion();
+        $installedVersion = $this->getApplication()->getVersion();
         $latestVersion = $this->getUrlContents(Application::VERSIONS_URL);
 
         if (version_compare($installedVersion, $latestVersion, '<')) {
