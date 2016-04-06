@@ -77,10 +77,10 @@ automatically select the most recent version available for the given branch:
 
 ```bash
 # Linux, Mac OS X
-$ symfony new my_project 2.3
+$ symfony new my_project 2.8
 
 # Windows
-c:\> php symfony new my_project 2.3
+c:\> php symfony new my_project 2.8
 ```
 
 **4. Start a new project based on a specific Symfony version**
@@ -90,10 +90,23 @@ argument and the exact Symfony version as the second argument:
 
 ```bash
 # Linux, Mac OS X
-$ symfony new my_project 2.5.6
+$ symfony new my_project 2.8.1
 
 # Windows
-c:\> php symfony new my_project 2.5.6
+c:\> php symfony new my_project 2.8.1
+```
+
+**5. Install the Symfony demo application**
+
+The Symfony Demo is a reference application developed using the official Symfony
+Best Practices:
+
+```bash
+# Linux, Mac OS X
+$ symfony demo
+
+# Windows
+c:\> php symfony demo
 ```
 
 Updating the installer
