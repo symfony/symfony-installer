@@ -42,7 +42,7 @@ class IntegrationTest extends \PHPUnit_Framework_TestCase
         $this->assertContains('Symfony Demo Application was successfully installed.', $output);
 
         $output = $this->runCommand('php app/console --version', $projectDir);
-        $this->assertRegExp('/Symfony version 2\.\d+\.\d+ - app\/dev\/debug/', $output);
+        $this->assertRegExp('/Symfony version 2\.\d+\.\d+(-DEV)? - app\/dev\/debug/', $output);
     }
 
     /**
@@ -108,13 +108,13 @@ class IntegrationTest extends \PHPUnit_Framework_TestCase
             array(
                 '',
                 '/.*Symfony 3\.0\.\d+ was successfully installed.*/',
-                '/Symfony version 3\.0\.\d+ - app\/dev\/debug/',
+                '/Symfony version 3\.0\.\d+(-DEV)? - app\/dev\/debug/',
             ),
 
             array(
                 'lts',
                 '/.*Symfony 2\.8\.\d+ was successfully installed.*/',
-                '/Symfony version 2\.8\.\d+ - app\/dev\/debug/',
+                '/Symfony version 2\.8\.\d+(-DEV)? - app\/dev\/debug/',
             ),
 
             array(
