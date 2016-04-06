@@ -1,0 +1,17 @@
+---------------------------------------------------------------------------
+
+by stof at 2016-04-04T13:24:20Z
+
+@javiereguiluz can you fix the testsuite ?
+
+---------------------------------------------------------------------------
+
+by javiereguiluz at 2016-04-04T13:30:58Z
+
+The error is caused by the infamous Symfony error that left the `-DEV` suffix in the version number (https://github.com/symfony/symfony/issues/18390 & related). What's the best approach to solve this in our test suite?
+
+---------------------------------------------------------------------------
+
+by javiereguiluz at 2016-04-06T10:36:52Z
+
+Let's merge this as is and then we'll think about how to fix our test suite. Thanks!
