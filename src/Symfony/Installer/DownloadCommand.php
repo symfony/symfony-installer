@@ -477,6 +477,55 @@ abstract class DownloadCommand extends Command
         return '3' === $this->version[0] || 'latest' === $this->version;
     }
 
+    /**
+     * Checks if the installed version is the latest one and displays some
+     * warning messages if not.
+     *
+     * @return $this
+     */
+    protected function checkInstallerVersion()
+    {
+        // check update only if installer is running via a PHAR file
+        if ('phar://' !== substr(__DIR__, 0, 7)) {
+            return $this;
+        }
+
+        if (!$this->isInstallerUpdated()) {
+            $this->output->writeln(sprintf(
+                "\n <bg=red> WARNING </> Your Symfony Installer version (%s) is outdated.\n".
+                ' Execute the command "%s selfupdate" to get the latest version (%s).',
+                $installedVersion, $_SERVER['PHP_SELF'], $latestVersion
+            ));
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return boolean Whether the installed version is the latest one
+     */
+    protected function isInstallerUpdated()
+    {
+        $installedVersion = $this->getApplication()->getVersion();
+        $latestVersion = $this->getUrlContents(Application::VERSIONS_URL);
+
+        return version_compare($installedVersion, $latestVersion, '>=');
+    }
+
+    /**
+     * Returns the contents obtained by making a GET request to the given URL.
+     *
+     * @param string $url
+     *
+     * @return string
+     */
+    protected function getUrlContents($url)
+    {
+        $client = $this->getGuzzleClient();
+
+        return $client->get($url)->getBody()->getContents();
+    }
+
     private function enableSignalHandler()
     {
         if (!function_exists('pcntl_signal')) {
