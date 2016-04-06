@@ -1,0 +1,17 @@
+---------------------------------------------------------------------------
+
+by stof at 2016-04-04T13:21:06Z
+
+Why is the refactoring of the installer version check shipped in the same PR (without being described in the PR) ?
+
+---------------------------------------------------------------------------
+
+by javiereguiluz at 2016-04-04T13:23:59Z
+
+@stof I agree that's a bad practice and I'm sorry about it.
+
+---------------------------------------------------------------------------
+
+by stof at 2016-04-04T13:25:40Z
+
+@javiereguiluz note that this hidden change is even the one preventing to merge this PR, as it is the buggy part...
