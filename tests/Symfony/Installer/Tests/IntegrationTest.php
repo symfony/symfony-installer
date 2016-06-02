@@ -107,6 +107,12 @@ class IntegrationTest extends \PHPUnit_Framework_TestCase
         return array(
             array(
                 '',
+                '/.*Symfony 3\.1\.\d+ was successfully installed.*/',
+                '/Symfony version 3\.1\.\d+(-DEV)? - app\/dev\/debug/',
+            ),
+
+            array(
+                '3.0',
                 '/.*Symfony 3\.0\.\d+ was successfully installed.*/',
                 '/Symfony version 3\.0\.\d+(-DEV)? - app\/dev\/debug/',
             ),
