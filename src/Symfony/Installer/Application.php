@@ -24,6 +24,9 @@ class Application extends ConsoleApplication
 {
     const VERSIONS_URL = 'https://get.symfony.com/symfony.version';
 
+    /**
+     * {@inheritdoc}
+     */
     public function doRun(InputInterface $input, OutputInterface $output)
     {
         return parent::doRun($input, $output);

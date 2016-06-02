@@ -24,6 +24,9 @@ use Symfony\Installer\Exception\AbortException;
  */
 class NewCommand extends DownloadCommand
 {
+    /**
+     * {@inheritdoc}
+     */
     protected function configure()
     {
         $this
@@ -34,6 +37,9 @@ class NewCommand extends DownloadCommand
         ;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     protected function initialize(InputInterface $input, OutputInterface $output)
     {
         parent::initialize($input, $output);
@@ -44,6 +50,9 @@ class NewCommand extends DownloadCommand
         $this->projectName = basename($directory);
     }
 
+    /**
+     * {@inheritdoc}
+     */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         try {
@@ -95,9 +104,9 @@ class NewCommand extends DownloadCommand
      *   - 2.5 can be installed starting from version 2.5.6 (inclusive)
      *   - 2.6, 2.7, 2.8 and 2.9 can be installed regardless the version.
      *
-     * @return NewCommand
+     * @return $this
      *
-     * @throws \RuntimeException If the given Symfony version is not compatible with this installer.
+     * @throws \RuntimeException If the given Symfony version is not compatible with this installer
      */
     protected function checkSymfonyVersionIsInstallable()
     {
@@ -194,7 +203,7 @@ class NewCommand extends DownloadCommand
      * download the project and removes Symfony-related files that don't make
      * sense in a proprietary project.
      *
-     * @return NewCommand
+     * @return $this
      */
     protected function cleanUp()
     {
@@ -220,7 +229,7 @@ class NewCommand extends DownloadCommand
      * It displays the message with the result of installing Symfony
      * and provides some pointers to the user.
      *
-     * @return NewCommand
+     * @return $this
      */
     protected function displayInstallationResult()
     {
@@ -276,7 +285,7 @@ class NewCommand extends DownloadCommand
     /**
      * Dump a basic README.md file.
      *
-     * @return NewCommand
+     * @return $this
      */
     protected function dumpReadmeFile()
     {
@@ -296,7 +305,7 @@ class NewCommand extends DownloadCommand
      * Updates the Symfony parameters.yml file to replace default configuration
      * values with better generated values.
      *
-     * @return NewCommand
+     * @return $this
      */
     protected function updateParameters()
     {
@@ -324,7 +333,7 @@ class NewCommand extends DownloadCommand
      * Updates the composer.json file to provide better values for some of the
      * default configuration values.
      *
-     * @return NewCommand
+     * @return $this
      */
     protected function updateComposerJson()
     {
@@ -378,7 +387,7 @@ class NewCommand extends DownloadCommand
      * Generates a good Composer project name based on the application name
      * and on the user name.
      *
-     * @return string
+     * @return string The generated Composer project name
      */
     protected function generateComposerProjectName()
     {
@@ -404,7 +413,7 @@ class NewCommand extends DownloadCommand
      *
      * @param string $name The project name to transform
      *
-     * @return string
+     * @return string The fixed Composer project name
      */
     private function fixComposerPackageName($name)
     {
@@ -417,11 +426,17 @@ class NewCommand extends DownloadCommand
         );
     }
 
+    /**
+     * {@inheritdoc}
+     */
     protected function getDownloadedApplicationType()
     {
         return 'Symfony';
     }
 
+    /**
+     * {@inheritdoc}
+     */
     protected function getRemoteFileUrl()
     {
         return 'http://symfony.com/download?v=Symfony_Standard_Vendors_'.$this->version;
@@ -454,7 +469,7 @@ class NewCommand extends DownloadCommand
      *
      * @param string $composerJsonFileContents The contents of the composer.json file.
      *
-     * @return string
+     * @return string The hash of the composer file content.
      */
     private function getComposerContentHash($composerJsonFileContents)
     {

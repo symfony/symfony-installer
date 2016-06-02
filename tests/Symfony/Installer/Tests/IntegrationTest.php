@@ -19,7 +19,14 @@ use Symfony\Component\Process\ProcessUtils;
 
 class IntegrationTest extends \PHPUnit_Framework_TestCase
 {
+    /**
+     * @var string The root directory
+     */
     private $rootDir;
+
+    /**
+     * @var Filesystem The Filesystem component
+     */
     private $fs;
 
     public function setUp()
@@ -87,11 +94,12 @@ class IntegrationTest extends \PHPUnit_Framework_TestCase
      * Runs the given string as a command and returns the resulting output.
      * The CWD is set to the root project directory to simplify command paths.
      *
-     * @param string $command
+     * @param string      $command          The name of the command to execute
+     * @param null|string $workingDirectory The working directory
      *
-     * @return string
+     * @return string The output of the command
      *
-     * @throws ProcessFailedException in case the command execution is not successful
+     * @throws ProcessFailedException If the command execution is not successful
      */
     private function runCommand($command, $workingDirectory = null)
     {
@@ -102,6 +110,11 @@ class IntegrationTest extends \PHPUnit_Framework_TestCase
         return $process->getOutput();
     }
 
+    /**
+     * Provides Symfony installation data.
+     *
+     * @return array
+     */
     public function provideSymfonyInstallationData()
     {
         return array(

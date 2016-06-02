@@ -23,6 +23,9 @@ use Symfony\Installer\Exception\AbortException;
  */
 class DemoCommand extends DownloadCommand
 {
+    /**
+     * {@inheritdoc}
+     */
     protected function configure()
     {
         $this
@@ -32,6 +35,9 @@ class DemoCommand extends DownloadCommand
         ;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     protected function initialize(InputInterface $input, OutputInterface $output)
     {
         parent::initialize($input, $output);
@@ -56,6 +62,9 @@ class DemoCommand extends DownloadCommand
         }
     }
 
+    /**
+     * {@inheritdoc}
+     */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         try {
@@ -94,7 +103,7 @@ class DemoCommand extends DownloadCommand
      * Removes all the temporary files and directories created to
      * download the demo application.
      *
-     * @return NewCommand
+     * @return $this
      */
     private function cleanUp()
     {
@@ -107,7 +116,7 @@ class DemoCommand extends DownloadCommand
      * It displays the message with the result of installing the Symfony Demo
      * application and provides some pointers to the user.
      *
-     * @return DemoCommand
+     * @return $this
      */
     private function displayInstallationResult()
     {
@@ -145,11 +154,17 @@ class DemoCommand extends DownloadCommand
         return $this;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     protected function getDownloadedApplicationType()
     {
         return 'the Symfony Demo Application';
     }
 
+    /**
+     * {@inheritdoc}
+     */
     protected function getRemoteFileUrl()
     {
         return 'http://symfony.com/download?v=Symfony_Demo';

@@ -38,37 +38,37 @@ use Symfony\Installer\Exception\AbortException;
 abstract class DownloadCommand extends Command
 {
     /**
-     * @var Filesystem
+     * @var Filesystem To dump content to a file
      */
     protected $fs;
 
     /**
-     * @var OutputInterface
+     * @var OutputInterface To output content
      */
     protected $output;
 
     /**
-     * @var string
+     * @var string The project name
      */
     protected $projectName;
 
     /**
-     * @var string
+     * @var string The project dir
      */
     protected $projectDir;
 
     /**
-     * @var string
+     * @var string The version to install
      */
     protected $version = 'latest';
 
     /**
-     * @var string
+     * @var string The path to the downloaded file
      */
     protected $downloadedFilePath;
 
     /**
-     * @var array
+     * @var array The requirement errors
      */
     protected $requirementsErrors = array();
 
@@ -76,15 +76,20 @@ abstract class DownloadCommand extends Command
      * Returns the type of the downloaded application in a human readable format.
      * It's mainly used to display readable error messages.
      *
-     * @return string
+     * @return string The type of the downloaded application in a human readable format
      */
     abstract protected function getDownloadedApplicationType();
 
     /**
      * Returns the absolute URL of the remote file downloaded by the command.
+     *
+     * @return string The absolute URL of the remote file downloaded by the command
      */
     abstract protected function getRemoteFileUrl();
 
+    /**
+     * {@inheritdoc}
+     */
     protected function initialize(InputInterface $input, OutputInterface $output)
     {
         $this->output = $output;
@@ -100,7 +105,7 @@ abstract class DownloadCommand extends Command
      *
      * @return $this
      *
-     * @throws \RuntimeException if the Symfony archive could not be downloaded
+     * @throws \RuntimeException If the Symfony archive could not be downloaded
      */
     protected function download()
     {
@@ -189,6 +194,13 @@ abstract class DownloadCommand extends Command
         return $this;
     }
 
+    /**
+     * Checks the project name.
+     *
+     * @return $this
+     *
+     * @throws \RuntimeException If there is already a projet in the specified directory
+     */
     protected function checkProjectName()
     {
         if (is_dir($this->projectDir) && !$this->isEmptyDirectory($this->projectDir)) {
@@ -206,7 +218,9 @@ abstract class DownloadCommand extends Command
      * Returns the Guzzle client configured according to the system environment
      * (e.g. it takes into account whether it should use a proxy server or not).
      *
-     * @return Client
+     * @return Client The configured Guzzle client
+     *
+     * @throws \RuntimeException If the php-curl is not installed or the allow_url_fopen ini setting is not set
      */
     protected function getGuzzleClient()
     {
@@ -234,9 +248,9 @@ abstract class DownloadCommand extends Command
      * Extracts the compressed Symfony file (ZIP or TGZ) using the
      * native operating system commands if available or PHP code otherwise.
      *
-     * @return DownloadCommand
+     * @return $this
      *
-     * @throws \RuntimeException if the downloaded archive could not be extracted
+     * @throws \RuntimeException If the downloaded archive could not be extracted
      */
     protected function extract()
     {
@@ -341,7 +355,7 @@ abstract class DownloadCommand extends Command
      * Returns the full Symfony version number of the project by getting
      * it from the composer.lock file.
      *
-     * @return string
+     * @return string The installed Symfony version
      */
     protected function getInstalledSymfonyVersion()
     {
@@ -360,6 +374,10 @@ abstract class DownloadCommand extends Command
 
     /**
      * Checks if the installer has enough permissions to create the project.
+     *
+     * @return $this
+     *
+     * @throws IOException If the installer does not have enough permissions to write to the project parent directory
      */
     protected function checkPermissions()
     {
@@ -399,7 +417,7 @@ abstract class DownloadCommand extends Command
      * @param \Requirement $requirement The Symfony requirements
      * @param int          $lineSize    The maximum line length
      *
-     * @return string
+     * @return string The formatted error message
      */
     protected function getErrorMessage(\Requirement $requirement, $lineSize = 70)
     {
@@ -416,7 +434,7 @@ abstract class DownloadCommand extends Command
     /**
      * Generates a good random value for Symfony's 'secret' option.
      *
-     * @return string
+     * @return string The randomly generated secret
      */
     protected function generateRandomSecret()
     {
@@ -431,7 +449,7 @@ abstract class DownloadCommand extends Command
      * Returns the executed command with all its arguments
      * (e.g. "symfony new blog 2.8.1").
      *
-     * @return string
+     * @return string The executed command with all its arguments
      */
     protected function getExecutedCommand()
     {
@@ -458,7 +476,7 @@ abstract class DownloadCommand extends Command
      *
      * @param string $dir the path of the directory to check
      *
-     * @return bool
+     * @return bool Whether the given directory is empty
      */
     protected function isEmptyDirectory($dir)
     {
@@ -470,7 +488,7 @@ abstract class DownloadCommand extends Command
     /**
      * Checks that the asked version is in the 3.x branch.
      *
-     * @return bool
+     * @return bool Wheter is Symfony3
      */
     protected function isSymfony3()
     {
@@ -502,7 +520,7 @@ abstract class DownloadCommand extends Command
     }
 
     /**
-     * @return boolean Whether the installed version is the latest one
+     * @return bool Whether the installed version is the latest one
      */
     protected function isInstallerUpdated()
     {
@@ -515,9 +533,9 @@ abstract class DownloadCommand extends Command
     /**
      * Returns the contents obtained by making a GET request to the given URL.
      *
-     * @param string $url
+     * @param string $url The URL to get the contents from
      *
-     * @return string
+     * @return string The obtained contents of $url
      */
     protected function getUrlContents($url)
     {
@@ -526,6 +544,11 @@ abstract class DownloadCommand extends Command
         return $client->get($url)->getBody()->getContents();
     }
 
+    /**
+     * Enables the signal handler.
+     *
+     * @throws AbortException If the execution has been aborted with SIGINT signal.
+     */
     private function enableSignalHandler()
     {
         if (!function_exists('pcntl_signal')) {

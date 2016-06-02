@@ -28,26 +28,45 @@ use Symfony\Component\Filesystem\Exception\IOException;
  */
 class SelfUpdateCommand extends DownloadCommand
 {
+    /**
+     * @var string The temp dir
+     */
     private $tempDir;
 
-    /** @var string */
+    /**
+     * @var string The latest installer version
+     */
     private $latestInstallerVersion;
 
-    /** @var string  the URL where the latest installer version can be downloaded */
+    /**
+     * @var string The URL where the latest installer version can be downloaded
+     */
     private $remoteInstallerFile;
 
-    /** @var string the filepath of the installer currently installed in the local machine */
+    /**
+     * @var string The filepath of the installer currently installed in the local machine
+     */
     private $currentInstallerFile;
 
-    /** @var string the filepath of the new installer downloaded to replace the current installer */
+    /**
+     * @var string The filepath of the new installer downloaded to replace the current installer
+     */
     private $newInstallerFile;
 
-    /** @var string the filepath of the backup of the current installer in case a rollback is performed */
+    /**
+     * @var string The filepath of the backup of the current installer in case a rollback is performed
+     */
     private $currentInstallerBackupFile;
 
-    /** @var bool flag which indicates that, in case of a rollback, it's safe to restore the installer backup because it corresponds to the most recent version */
+    /**
+     * @var bool Flag which indicates that, in case of a rollback, it's safe to restore the installer backup because
+     *           it corresponds to the most recent version
+     */
     private $restorePreviousInstaller;
 
+    /**
+     * {@inheritdoc}
+     */
     protected function configure()
     {
         $this
@@ -60,12 +79,17 @@ class SelfUpdateCommand extends DownloadCommand
 
     /**
      * The self-update command is only available when using the installer via the PHAR file.
+     *
+     * @return bool Whether the command is enabled
      */
     public function isEnabled()
     {
         return 'phar://' === substr(__DIR__, 0, 7);
     }
 
+    /**
+     * {@inheritdoc}
+     */
     protected function initialize(InputInterface $input, OutputInterface $output)
     {
         $this->fs = new Filesystem();
@@ -80,6 +104,9 @@ class SelfUpdateCommand extends DownloadCommand
         $this->restorePreviousInstaller = false;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         if ($this->isInstallerUpdated()) {
@@ -118,6 +145,11 @@ class SelfUpdateCommand extends DownloadCommand
         }
     }
 
+    /**
+     * Downloads the new version of the Symfony installer.
+     *
+     * @return $this
+     */
     private function downloadNewVersion()
     {
         // check for permissions in local filesystem before start downloading files
@@ -139,6 +171,11 @@ class SelfUpdateCommand extends DownloadCommand
         return $this;
     }
 
+    /**
+     * Checks if the new version is valid.
+     *
+     * @return $this
+     */
     private function checkNewVersionIsValid()
     {
         // creating a Phar instance for an existing file is not allowed
@@ -154,6 +191,11 @@ class SelfUpdateCommand extends DownloadCommand
         return $this;
     }
 
+    /**
+     * Does a backup of the current version of the Symfony installer.
+     *
+     * @return $this
+     */
     private function backupCurrentVersion()
     {
         $this->fs->copy($this->currentInstallerFile, $this->currentInstallerBackupFile, true);
@@ -162,6 +204,11 @@ class SelfUpdateCommand extends DownloadCommand
         return $this;
     }
 
+    /**
+     * Replaces the currenct version of the Symfony installer with the new one.
+     *
+     * @return $this
+     */
     private function replaceCurrentVersionbyNewVersion()
     {
         $this->fs->copy($this->newInstallerFile, $this->currentInstallerFile, true);
@@ -169,11 +216,17 @@ class SelfUpdateCommand extends DownloadCommand
         return $this;
     }
 
+    /**
+     * Removes the temporary used files.
+     */
     private function cleanUp()
     {
         $this->fs->remove(array($this->currentInstallerBackupFile, $this->newInstallerFile));
     }
 
+    /**
+     * Restores the previously installed version of the Symfony installer.
+     */
     private function rollback()
     {
         $this->output->writeln(array(
@@ -190,11 +243,17 @@ class SelfUpdateCommand extends DownloadCommand
         }
     }
 
+    /**
+     * {@inheritdoc}
+     */
     protected function getDownloadedApplicationType()
     {
         return 'Symfony Installer';
     }
 
+    /**
+     * {@inheritdoc}
+     */
     protected function getRemoteFileUrl()
     {
         return 'http://symfony.com/installer';
