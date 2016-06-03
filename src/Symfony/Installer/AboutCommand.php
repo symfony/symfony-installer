@@ -22,8 +22,16 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class AboutCommand extends Command
 {
+    /**
+     * @var string The current version of the Symfony installer
+     */
     private $appVersion;
 
+    /**
+     * Constructor.
+     *
+     * @param string $appVersion The current version of the Symfony installer
+     */
     public function __construct($appVersion)
     {
         parent::__construct();
@@ -31,6 +39,9 @@ class AboutCommand extends Command
         $this->appVersion = $appVersion;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     protected function configure()
     {
         $this
@@ -39,6 +50,9 @@ class AboutCommand extends Command
         ;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $commandHelp = <<<COMMAND_HELP
@@ -99,7 +113,7 @@ COMMAND_UPDATE_HELP;
     /**
      * Returns the executed command.
      *
-     * @return string
+     * @return string The executed command
      */
     private function getExecutedCommand()
     {
