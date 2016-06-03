@@ -488,7 +488,7 @@ abstract class DownloadCommand extends Command
     /**
      * Checks that the asked version is in the 3.x branch.
      *
-     * @return bool Wheter is Symfony3
+     * @return bool Whether is Symfony3
      */
     protected function isSymfony3()
     {
