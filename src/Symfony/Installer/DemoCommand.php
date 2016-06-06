@@ -75,6 +75,7 @@ class DemoCommand extends DownloadCommand
                 ->download()
                 ->extract()
                 ->cleanUp()
+                ->updateComposerJson()
                 ->createGitIgnore()
                 ->checkSymfonyRequirements()
                 ->displayInstallationResult()
@@ -150,6 +151,33 @@ class DemoCommand extends DownloadCommand
             "    3. Browse to the <comment>http://localhost:8000</comment> URL to see the demo application in action.\n\n",
             $this->projectDir
         ));
+
+        return $this;
+    }
+
+    /**
+     * Updates the composer.json file to provide better values for some of the
+     * default configuration values.
+     *
+     * @return $this
+     */
+    protected function updateComposerJson()
+    {
+        $composerConfig = $this->getProjectComposerConfig();
+
+        if (isset($composerConfig['config']['platform']['php'])) {
+            unset($composerConfig['config']['platform']['php']);
+
+            if (empty($composerConfig['config']['platform'])) {
+                unset($composerConfig['config']['platform']);
+            }
+
+            if (empty($composerConfig['config'])) {
+                unset($composerConfig['config']);
+            }
+        }
+
+        $this->saveProjectComposerConfig($composerConfig);
 
         return $this;
     }

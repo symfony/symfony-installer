@@ -337,48 +337,32 @@ class NewCommand extends DownloadCommand
      */
     protected function updateComposerJson()
     {
-        $filename = $this->projectDir.'/composer.json';
+        $composerConfig = $this->getProjectComposerConfig();
 
-        if (!is_writable($filename)) {
-            if ($this->output->isVerbose()) {
-                $this->output->writeln(sprintf(
-                    " <comment>[WARNING]</comment> Project name cannot be configured because\n".
-                    " the <comment>%s</comment> file is not writable.\n",
-                    $filename
-                ));
-            }
+        $composerConfig['name'] = $this->generateComposerProjectName();
+        $composerConfig['license'] = 'proprietary';
 
-            return $this;
+        if (isset($composerConfig['description'])) {
+            unset($composerConfig['description']);
         }
 
-        $contents = json_decode(file_get_contents($filename), true);
+        if (isset($composerConfig['config']['platform']['php'])) {
+            unset($composerConfig['config']['platform']['php']);
 
-        $contents['name'] = $this->generateComposerProjectName();
-        $contents['license'] = 'proprietary';
-
-        if (isset($contents['description'])) {
-            unset($contents['description']);
-        }
-
-        if (isset($contents['config']['platform']['php'])) {
-            unset($contents['config']['platform']['php']);
-
-            if (empty($contents['config']['platform'])) {
-                unset($contents['config']['platform']);
+            if (empty($composerConfig['config']['platform'])) {
+                unset($composerConfig['config']['platform']);
             }
 
-            if (empty($contents['config'])) {
-                unset($contents['config']);
+            if (empty($composerConfig['config'])) {
+                unset($composerConfig['config']);
             }
         }
 
-        if (isset($contents['extra']['branch-alias'])) {
-            unset($contents['extra']['branch-alias']);
+        if (isset($composerConfig['extra']['branch-alias'])) {
+            unset($composerConfig['extra']['branch-alias']);
         }
 
-        file_put_contents($filename, json_encode($contents, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES)."\n");
-
-        $this->syncComposerLockFile();
+        $this->saveProjectComposerConfig($composerConfig);
 
         return $this;
     }
@@ -440,67 +424,5 @@ class NewCommand extends DownloadCommand
     protected function getRemoteFileUrl()
     {
         return 'http://symfony.com/download?v=Symfony_Standard_Vendors_'.$this->version;
-    }
-
-    /**
-     * Updates the hash values stored in composer.lock to avoid out-of-sync
-     * problems when the composer.json file contents are changed.
-     */
-    private function syncComposerLockFile()
-    {
-        $composerJsonFileContents = file_get_contents($this->projectDir.'/composer.json');
-        $composerLockFileContents = json_decode(file_get_contents($this->projectDir.'/composer.lock'), true);
-
-        if (array_key_exists('hash', $composerLockFileContents)) {
-            $composerLockFileContents['hash'] = md5($composerJsonFileContents);
-        }
-
-        if (array_key_exists('content-hash', $composerLockFileContents)) {
-            $composerLockFileContents['content-hash'] = $this->getComposerContentHash($composerJsonFileContents);
-        }
-
-        file_put_contents($this->projectDir.'/composer.lock', json_encode($composerLockFileContents, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES)."\n");
-    }
-
-    /**
-     * Returns the md5 hash of the sorted content of the composer file.
-     *
-     * @see https://github.com/composer/composer/blob/master/src/Composer/Package/Locker.php (getContentHash() method)
-     *
-     * @param string $composerJsonFileContents The contents of the composer.json file.
-     *
-     * @return string The hash of the composer file content.
-     */
-    private function getComposerContentHash($composerJsonFileContents)
-    {
-        $content = json_decode($composerJsonFileContents, true);
-
-        $relevantKeys = array(
-            'name',
-            'version',
-            'require',
-            'require-dev',
-            'conflict',
-            'replace',
-            'provide',
-            'minimum-stability',
-            'prefer-stable',
-            'repositories',
-            'extra',
-        );
-
-        $relevantContent = array();
-
-        foreach (array_intersect($relevantKeys, array_keys($content)) as $key) {
-            $relevantContent[$key] = $content[$key];
-        }
-
-        if (isset($content['config']['platform'])) {
-            $relevantContent['config']['platform'] = $content['config']['platform'];
-        }
-
-        ksort($relevantContent);
-
-        return md5(json_encode($relevantContent));
     }
 }
