@@ -12,7 +12,6 @@
 namespace Symfony\Installer\Tests;
 
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Process\Exception\RuntimeException;
 use Symfony\Component\Process\Process;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Process\Exception\ProcessFailedException;
@@ -98,7 +97,7 @@ class IntegrationTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException RuntimeException
+     * @expectedException \RuntimeException
      * @expectedExceptionMessageRegExp /.+The selected version .+ cannot be installed because it requires.+PHP .+ or higher and your system has PHP .+ installed.+/s
      */
     public function testSymfonyRequiresNewerPhpVersion()
