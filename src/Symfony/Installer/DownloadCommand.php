@@ -544,6 +544,11 @@ abstract class DownloadCommand extends Command
         return $client->get($url)->getBody()->getContents();
     }
 
+    /**
+     * It returns the project's Composer config as a PHP array.
+     *
+     * @return $this|array
+     */
     protected function getProjectComposerConfig()
     {
         $composerJsonFilepath = $this->projectDir.'/composer.json';
@@ -563,7 +568,14 @@ abstract class DownloadCommand extends Command
         return json_decode(file_get_contents($composerJsonFilepath), true);
     }
 
-    protected function saveProjectComposerConfig($config)
+    /**
+     * It saves the given PHP array as the project's Composer config. In addition
+     * to JSON-serializing the contents, it synchronizes the composer.lock file to
+     * avoid out-of-sync Composer errors.
+     *
+     * @param array $config
+     */
+    protected function saveProjectComposerConfig(array $config)
     {
         $composerJsonFilepath = $this->projectDir.'/composer.json';
         $this->fs->dumpFile($composerJsonFilepath, json_encode($config, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES)."\n");
