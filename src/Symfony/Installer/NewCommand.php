@@ -123,7 +123,6 @@ class NewCommand extends DownloadCommand
 
         if (preg_match('/^[23]\.\d$/', $this->version)) {
             // Check if we have a minor version in order to retrieve the last patch from symfony.com
-
             $client = $this->getGuzzleClient();
             $versionsList = $client->get('http://symfony.com/versions.json')->json();
 
@@ -185,6 +184,15 @@ class NewCommand extends DownloadCommand
                 "> How to Install or Upgrade to the Latest, Unreleased Symfony Version\n".
                 '> http://symfony.com/doc/current/cookbook/install/unstable_versions.html',
                 $this->version
+            ));
+        }
+
+        // check that the system has the PHP version required by the Symfony version to be installed
+        if (version_compare($this->version, '3.0.0', '>=') && version_compare(phpversion(), '5.5.9', '<')) {
+            throw new \RuntimeException(sprintf(
+                "The selected version (%s) cannot be installed because it requires\n".
+                "PHP 5.5.9 or higher and your system has PHP %s installed.\n",
+                $this->version, phpversion()
             ));
         }
 
