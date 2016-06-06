@@ -99,7 +99,7 @@ class IntegrationTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @expectedException RuntimeException
-     * @expectedExceptionMessageRegExp /The selected version \(.+\) cannot be installed because it requires\nPHP 5.5.9 or higher and your system has PHP .+ installed\./
+     * @expectedExceptionMessageRegExp /.+The selected version .+ cannot be installed because it requires.+PHP .+ or higher and your system has PHP .+ installed.+/s
      */
     public function testSymfonyRequiresNewerPhpVersion()
     {
