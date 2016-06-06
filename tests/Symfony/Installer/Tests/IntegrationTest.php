@@ -50,6 +50,10 @@ class IntegrationTest extends \PHPUnit_Framework_TestCase
 
         $output = $this->runCommand('php app/console --version', $projectDir);
         $this->assertRegExp('/Symfony version 2\.\d+\.\d+(-DEV)? - app\/dev\/debug/', $output);
+
+        $composerConfig = json_decode(file_get_contents($projectDir.'/composer.json'), true);
+
+        $this->assertArrayNotHasKey('platform', $composerConfig['config'], 'The composer.json file does not define any platform configuration.');
     }
 
     /**
@@ -75,6 +79,13 @@ class IntegrationTest extends \PHPUnit_Framework_TestCase
         }
 
         $this->assertRegExp($versionRegexp, $output);
+
+        $composerConfig = json_decode(file_get_contents($projectDir.'/composer.json'), true);
+        $this->assertArrayNotHasKey(
+            isset($composerConfig['config']) ? 'platform' : 'config',
+            isset($composerConfig['config']) ? $composerConfig['config'] : $composerConfig,
+            'The composer.json file does not define any platform configuration.'
+        );
     }
 
     public function testSymfonyInstallationInCurrentDirectory()

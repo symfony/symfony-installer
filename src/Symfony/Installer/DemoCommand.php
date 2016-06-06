@@ -75,6 +75,7 @@ class DemoCommand extends DownloadCommand
                 ->download()
                 ->extract()
                 ->cleanUp()
+                ->updateComposerJson()
                 ->createGitIgnore()
                 ->checkSymfonyRequirements()
                 ->displayInstallationResult()
