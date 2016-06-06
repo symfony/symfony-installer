@@ -64,10 +64,10 @@ class IntegrationTest extends \PHPUnit_Framework_TestCase
     /**
      * @dataProvider provideSymfonyInstallationData
      */
-    public function testSymfonyInstallation($versionToInstall, $messageRegexp, $versionRegexp, $minPhpVersion)
+    public function testSymfonyInstallation($versionToInstall, $messageRegexp, $versionRegexp, $requiredPhpVersion)
     {
-        if (version_compare(phpversion(), $minPhpVersion, '<')) {
-            $this->markTestSkipped(sprintf('This test requires PHP %s or higher.', $minPhpVersion));
+        if (version_compare(phpversion(), $requiredPhpVersion, '<')) {
+            $this->markTestSkipped(sprintf('This test requires PHP %s or higher.', $requiredPhpVersion));
         }
 
         $projectDir = sprintf('%s/my_test_project', sys_get_temp_dir());
