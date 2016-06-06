@@ -102,7 +102,7 @@ class IntegrationTest extends \PHPUnit_Framework_TestCase
             $this->markTestSkipped('This test requires PHP 5.4 or lower.');
         }
 
-        $this->runCommand(sprintf('php %s/symfony.phar new . 2.7.5', $this->rootDir));
+        $this->runCommand(sprintf('php %s/symfony.phar new my_test_project', $this->rootDir));
     }
 
     public function testSymfonyInstallationInCurrentDirectory()
