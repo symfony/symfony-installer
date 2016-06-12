@@ -337,6 +337,8 @@ class NewCommand extends DownloadCommand
      */
     protected function updateComposerJson()
     {
+        parent::updateComposerJson();
+
         $composerConfig = $this->getProjectComposerConfig();
 
         $composerConfig['name'] = $this->generateComposerProjectName();
@@ -344,18 +346,6 @@ class NewCommand extends DownloadCommand
 
         if (isset($composerConfig['description'])) {
             unset($composerConfig['description']);
-        }
-
-        if (isset($composerConfig['config']['platform']['php'])) {
-            unset($composerConfig['config']['platform']['php']);
-
-            if (empty($composerConfig['config']['platform'])) {
-                unset($composerConfig['config']['platform']);
-            }
-
-            if (empty($composerConfig['config'])) {
-                unset($composerConfig['config']);
-            }
         }
 
         if (isset($composerConfig['extra']['branch-alias'])) {

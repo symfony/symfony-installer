@@ -156,33 +156,6 @@ class DemoCommand extends DownloadCommand
     }
 
     /**
-     * Updates the composer.json file to provide better values for some of the
-     * default configuration values.
-     *
-     * @return $this
-     */
-    protected function updateComposerJson()
-    {
-        $composerConfig = $this->getProjectComposerConfig();
-
-        if (isset($composerConfig['config']['platform']['php'])) {
-            unset($composerConfig['config']['platform']['php']);
-
-            if (empty($composerConfig['config']['platform'])) {
-                unset($composerConfig['config']['platform']);
-            }
-
-            if (empty($composerConfig['config'])) {
-                unset($composerConfig['config']);
-            }
-        }
-
-        $this->saveProjectComposerConfig($composerConfig);
-
-        return $this;
-    }
-
-    /**
      * {@inheritdoc}
      */
     protected function getDownloadedApplicationType()
