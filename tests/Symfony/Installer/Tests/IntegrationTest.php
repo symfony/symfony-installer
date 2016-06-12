@@ -98,7 +98,7 @@ class IntegrationTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @expectedException \RuntimeException
-     * @expectedExceptionMessageRegExp /.+The selected version 3.0.0 cannot be installed because it requires.+PHP 5.5.9 or higher and your system has PHP 5.4.* installed.+/s
+     * @expectedExceptionMessageRegExp /.+The selected version \(3.0.0\) cannot be installed because it requires.+PHP 5.5.9 or higher and your system has PHP 5.4.* installed.+/s
      */
     public function testSymfonyRequiresNewerPhpVersion()
     {
