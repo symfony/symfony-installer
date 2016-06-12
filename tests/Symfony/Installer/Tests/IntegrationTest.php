@@ -81,7 +81,7 @@ class IntegrationTest extends \PHPUnit_Framework_TestCase
         $this->assertRegExp($versionRegexp, $output);
 
         $composerConfig = json_decode(file_get_contents($projectDir.'/composer.json'), true);
-        $this->assertArrayNotHasKey('platform', $composerConfig['config'], 'The composer.json file does not define any platform configuration.');
+        $this->assertArrayNotHasKey('config', $composerConfig, 'The composer.json file does not define any platform configuration.');
     }
 
     public function testSymfonyInstallationInCurrentDirectory()
