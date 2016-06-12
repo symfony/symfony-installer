@@ -21,6 +21,7 @@ before_install:
   - curl -LSs https://box-project.github.io/box2/installer.php | php
   - mv box.phar box
   - chmod 755 box
+  - rm -f symfony.phar
 
 install:
   - composer install
