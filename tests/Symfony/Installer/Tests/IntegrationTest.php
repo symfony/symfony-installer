@@ -96,14 +96,17 @@ class IntegrationTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-
+    /**
+     * @expectedException \RuntimeException
+     * @expectedExceptionMessageRegExp /.+The selected version .+ cannot be installed because it requires.+PHP .+ or higher and your system has PHP .+ installed.+/s
+     */
     public function testSymfonyRequiresNewerPhpVersion()
     {
         if (version_compare(phpversion(), '5.5.0', '>=')) {
             $this->markTestSkipped('This test requires PHP 5.4 or lower.');
         }
 
-        $this->runCommand(sprintf('php %s/symfony.phar new my_test_project', $this->rootDir));
+        $this->runCommand(sprintf('php %s/symfony.phar new my_test_project 3.0', $this->rootDir));
     }
 
     public function testSymfonyInstallationInCurrentDirectory()

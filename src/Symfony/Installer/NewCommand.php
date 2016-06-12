@@ -188,7 +188,6 @@ class NewCommand extends DownloadCommand
         }
 
         // check that the system has the PHP version required by the Symfony version to be installed
-var_dump("VERSION", $this->version, "PHP version", phpversion());
         if (version_compare($this->version, '3.0.0', '>=') && version_compare(phpversion(), '5.5.9', '<')) {
             throw new \RuntimeException(sprintf(
                 "The selected version (%s) cannot be installed because it requires\n".
