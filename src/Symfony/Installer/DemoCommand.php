@@ -139,7 +139,7 @@ class DemoCommand extends DownloadCommand
 
             $this->output->writeln(sprintf(
                 " After fixing these issues, re-check Symfony requirements executing this command:\n\n".
-                "   <comment>php %s/app/check.php</comment>\n\n".
+                "   <comment>php %s/bin/symfony_requirements</comment>\n\n".
                 " Then, you can:\n",
                 $this->projectName
             ));
@@ -147,7 +147,7 @@ class DemoCommand extends DownloadCommand
 
         $this->output->writeln(sprintf(
             "    1. Change your current directory to <comment>%s</comment>\n\n".
-            "    2. Execute the <comment>php app/console server:run</comment> command to run the demo application.\n\n".
+            "    2. Execute the <comment>php bin/console server:run</comment> command to run the demo application.\n\n".
             "    3. Browse to the <comment>http://localhost:8000</comment> URL to see the demo application in action.\n\n",
             $this->projectDir
         ));
