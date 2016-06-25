@@ -41,6 +41,10 @@ class IntegrationTest extends \PHPUnit_Framework_TestCase
 
     public function testDemoApplicationInstallation()
     {
+        if (PHP_VERSION_ID < 50500) {
+            $this->markTestSkipped('Symfony 3 requires PHP 5.5.9 or higher.');
+        }
+
         $projectDir = sprintf('%s/my_test_project', sys_get_temp_dir());
         $this->fs->remove($projectDir);
 
