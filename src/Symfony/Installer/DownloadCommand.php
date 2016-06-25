@@ -63,6 +63,16 @@ abstract class DownloadCommand extends Command
     protected $version = 'latest';
 
     /**
+     * @var string The latest installer version
+     */
+    private $latestInstallerVersion;
+
+    /**
+     * @var string The version of the local installer being executed
+     */
+    private $localInstallerVersion;
+
+    /**
      * @var string The path to the downloaded file
      */
     protected $downloadedFilePath;
@@ -94,6 +104,9 @@ abstract class DownloadCommand extends Command
     {
         $this->output = $output;
         $this->fs = new Filesystem();
+
+        $this->latestInstallerVersion = $this->getUrlContents(Application::VERSIONS_URL);
+        $this->localInstallerVersion = $this->getApplication()->getVersion();
 
         $this->enableSignalHandler();
     }
@@ -558,7 +571,7 @@ abstract class DownloadCommand extends Command
             $this->output->writeln(sprintf(
                 "\n <bg=red> WARNING </> Your Symfony Installer version (%s) is outdated.\n".
                 ' Execute the command "%s selfupdate" to get the latest version (%s).',
-                $installedVersion, $_SERVER['PHP_SELF'], $latestVersion
+                $this->localInstallerVersion, $_SERVER['PHP_SELF'], $this->latestInstallerVersion
             ));
         }
 
@@ -570,10 +583,7 @@ abstract class DownloadCommand extends Command
      */
     protected function isInstallerUpdated()
     {
-        $installedVersion = $this->getApplication()->getVersion();
-        $latestVersion = $this->getUrlContents(Application::VERSIONS_URL);
-
-        return version_compare($installedVersion, $latestVersion, '>=');
+        return version_compare($this->localInstallerVersion, $this->latestInstallerVersion, '>=');
     }
 
     /**
