@@ -41,6 +41,10 @@ class IntegrationTest extends \PHPUnit_Framework_TestCase
 
     public function testDemoApplicationInstallation()
     {
+        if (PHP_VERSION_ID < 50500) {
+            $this->markTestSkipped('Symfony 3 requires PHP 5.5.9 or higher.');
+        }
+
         $projectDir = sprintf('%s/my_test_project', sys_get_temp_dir());
         $this->fs->remove($projectDir);
 
@@ -48,8 +52,8 @@ class IntegrationTest extends \PHPUnit_Framework_TestCase
         $this->assertContains('Downloading the Symfony Demo Application', $output);
         $this->assertContains('Symfony Demo Application was successfully installed.', $output);
 
-        $output = $this->runCommand('php app/console --version', $projectDir);
-        $this->assertRegExp('/Symfony version 2\.\d+\.\d+(-DEV)? - app\/dev\/debug/', $output);
+        $output = $this->runCommand('php bin/console --version', $projectDir);
+        $this->assertRegExp('/Symfony version 3\.\d+\.\d+(-DEV)? - app\/dev\/debug/', $output);
 
         $composerConfig = json_decode(file_get_contents($projectDir.'/composer.json'), true);
 
