@@ -48,8 +48,8 @@ class IntegrationTest extends \PHPUnit_Framework_TestCase
         $this->assertContains('Downloading the Symfony Demo Application', $output);
         $this->assertContains('Symfony Demo Application was successfully installed.', $output);
 
-        $output = $this->runCommand('php app/console --version', $projectDir);
-        $this->assertRegExp('/Symfony version 2\.\d+\.\d+(-DEV)? - app\/dev\/debug/', $output);
+        $output = $this->runCommand('php bin/console --version', $projectDir);
+        $this->assertRegExp('/Symfony version 3\.\d+\.\d+(-DEV)? - app\/dev\/debug/', $output);
 
         $composerConfig = json_decode(file_get_contents($projectDir.'/composer.json'), true);
 
