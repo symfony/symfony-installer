@@ -308,9 +308,12 @@ abstract class DownloadCommand extends Command
      */
     protected function checkSymfonyRequirements()
     {
+        if (null === $requirementsFile = $this->getSymfonyRequirementsFilePath()) {
+            return $this;
+        }
+
         try {
-            $requirementsDir = $this->isSymfony3() ? 'var' : 'app';
-            require $this->projectDir.'/'.$requirementsDir.'/SymfonyRequirements.php';
+            require $requirementsFile;
             $symfonyRequirements = new \SymfonyRequirements();
             $this->requirementsErrors = array();
             foreach ($symfonyRequirements->getRequirements() as $req) {
@@ -323,6 +326,22 @@ abstract class DownloadCommand extends Command
         }
 
         return $this;
+    }
+
+    private function getSymfonyRequirementsFilePath()
+    {
+        $paths = array(
+            $this->projectDir.'/app/SymfonyRequirements.php',
+            $this->projectDir.'/var/SymfonyRequirements.php',
+        );
+
+        foreach ($paths as $path) {
+            if (file_exists($path)) {
+                return $path;
+            }
+        }
+
+        return null;
     }
 
     /**
