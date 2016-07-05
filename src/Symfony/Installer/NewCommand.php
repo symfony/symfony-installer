@@ -120,8 +120,8 @@ class NewCommand extends DownloadCommand
         $symfonyVersions = $client->get('http://symfony.com/versions.json')->json();
         if (empty($symfonyVersions)) {
             throw new \RuntimeException(
-                "There was a problem that prevented to get the list of Symfony versions.\n".
-                "from symfony.com. Check that you are online and the following URL is acceisble::\n\n".
+                "There was a problem while downloading the list of Symfony versions from.\n".
+                "symfony.com. Check that you are online and the following URL is accessible::\n\n".
                 'http://symfony.com/versions.json'
             );
         }
