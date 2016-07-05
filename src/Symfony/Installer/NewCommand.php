@@ -110,9 +110,13 @@ class NewCommand extends DownloadCommand
      */
     protected function checkSymfonyVersionIsInstallable()
     {
-        // validate semver syntax
-        if (!preg_match('/^[2-9]\.\d(?:\.\d{1,2})?(?:-(?:dev|BETA\d*|RC\d*))?$/i', $this->version)) {
-            throw new \RuntimeException('The Symfony version must be 2.N, 2.N.M, 3.N or 3.N.M (where N and M are positive integers). The special "-dev", "-BETA" and "-RC" versions are also supported.');
+        // validate the given version syntax
+        if (!preg_match('/^latest|lts|[2-9]\.\d(?:\.\d{1,2})?(?:-(?:dev|BETA\d*|RC\d*))?$/i', $this->version)) {
+            throw new \RuntimeException(sprintf(
+                "The Symfony version can be a branch number (e.g. 2.8), a full version\n".
+                "number (e.g. 3.1.4), a special word ('latest' or 'lts') and a unstable\n".
+                "version number (e.g. 3.2.0-rc1) but '%s' was given.", $this->version
+            ));
         }
 
         // Get the full list of Symfony versions to check if it's installable
