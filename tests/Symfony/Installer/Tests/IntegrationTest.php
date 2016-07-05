@@ -102,7 +102,7 @@ class IntegrationTest extends \PHPUnit_Framework_TestCase
      */
     public function testSymfonyRequiresNewerPhpVersion()
     {
-        if (PHP_VERSION_ID >= 55000) {
+        if (PHP_VERSION_ID >= 50500) {
             $this->markTestSkipped('This test requires PHP 5.4 or lower.');
         }
 
