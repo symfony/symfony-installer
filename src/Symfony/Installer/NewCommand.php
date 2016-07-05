@@ -110,80 +110,58 @@ class NewCommand extends DownloadCommand
      */
     protected function checkSymfonyVersionIsInstallable()
     {
-        // 'latest' is a special version name that refers to the latest stable version
-        // 'lts' is a special version name that refers to the current long term support version
-        if (in_array($this->version, array('latest', 'lts'))) {
-            return $this;
-        }
-
         // validate semver syntax
-        if (!preg_match('/^[23]\.\d(?:\.\d{1,2})?(?:-(?:dev|BETA\d*|RC\d*))?$/i', $this->version)) {
+        if (!preg_match('/^[2-9]\.\d(?:\.\d{1,2})?(?:-(?:dev|BETA\d*|RC\d*))?$/i', $this->version)) {
             throw new \RuntimeException('The Symfony version must be 2.N, 2.N.M, 3.N or 3.N.M (where N and M are positive integers). The special "-dev", "-BETA" and "-RC" versions are also supported.');
         }
 
-        if (preg_match('/^[23]\.\d$/', $this->version)) {
-            // Check if we have a minor version in order to retrieve the last patch from symfony.com
-            $client = $this->getGuzzleClient();
-            $versionsList = $client->get('http://symfony.com/versions.json')->json();
+        // Get the full list of Symfony versions to check if it's installable
+        $client = $this->getGuzzleClient();
+        $symfonyVersions = $client->get('http://symfony.com/versions.json')->json();
+        if (empty($symfonyVersions)) {
+            throw new \RuntimeException(
+                "There was a problem that prevented to get the list of Symfony versions.\n".
+                "from symfony.com. Check that you are online and the following URL is acceisble::\n\n".
+                'http://symfony.com/versions.json'
+            );
+        }
 
-            if ($versionsList && isset($versionsList[$this->version])) {
-                // Get the latest patch of the minor version the user asked
-                $this->version = $versionsList[$this->version];
-            } elseif ($versionsList && !isset($versionsList[$this->version])) {
+        // if a branch number is used, transform it into a real version number
+        if (preg_match('/^[2-9]\.\d$/', $this->version)) {
+            if (!isset($symfonyVersions[$this->version])) {
                 throw new \RuntimeException(sprintf(
                     "The selected branch (%s) does not exist, or is not maintained.\n".
                     "To solve this issue, install Symfony with the latest stable release:\n\n".
-                    '%s %s %s',
-                    $this->version,
-                    $_SERVER['PHP_SELF'],
-                    $this->getName(),
-                    $this->projectDir
+                    '%s %s %s',  $this->version, $_SERVER['PHP_SELF'], $this->getName(), $this->projectDir
                 ));
             }
+
+            $this->version = $symfonyVersions[$this->version];
         }
 
-        // 2.0, 2.1, 2.2 and 2.4 cannot be installed because they are unmaintained
-        if (preg_match('/^2\.[0124]\.\d{1,2}$/', $this->version)) {
+        // if a special version name is used, transform it into a real version number
+        if (in_array($this->version, array('latest', 'lts'))) {
+            $this->version = $symfonyVersions[$this->version];
+        }
+
+        // versions are case-sensitive in the download server (3.1.0-rc1 must be 3.1.0-RC1)
+        if ($isUnstableVersion = preg_match('/^.*\-(BETA|RC)\d*$/i', $this->version)) {
+            $this->version = strtoupper($this->version);
+        }
+
+        $isNonInstallable = in_array($this->version, $symfonyVersions['non_installable']);
+        $isInstallable = in_array($this->version, $symfonyVersions['installable']);
+
+        // installable and non-installable versions are explicitly declared in the
+        // list of versions; there is an edge-case: unstable versions are not listed
+        // and they are generally installable (e.g. 3.1.0-RC1)
+        if ($isNonInstallable || (!$isInstallable && !$isUnstableVersion)) {
             throw new \RuntimeException(sprintf(
-                "The selected version (%s) cannot be installed because it belongs\n".
-                "to an unmaintained Symfony branch which is not compatible with this installer.\n".
+                "The selected version (%s) cannot be installed because it is not compatible\n".
+                "with this installer or because it hasn't been published as a package yet.\n".
                 "To solve this issue install Symfony manually executing the following command:\n\n".
                 'composer create-project symfony/framework-standard-edition %s %s',
                 $this->version, $this->projectDir, $this->version
-            ));
-        }
-
-        // 2.3 can be installed starting from version 2.3.21 (inclusive)
-        if (preg_match('/^2\.3\.\d{1,2}$/', $this->version) && version_compare($this->version, '2.3.21', '<')) {
-            throw new \RuntimeException(sprintf(
-                "The selected version (%s) cannot be installed because this installer\n".
-                "is compatible with Symfony 2.3 versions starting from 2.3.21.\n".
-                "To solve this issue install Symfony manually executing the following command:\n\n".
-                'composer create-project symfony/framework-standard-edition %s %s',
-                $this->version, $this->projectDir, $this->version
-            ));
-        }
-
-        // 2.5 can be installed starting from version 2.5.6 (inclusive)
-        if (preg_match('/^2\.5\.\d{1,2}$/', $this->version) && version_compare($this->version, '2.5.6', '<')) {
-            throw new \RuntimeException(sprintf(
-                "The selected version (%s) cannot be installed because this installer\n".
-                "is compatible with Symfony 2.5 versions starting from 2.5.6.\n".
-                "To solve this issue install Symfony manually executing the following command:\n\n".
-                'composer create-project symfony/framework-standard-edition %s %s',
-                $this->version, $this->projectDir, $this->version
-            ));
-        }
-
-        // "-dev" versions are not supported because Symfony doesn't provide packages for them
-        if (preg_match('/^.*\-dev$/i', $this->version)) {
-            throw new \RuntimeException(sprintf(
-                "The selected version (%s) cannot be installed because it hasn't\n".
-                "been published as a package yet. Read the following article for\n".
-                "an alternative installation method:\n\n".
-                "> How to Install or Upgrade to the Latest, Unreleased Symfony Version\n".
-                '> http://symfony.com/doc/current/cookbook/install/unstable_versions.html',
-                $this->version
             ));
         }
 
@@ -196,11 +174,8 @@ class NewCommand extends DownloadCommand
             ));
         }
 
-        // warn the user when downloading an unstable version
-        if (preg_match('/^.*\-(BETA|RC)\d*$/i', $this->version)) {
+        if ($isUnstableVersion) {
             $this->output->writeln("\n <bg=red> WARNING </> You are downloading an unstable Symfony version.");
-            // versions provided by the download server are case sensitive
-            $this->version = strtoupper($this->version);
         }
 
         return $this;
