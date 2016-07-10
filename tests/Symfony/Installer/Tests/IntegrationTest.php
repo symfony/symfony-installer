@@ -63,8 +63,12 @@ class IntegrationTest extends \PHPUnit_Framework_TestCase
     /**
      * @dataProvider provideSymfonyInstallationData
      */
-    public function testSymfonyInstallation($versionToInstall, $messageRegexp, $versionRegexp)
+    public function testSymfonyInstallation($versionToInstall, $messageRegexp, $versionRegexp, $requiredPhpVersion)
     {
+        if (version_compare(phpversion(), $requiredPhpVersion, '<')) {
+            $this->markTestSkipped(sprintf('This test requires PHP %s or higher.', $requiredPhpVersion));
+        }
+
         $projectDir = sprintf('%s/my_test_project', sys_get_temp_dir());
         $this->fs->remove($projectDir);
 
@@ -90,6 +94,19 @@ class IntegrationTest extends \PHPUnit_Framework_TestCase
             isset($composerConfig['config']) ? $composerConfig['config'] : $composerConfig,
             'The composer.json file does not define any platform configuration.'
         );
+    }
+
+    /**
+     * @expectedException \RuntimeException
+     * @expectedExceptionMessageRegExp /.+The selected version \(3.0.0\) cannot be installed because it requires.+PHP 5.5.9 or higher and your system has PHP 5.4.* installed.+/s
+     */
+    public function testSymfonyRequiresNewerPhpVersion()
+    {
+        if (PHP_VERSION_ID >= 50500) {
+            $this->markTestSkipped('This test requires PHP 5.4 or lower.');
+        }
+
+        $this->runCommand(sprintf('php %s/symfony.phar new my_test_project 3.0.0', $this->rootDir));
     }
 
     public function testSymfonyInstallationInCurrentDirectory()
@@ -137,42 +154,49 @@ class IntegrationTest extends \PHPUnit_Framework_TestCase
                 '',
                 '/.*Symfony 3\.1\.\d+ was successfully installed.*/',
                 '/Symfony version 3\.1\.\d+(-DEV)? - app\/dev\/debug/',
+                '5.5.9',
             ),
 
             array(
                 '3.0',
                 '/.*Symfony 3\.0\.\d+ was successfully installed.*/',
                 '/Symfony version 3\.0\.\d+(-DEV)? - app\/dev\/debug/',
+                '5.5.9',
             ),
 
             array(
                 'lts',
                 '/.*Symfony 2\.8\.\d+ was successfully installed.*/',
                 '/Symfony version 2\.8\.\d+(-DEV)? - app\/dev\/debug/',
+                '5.3.9',
             ),
 
             array(
                 '2.3',
                 '/.*Symfony 2\.3\.\d+ was successfully installed.*/',
                 '/Symfony version 2\.3\.\d+ - app\/dev\/debug/',
+                '5.3.9',
             ),
 
             array(
                 '2.5.6',
                 '/.*Symfony 2\.5\.6 was successfully installed.*/',
                 '/Symfony version 2\.5\.6 - app\/dev\/debug/',
+                '5.3.9',
             ),
 
             array(
                 '2.7.0-BETA1',
                 '/.*Symfony 2\.7\.0\-BETA1 was successfully installed.*/',
                 '/Symfony version 2\.7\.0\-BETA1 - app\/dev\/debug/',
+                '5.3.9',
             ),
 
             array(
                 '3.0.0-BETA1',
                 '/.*Symfony dev\-master was successfully installed.*/',
                 '/Symfony version 3\.0\.0\-BETA1 - app\/dev\/debug/',
+                '5.5.9',
             ),
         );
     }
