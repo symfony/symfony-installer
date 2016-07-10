@@ -1,0 +1,41 @@
+---------------------------------------------------------------------------
+
+by xabbuh at 2016-06-06T18:45:00Z
+
+You will now have to skip some tests when on PHP 5.4.
+
+---------------------------------------------------------------------------
+
+by javiereguiluz at 2016-06-06T18:51:30Z
+
+@xabbuh yes. I did that in a80196a ... but there are other failing tests which I can't fix. I'll try to fix them tomorrow.
+
+---------------------------------------------------------------------------
+
+by javiereguiluz at 2016-06-12T11:15:10Z
+
+This is now ready for the final review. Thanks!
+
+---------------------------------------------------------------------------
+
+by xabbuh at 2016-06-13T12:51:20Z
+
+Should we make it possible to skip the version check to be able to bootstrap a project even on a system that isn't fully ready to run the application itself?
+
+---------------------------------------------------------------------------
+
+by javiereguiluz at 2016-06-13T14:35:13Z
+
+@xabbuh I'd prefer to keep failing if your system is not ready to run the Symfony version you want to install.
+
+---------------------------------------------------------------------------
+
+by javiereguiluz at 2016-06-13T14:36:56Z
+
+I think this needs more work. If you don't pass any version, you are using `latest`, which bypasses this new check, although it also requires 5.5.9.
+
+---------------------------------------------------------------------------
+
+by javiereguiluz at 2016-07-05T15:07:59Z
+
+This is now ready for a new review. I changed everything about how we decide if a version is installable.
