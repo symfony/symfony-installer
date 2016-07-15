@@ -65,12 +65,12 @@ abstract class DownloadCommand extends Command
     /**
      * @var string The latest installer version
      */
-    private $latestInstallerVersion;
+    protected $latestInstallerVersion;
 
     /**
      * @var string The version of the local installer being executed
      */
-    private $localInstallerVersion;
+    protected $localInstallerVersion;
 
     /**
      * @var string The path to the downloaded file
