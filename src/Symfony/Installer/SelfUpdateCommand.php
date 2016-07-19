@@ -13,7 +13,6 @@ namespace Symfony\Installer;
 
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Exception\IOException;
 
 /**
@@ -32,11 +31,6 @@ class SelfUpdateCommand extends DownloadCommand
      * @var string The temp dir
      */
     private $tempDir;
-
-    /**
-     * @var string The latest installer version
-     */
-    private $latestInstallerVersion;
 
     /**
      * @var string The URL where the latest installer version can be downloaded
@@ -92,10 +86,8 @@ class SelfUpdateCommand extends DownloadCommand
      */
     protected function initialize(InputInterface $input, OutputInterface $output)
     {
-        $this->fs = new Filesystem();
-        $this->output = $output;
-
-        $this->latestInstallerVersion = $this->getUrlContents(Application::VERSIONS_URL);
+        parent::initialize($input, $output);
+        
         $this->remoteInstallerFile = 'http://symfony.com/installer';
         $this->currentInstallerFile = realpath($_SERVER['argv'][0]) ?: $_SERVER['argv'][0];
         $this->tempDir = sys_get_temp_dir();
