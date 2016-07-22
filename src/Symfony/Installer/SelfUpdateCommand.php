@@ -12,6 +12,7 @@
 namespace Symfony\Installer;
 
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Filesystem\Exception\IOException;
 
@@ -66,6 +67,7 @@ class SelfUpdateCommand extends DownloadCommand
         $this
             ->setName('self-update')
             ->setAliases(array('selfupdate'))
+            ->addOption('force-update', 'f', InputOption::VALUE_NONE, 'It updates the installer to the latest available version without checking if it\'s older or newer than the locally installed version.')
             ->setDescription('Update the Symfony Installer to the latest version.')
             ->setHelp('The <info>%command.name%</info> command updates the installer to the latest available version.')
         ;
@@ -100,13 +102,14 @@ class SelfUpdateCommand extends DownloadCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        if ($this->isInstallerUpdated()) {
+        $forceUpdate = true === $input->getOption('force-update');
+        if (!$forceUpdate && $this->isInstallerUpdated()) {
             $this->output->writeln(sprintf('// Symfony Installer is <info>already updated</info> to the latest version (%s).', $this->latestInstallerVersion));
 
             return;
-        } else {
-            $this->output->writeln(sprintf('// <info>updating</info> Symfony Installer to <info>%s</info> version', $this->latestInstallerVersion));
         }
+
+        $this->output->writeln(sprintf('// <info>updating</info> Symfony Installer to <info>%s</info> version', $this->latestInstallerVersion));
 
         try {
             $this
