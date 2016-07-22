@@ -1,0 +1,13 @@
+---------------------------------------------------------------------------
+
+by Archmonster at 2016-07-15T16:29:20Z
+
+Was about to post a reply to the bug report, but since you've already submitted a pull request i'm going to reply to you.
+
+While it is true that the issue is version_compare not receiving the correct values, it does not solve the underlying issue, which is storing version numbers in private properties of DownloadCommand, and then trying to use / override them from a subclass. Both $latestInstallerVersion and $localInstallerVersion should be made protected instead of private and if you rely on parent::initialize() to set their values you should remove the duplicated code from SelfUpdateCommand::initialize().
+
+---------------------------------------------------------------------------
+
+by asvinours at 2016-07-18T12:18:33Z
+
+I have updated my pull request to remove duplicated code and change the scope of the attributes of the DownloadCommand.
