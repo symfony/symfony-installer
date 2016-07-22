@@ -129,3 +129,29 @@ c:\> php symfony self-update
 > installer tries to guess the best proxy settings from the `HTTP_PROXY` and
 > `http_proxy` environment variables. Make sure any of them is set before
 > executing the Symfony Installer.
+
+Troubleshooting
+---------------
+
+### SSL and certificates issues on Windows systems
+
+If you experience any error related with SSL or security certificates when using
+the Symfony Installer on Windows systems:
+
+1) Check that the OpenSSL extension is enabled in your `php.ini` configuration:
+
+```ini
+; make sure that the following line is uncommented
+extension=php_openssl.dll
+```
+
+2) Check that the path to the file that contains the security certificates
+exists and is defined in `php.ini`:
+
+```ini
+openssl.cafile=C:/path/to/cacert.pem
+```
+
+If you can't locate the `cacert.pem` file anywhere on your system, you can
+safely download it from the official website of the cURL project:
+http://curl.haxx.se/ca/cacert.pem
