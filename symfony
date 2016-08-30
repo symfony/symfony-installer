@@ -14,6 +14,17 @@ if (PHP_VERSION_ID < 50400) {
     exit(1);
 }
 
+if (extension_loaded('suhosin')) {
+    file_put_contents('php://stderr',
+        "Symfony Installer is not compatible with the 'suhosin' PHP extension.\n".
+        "Disable that extension before running the installer.\n\n".
+        "Alternatively, install Symfony manually executing the following command:\n\n".
+        "composer create-project symfony/framework-standard-edition <project-name> <symfony-version>\n\n"
+    );
+
+    exit(1);
+}
+
 require file_exists(__DIR__.'/vendor/autoload.php')
     ? __DIR__.'/vendor/autoload.php'
     : __DIR__.'/../../autoload.php';
