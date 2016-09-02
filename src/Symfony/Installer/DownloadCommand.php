@@ -520,6 +520,7 @@ abstract class DownloadCommand extends Command
         }
 
         $commandName = $this->getName();
+        $commandArguments = '';
 
         if ('new' === $commandName) {
             $commandArguments = sprintf('%s %s', $this->projectName, ('latest' !== $this->version) ? $this->version : '');
