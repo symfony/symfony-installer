@@ -395,13 +395,18 @@ class NewCommand extends DownloadCommand
      */
     private function fixComposerPackageName($name)
     {
-        return strtolower(
-            preg_replace(
-                array('~[^\w.-]~iu', '~([A-Z]+)([A-Z][a-z])~u', '~([a-z\d])([A-Z])~u'),
-                array('', '\\1-\\2', '\\1-\\2'),
-                strtr($name, '-', '.')
-            )
+        $name = str_replace(
+            ['à', 'á', 'â', 'ä', 'æ', 'ã', 'å', 'ā', 'é', 'è', 'ê', 'ë', 'ę', 'ė', 'ē', 'ī', 'į', 'í', 'ì', 'ï', 'î', 'ō', 'ø', 'œ', 'õ', 'ó', 'ò', 'ö', 'ô', 'ū', 'ú', 'ù', 'ü', 'û', 'ç', 'ć', 'č', 'ł', 'ñ', 'ń', 'ß', 'ś', 'š', 'ŵ', 'ŷ', 'ÿ', 'ź', 'ž', 'ż'],
+            ['a', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'e', 'e', 'e', 'e', 'e', 'e', 'e', 'i', 'i', 'i', 'i', 'i', 'i', 'o', 'o', 'o', 'o', 'o', 'o', 'o', 'o', 'u', 'u', 'u', 'u', 'u', 'c', 'c', 'c', 'l', 'n', 'n', 's', 's', 's', 'w', 'y', 'y', 'z', 'z', 'z'],
+            $name
         );
+        $name = strtr($name, '-', '.');
+
+        return strtolower(preg_replace(
+            ['/([A-Z]+)([A-Z][a-z])/', '/([a-z\d])([A-Z])/'],
+            ['\\1-\\2', '\\1-\\2'],
+            $name
+        ));
     }
 
     protected function getDownloadedApplicationType()
