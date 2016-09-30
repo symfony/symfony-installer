@@ -22,9 +22,11 @@ class NewCommandTest extends \PHPUnit_Framework_TestCase
     public function getProjectNames()
     {
         return [
-            ['foobar', 'foobar'],
-            ['áèîøūñ', 'aeioun'],
-            ['çįßłŵž', 'cislwz'],
+            ['foo/bar', 'foo/bar'],
+            ['áèî/øū', 'aei/ou'],
+            ['çñß/łŵž', 'cns/lwz'],
+            ['foo#bar\foo?bar=foo!bar{foo]bar', 'foobarfoobarfoobarfoobar'],
+            ['FOO/bar', 'foo/bar'],
         ];
     }
 }

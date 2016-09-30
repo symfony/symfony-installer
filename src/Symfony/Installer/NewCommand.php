@@ -400,13 +400,9 @@ class NewCommand extends DownloadCommand
             ['a', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'e', 'e', 'e', 'e', 'e', 'e', 'e', 'i', 'i', 'i', 'i', 'i', 'i', 'o', 'o', 'o', 'o', 'o', 'o', 'o', 'o', 'u', 'u', 'u', 'u', 'u', 'c', 'c', 'c', 'l', 'n', 'n', 's', 's', 's', 'w', 'y', 'y', 'z', 'z', 'z'],
             $name
         );
-        $name = strtr($name, '-', '.');
+        $name = preg_replace('#[^A-Za-z0-9_./-]+#', '', $name);
 
-        return strtolower(preg_replace(
-            ['/([A-Z]+)([A-Z][a-z])/', '/([a-z\d])([A-Z])/'],
-            ['\\1-\\2', '\\1-\\2'],
-            $name
-        ));
+        return strtolower($name);
     }
 
     protected function getDownloadedApplicationType()
