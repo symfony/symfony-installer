@@ -136,6 +136,8 @@ class SelfUpdateCommand extends DownloadCommand
             if ($this->output->isVeryVerbose()) {
                 $this->output->writeln($e->getMessage());
             }
+
+            return 1;
         }
     }
 
@@ -148,11 +150,11 @@ class SelfUpdateCommand extends DownloadCommand
     {
         // check for permissions in local filesystem before start downloading files
         if (!is_writable($this->currentInstallerFile)) {
-            throw new \RuntimeException('Symfony Installer update failed: the "'.$this->currentInstallerFile.'" file could not be written');
+            throw new IOException('Symfony Installer update failed: the "'.$this->currentInstallerFile.'" file could not be written');
         }
 
         if (!is_writable($this->tempDir)) {
-            throw new \RuntimeException('Symfony Installer update failed: the "'.$this->tempDir.'" directory used to download files temporarily could not be written');
+            throw new IOException('Symfony Installer update failed: the "'.$this->tempDir.'" directory used to download files temporarily could not be written');
         }
 
         if (false === $newInstaller = $this->getUrlContents($this->remoteInstallerFile)) {
@@ -225,7 +227,7 @@ class SelfUpdateCommand extends DownloadCommand
     {
         $this->output->writeln(array(
             '',
-            'There was an error while updating the installer.',
+            '<error>There was an error while updating the installer.</error>',
             'The previous Symfony Installer version has been restored.',
             '',
         ));
