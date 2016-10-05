@@ -1,0 +1,11 @@
+---------------------------------------------------------------------------
+
+by stof at 2016-09-30T11:38:15Z
+
+I would also remove any char not allowed in a composer package name (see the composer source code for their regex)
+
+---------------------------------------------------------------------------
+
+by Pierstoval at 2016-09-30T11:40:34Z
+
+👍 for this 😄 Just need to make sure the box build works for php 5.4, or remove the travis build for this case
