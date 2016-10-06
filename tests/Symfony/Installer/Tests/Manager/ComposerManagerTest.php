@@ -1,21 +1,21 @@
 <?php
 
-namespace Symfony\Installer\Tests;
+namespace Symfony\Installer\Tests\Composer;
 
-use Symfony\Installer\NewCommand;
+use Symfony\Installer\Manager\ComposerManager;
 
-class NewCommandTest extends \PHPUnit_Framework_TestCase
+class ComposerManagerTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @dataProvider getProjectNames
      */
-    public function testFixComposerPackageName($originalName, $expectedName)
+    public function testFixPackageName($originalName, $expectedName)
     {
-        $command = new NewCommand();
-        $method = new \ReflectionMethod($command, 'fixComposerPackageName');
+        $composerManager = new ComposerManager();
+        $method = new \ReflectionMethod($composerManager, 'fixPackageName');
         $method->setAccessible(true);
 
-        $fixedName = $method->invoke($command, $originalName);
+        $fixedName = $method->invoke($composerManager, $originalName);
         $this->assertSame($expectedName, $fixedName);
     }
 

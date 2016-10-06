@@ -15,6 +15,7 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Installer\Exception\AbortException;
+use Symfony\Installer\Manager\ComposerManager;
 
 /**
  * This command creates new Symfony projects for the given Symfony version.
@@ -24,6 +25,9 @@ use Symfony\Installer\Exception\AbortException;
  */
 class NewCommand extends DownloadCommand
 {
+    /** @var ComposerManager */
+    private $composerManager;
+
     /**
      * {@inheritdoc}
      */
@@ -48,6 +52,7 @@ class NewCommand extends DownloadCommand
         $this->version = trim($input->getArgument('version'));
         $this->projectDir = $this->fs->isAbsolutePath($directory) ? $directory : getcwd().DIRECTORY_SEPARATOR.$directory;
         $this->projectName = basename($directory);
+        $this->composerManager = new ComposerManager();
     }
 
     /**
@@ -328,7 +333,7 @@ class NewCommand extends DownloadCommand
 
         $composerConfig = $this->getProjectComposerConfig();
 
-        $composerConfig['name'] = $this->generateComposerProjectName();
+        $composerConfig['name'] = $this->composerManager->generateProjectName($this->projectName);
         $composerConfig['license'] = 'proprietary';
 
         if (isset($composerConfig['description'])) {
@@ -342,50 +347,6 @@ class NewCommand extends DownloadCommand
         $this->saveProjectComposerConfig($composerConfig);
 
         return $this;
-    }
-
-    /**
-     * Generates a good Composer project name based on the application name
-     * and on the user name.
-     *
-     * @return string The generated Composer project name
-     */
-    protected function generateComposerProjectName()
-    {
-        $name = $this->projectName;
-
-        if (!empty($_SERVER['USERNAME'])) {
-            $name = $_SERVER['USERNAME'].'/'.$name;
-        } elseif (true === extension_loaded('posix') && $user = posix_getpwuid(posix_getuid())) {
-            $name = $user['name'].'/'.$name;
-        } elseif (get_current_user()) {
-            $name = get_current_user().'/'.$name;
-        } else {
-            // package names must be in the format foo/bar
-            $name = $name.'/'.$name;
-        }
-
-        return $this->fixComposerPackageName($name);
-    }
-
-    /**
-     * Transforms uppercase strings into dash-separated strings
-     * (e.g. FooBar -> foo-bar) to comply with Composer rules for package names.
-     *
-     * @param string $name The project name to transform
-     *
-     * @return string The fixed Composer project name
-     */
-    private function fixComposerPackageName($name)
-    {
-        $name = str_replace(
-            ['à', 'á', 'â', 'ä', 'æ', 'ã', 'å', 'ā', 'é', 'è', 'ê', 'ë', 'ę', 'ė', 'ē', 'ī', 'į', 'í', 'ì', 'ï', 'î', 'ō', 'ø', 'œ', 'õ', 'ó', 'ò', 'ö', 'ô', 'ū', 'ú', 'ù', 'ü', 'û', 'ç', 'ć', 'č', 'ł', 'ñ', 'ń', 'ß', 'ś', 'š', 'ŵ', 'ŷ', 'ÿ', 'ź', 'ž', 'ż'],
-            ['a', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'e', 'e', 'e', 'e', 'e', 'e', 'e', 'i', 'i', 'i', 'i', 'i', 'i', 'o', 'o', 'o', 'o', 'o', 'o', 'o', 'o', 'u', 'u', 'u', 'u', 'u', 'c', 'c', 'c', 'l', 'n', 'n', 's', 's', 's', 'w', 'y', 'y', 'z', 'z', 'z'],
-            $name
-        );
-        $name = preg_replace('#[^A-Za-z0-9_./-]+#', '', $name);
-
-        return strtolower($name);
     }
 
     /**
