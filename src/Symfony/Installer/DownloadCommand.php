@@ -28,6 +28,7 @@ use Symfony\Component\Filesystem\Exception\IOException;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Intl\Exception\MethodArgumentValueNotImplementedException;
 use Symfony\Installer\Exception\AbortException;
+use Symfony\Installer\Manager\ComposerManager;
 
 /**
  * Abstract command used by commands which download and extract compressed Symfony files.
@@ -81,6 +82,9 @@ abstract class DownloadCommand extends Command
      * @var array The requirement errors
      */
     protected $requirementsErrors = array();
+
+    /** @var ComposerManager */
+    protected $composerManager;
 
     /**
      * Returns the type of the downloaded application in a human readable format.
@@ -363,23 +367,9 @@ abstract class DownloadCommand extends Command
      *
      * @return $this
      */
-    protected function updateComposerJson()
+    protected function updateComposerConfig()
     {
-        $composerConfig = $this->getProjectComposerConfig();
-
-        if (isset($composerConfig['config']['platform']['php'])) {
-            unset($composerConfig['config']['platform']['php']);
-
-            if (empty($composerConfig['config']['platform'])) {
-                unset($composerConfig['config']['platform']);
-            }
-
-            if (empty($composerConfig['config'])) {
-                unset($composerConfig['config']);
-            }
-        }
-
-        $this->saveProjectComposerConfig($composerConfig);
+        $this->composerManager->initializeProjectConfig();
 
         return $this;
     }
@@ -418,17 +408,13 @@ abstract class DownloadCommand extends Command
      */
     protected function getInstalledSymfonyVersion()
     {
-        $composer = json_decode(file_get_contents($this->projectDir.'/composer.lock'), true);
+        $symfonyVersion = $this->composerManager->getPackageVersion('symfony/symfony');
 
-        foreach ($composer['packages'] as $package) {
-            if ('symfony/symfony' === $package['name']) {
-                if ('v' === substr($package['version'], 0, 1)) {
-                    return substr($package['version'], 1);
-                };
+        if (!empty($symfonyVersion) && 'v' === substr($symfonyVersion, 0, 1)) {
+            return substr($symfonyVersion, 1);
+        };
 
-                return $package['version'];
-            }
-        }
+        return $symfonyVersion;
     }
 
     /**
@@ -598,107 +584,6 @@ abstract class DownloadCommand extends Command
         $client = $this->getGuzzleClient();
 
         return $client->get($url)->getBody()->getContents();
-    }
-
-    /**
-     * It returns the project's Composer config as a PHP array.
-     *
-     * @return $this|array
-     */
-    protected function getProjectComposerConfig()
-    {
-        $composerJsonFilepath = $this->projectDir.'/composer.json';
-
-        if (!is_writable($composerJsonFilepath)) {
-            if ($this->output->isVerbose()) {
-                $this->output->writeln(sprintf(
-                    " <comment>[WARNING]</comment> Project's Composer config cannot be updated because\n".
-                    " the <comment>%s</comment> file is not writable.\n",
-                    $composerJsonFilepath
-                ));
-            }
-
-            return $this;
-        }
-
-        return json_decode(file_get_contents($composerJsonFilepath), true);
-    }
-
-    /**
-     * It saves the given PHP array as the project's Composer config. In addition
-     * to JSON-serializing the contents, it synchronizes the composer.lock file to
-     * avoid out-of-sync Composer errors.
-     *
-     * @param array $config
-     */
-    protected function saveProjectComposerConfig(array $config)
-    {
-        $composerJsonFilepath = $this->projectDir.'/composer.json';
-        $this->fs->dumpFile($composerJsonFilepath, json_encode($config, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES)."\n");
-
-        $this->syncComposerLockFile();
-    }
-
-    /**
-     * Updates the hash values stored in composer.lock to avoid out-of-sync
-     * problems when the composer.json file contents are changed.
-     */
-    private function syncComposerLockFile()
-    {
-        $composerJsonFileContents = file_get_contents($this->projectDir.'/composer.json');
-        $composerLockFileContents = json_decode(file_get_contents($this->projectDir.'/composer.lock'), true);
-
-        if (array_key_exists('hash', $composerLockFileContents)) {
-            $composerLockFileContents['hash'] = md5($composerJsonFileContents);
-        }
-
-        if (array_key_exists('content-hash', $composerLockFileContents)) {
-            $composerLockFileContents['content-hash'] = $this->getComposerContentHash($composerJsonFileContents);
-        }
-
-        $this->fs->dumpFile($this->projectDir.'/composer.lock', json_encode($composerLockFileContents, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES)."\n");
-    }
-
-    /**
-     * Returns the md5 hash of the sorted content of the composer file.
-     *
-     * @see https://github.com/composer/composer/blob/master/src/Composer/Package/Locker.php (getContentHash() method)
-     *
-     * @param string $composerJsonFileContents The contents of the composer.json file.
-     *
-     * @return string The hash of the composer file content.
-     */
-    private function getComposerContentHash($composerJsonFileContents)
-    {
-        $composerConfig = json_decode($composerJsonFileContents, true);
-
-        $relevantKeys = array(
-            'name',
-            'version',
-            'require',
-            'require-dev',
-            'conflict',
-            'replace',
-            'provide',
-            'minimum-stability',
-            'prefer-stable',
-            'repositories',
-            'extra',
-        );
-
-        $relevantComposerConfig = array();
-
-        foreach (array_intersect($relevantKeys, array_keys($composerConfig)) as $key) {
-            $relevantComposerConfig[$key] = $composerConfig[$key];
-        }
-
-        if (isset($composerConfig['config']['platform'])) {
-            $relevantComposerConfig['config']['platform'] = $composerConfig['config']['platform'];
-        }
-
-        ksort($relevantComposerConfig);
-
-        return md5(json_encode($relevantComposerConfig));
     }
 
     /**
