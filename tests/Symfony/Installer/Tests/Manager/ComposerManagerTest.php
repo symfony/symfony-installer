@@ -11,7 +11,7 @@ class ComposerManagerTest extends \PHPUnit_Framework_TestCase
      */
     public function testFixPackageName($originalName, $expectedName)
     {
-        $composerManager = new ComposerManager();
+        $composerManager = new ComposerManager(sys_get_temp_dir());
         $method = new \ReflectionMethod($composerManager, 'fixPackageName');
         $method->setAccessible(true);
 
