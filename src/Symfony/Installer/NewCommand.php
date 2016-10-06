@@ -25,9 +25,6 @@ use Symfony\Installer\Manager\ComposerManager;
  */
 class NewCommand extends DownloadCommand
 {
-    /** @var ComposerManager */
-    private $composerManager;
-
     /**
      * {@inheritdoc}
      */
@@ -52,7 +49,8 @@ class NewCommand extends DownloadCommand
         $this->version = trim($input->getArgument('version'));
         $this->projectDir = $this->fs->isAbsolutePath($directory) ? $directory : getcwd().DIRECTORY_SEPARATOR.$directory;
         $this->projectName = basename($directory);
-        $this->composerManager = new ComposerManager();
+
+        $this->composerManager = new ComposerManager($this->projectDir);
     }
 
     /**
@@ -71,7 +69,7 @@ class NewCommand extends DownloadCommand
                 ->cleanUp()
                 ->dumpReadmeFile()
                 ->updateParameters()
-                ->updateComposerJson()
+                ->updateComposerConfig()
                 ->createGitIgnore()
                 ->checkSymfonyRequirements()
                 ->displayInstallationResult()
@@ -327,24 +325,15 @@ class NewCommand extends DownloadCommand
      *
      * @return $this
      */
-    protected function updateComposerJson()
+    protected function updateComposerConfig()
     {
-        parent::updateComposerJson();
-
-        $composerConfig = $this->getProjectComposerConfig();
-
-        $composerConfig['name'] = $this->composerManager->generateProjectName($this->projectName);
-        $composerConfig['license'] = 'proprietary';
-
-        if (isset($composerConfig['description'])) {
-            unset($composerConfig['description']);
-        }
-
-        if (isset($composerConfig['extra']['branch-alias'])) {
-            unset($composerConfig['extra']['branch-alias']);
-        }
-
-        $this->saveProjectComposerConfig($composerConfig);
+        parent::updateComposerConfig();
+        $this->composerManager->updateProjectConfig([
+            'name' => $this->composerManager->createPackageName($this->projectName),
+            'license' => 'proprietary',
+            'description' => null,
+            'extra' => ['branch-alias' => null],
+        ]);
 
         return $this;
     }
