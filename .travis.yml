@@ -24,7 +24,7 @@ before_install:
 
 install:
   - composer install
-  - php box build
+  - ~/.phpenv/versions/5.6/bin/php box build
 
 script:
   - phpunit
