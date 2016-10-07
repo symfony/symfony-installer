@@ -83,22 +83,13 @@ class ComposerManager
     /**
      * It returns the project's Composer config as a PHP array.
      *
-     * @return $this|array
+     * @return array
      */
     private function getProjectConfig()
     {
         $composerJsonPath = $this->projectDir.'/composer.json';
-
         if (!is_writable($composerJsonPath)) {
-//            if ($this->output->isVerbose()) {
-//                $this->output->writeln(sprintf(
-//                    " <comment>[WARNING]</comment> Project's Composer config cannot be updated because\n".
-//                    " the <comment>%s</comment> file is not writable.\n",
-//                    $composerJsonPath
-//                ));
-//            }
-
-            return $this;
+            return [];
         }
 
         return json_decode(file_get_contents($composerJsonPath), true);
