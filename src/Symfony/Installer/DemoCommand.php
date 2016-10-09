@@ -15,6 +15,7 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Installer\Exception\AbortException;
+use Symfony\Installer\Manager\ComposerManager;
 
 /**
  * This command creates a full-featured Symfony demo application.
@@ -60,6 +61,8 @@ class DemoCommand extends DownloadCommand
             $this->projectDir = $this->fs->isAbsolutePath($directory) ? $directory : getcwd().DIRECTORY_SEPARATOR.$directory;
             $this->projectName = basename($directory);
         }
+
+        $this->composerManager = new ComposerManager($this->projectDir);
     }
 
     /**
@@ -75,7 +78,7 @@ class DemoCommand extends DownloadCommand
                 ->download()
                 ->extract()
                 ->cleanUp()
-                ->updateComposerJson()
+                ->updateComposerConfig()
                 ->createGitIgnore()
                 ->checkSymfonyRequirements()
                 ->displayInstallationResult()
