@@ -256,7 +256,7 @@ class NewCommand extends DownloadCommand
         }
 
         $consoleDir = ($this->isSymfony3() ? 'bin' : 'app');
-        $serverRunCommand = extension_loaded('pcntl') ? 'server:start' : 'server:run';
+        $serverRunCommand = version_compare($this->version, '2.6.0', '>=') && extension_loaded('pcntl') ? 'server:start' : 'server:run';
 
         $this->output->writeln(sprintf(
             "    * Configure your application in <comment>app/config/parameters.yml</comment> file.\n\n".

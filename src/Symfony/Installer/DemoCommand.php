@@ -145,7 +145,7 @@ class DemoCommand extends DownloadCommand
             ));
         }
 
-        $serverRunCommand = extension_loaded('pcntl') ? 'server:start' : 'server:run';
+        $serverRunCommand = version_compare($this->version, '2.6.0', '>=') && extension_loaded('pcntl') ? 'server:start' : 'server:run';
 
         $this->output->writeln(sprintf(
             "    1. Change your current directory to <comment>%s</comment>\n\n".
