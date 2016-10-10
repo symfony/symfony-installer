@@ -21,6 +21,7 @@ use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Event\ProgressEvent;
 use GuzzleHttp\Utils;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Helper\Helper;
 use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -146,10 +147,10 @@ abstract class DownloadCommand extends Command
 
             if (null === $progressBar) {
                 ProgressBar::setPlaceholderFormatterDefinition('max', function (ProgressBar $bar) {
-                    return $this->formatSize($bar->getMaxSteps());
+                    return Helper::formatMemory($bar->getMaxSteps());
                 });
                 ProgressBar::setPlaceholderFormatterDefinition('current', function (ProgressBar $bar) {
-                    return str_pad($this->formatSize($bar->getProgress()), 11, ' ', STR_PAD_LEFT);
+                    return str_pad(Helper::formatMemory($bar->getProgress()), 11, ' ', STR_PAD_LEFT);
                 });
 
                 $progressBar = new ProgressBar($this->output, $downloadSize);
@@ -447,26 +448,6 @@ abstract class DownloadCommand extends Command
         }
 
         return $this;
-    }
-
-    /**
-     * Utility method to show the number of bytes in a readable format.
-     *
-     * @param int $bytes The number of bytes to format
-     *
-     * @return string The human readable string of bytes (e.g. 4.32MB)
-     */
-    protected function formatSize($bytes)
-    {
-        $units = array('B', 'KB', 'MB', 'GB', 'TB');
-
-        $bytes = max($bytes, 0);
-        $pow = $bytes ? floor(log($bytes, 1024)) : 0;
-        $pow = min($pow, count($units) - 1);
-
-        $bytes /= pow(1024, $pow);
-
-        return number_format($bytes, 2).' '.$units[$pow];
     }
 
     /**
