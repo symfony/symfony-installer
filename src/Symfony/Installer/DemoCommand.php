@@ -145,11 +145,13 @@ class DemoCommand extends DownloadCommand
             ));
         }
 
+        $serverRunCommand = extension_loaded('pcntl') ? 'server:start' : 'server:run';
+
         $this->output->writeln(sprintf(
             "    1. Change your current directory to <comment>%s</comment>\n\n".
-            "    2. Execute the <comment>php bin/console server:run</comment> command to run the demo application.\n\n".
+            "    2. Execute the <comment>php bin/console %s</comment> command to run the demo application.\n\n".
             "    3. Browse to the <comment>http://localhost:8000</comment> URL to see the demo application in action.\n\n",
-            $this->projectDir
+            $this->projectDir, $serverRunCommand
         ));
 
         return $this;
