@@ -256,14 +256,15 @@ class NewCommand extends DownloadCommand
         }
 
         $consoleDir = ($this->isSymfony3() ? 'bin' : 'app');
+        $serverRunCommand = version_compare($this->version, '2.6.0', '>=') && extension_loaded('pcntl') ? 'server:start' : 'server:run';
 
         $this->output->writeln(sprintf(
             "    * Configure your application in <comment>app/config/parameters.yml</comment> file.\n\n".
             "    * Run your application:\n".
-            "        1. Execute the <comment>php %s/console server:run</comment> command.\n".
+            "        1. Execute the <comment>php %s/console %s</comment> command.\n".
             "        2. Browse to the <comment>http://localhost:8000</comment> URL.\n\n".
             "    * Read the documentation at <comment>http://symfony.com/doc</comment>\n",
-            $consoleDir
+            $consoleDir, $serverRunCommand
         ));
 
         return $this;
