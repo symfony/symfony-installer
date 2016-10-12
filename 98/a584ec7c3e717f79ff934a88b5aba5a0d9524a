@@ -1,0 +1,11 @@
+---------------------------------------------------------------------------
+
+by lyrixx at 2016-10-10T09:02:34Z
+
+Should be deal with Symfony Version also ? because this command does not exist in older SF version.
+
+---------------------------------------------------------------------------
+
+by javiereguiluz at 2016-10-10T09:09:16Z
+
+@lyrixx you are right! I've improved the condition to check that we're using Sf 2.6.0 or higher. Thanks!
