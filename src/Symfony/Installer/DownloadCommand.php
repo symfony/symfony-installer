@@ -129,14 +129,7 @@ abstract class DownloadCommand extends Command
     {
         $this->output->writeln(sprintf("\n Downloading %s...\n", $this->getDownloadedApplicationType()));
 
-        // decide which is the best compressed version to download
-        $distill = new Distill();
-        $symfonyArchiveFile = $distill
-            ->getChooser()
-            ->setStrategy(new MinimumSize())
-            ->addFilesWithDifferentExtensions($this->getRemoteFileUrl(), ['tgz', 'zip'])
-            ->getPreferredFile()
-        ;
+        $symfonyArchiveFile = $this->getRemoteFileUrl().'.tgz';
 
         /** @var ProgressBar|null $progressBar */
         $progressBar = null;
