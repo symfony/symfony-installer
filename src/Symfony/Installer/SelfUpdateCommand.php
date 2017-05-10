@@ -89,7 +89,7 @@ class SelfUpdateCommand extends DownloadCommand
     protected function initialize(InputInterface $input, OutputInterface $output)
     {
         parent::initialize($input, $output);
-        $this->remoteInstallerFile = 'http://symfony.com/installer';
+        $this->remoteInstallerFile = 'https://symfony.com/installer';
         $this->currentInstallerFile = realpath($_SERVER['argv'][0]) ?: $_SERVER['argv'][0];
         $this->tempDir = sys_get_temp_dir();
         $this->currentInstallerBackupFile = basename($this->currentInstallerFile, '.phar').'-backup.phar';
@@ -252,6 +252,6 @@ class SelfUpdateCommand extends DownloadCommand
      */
     protected function getRemoteFileUrl()
     {
-        return 'http://symfony.com/installer';
+        return 'https://symfony.com/installer';
     }
 }
