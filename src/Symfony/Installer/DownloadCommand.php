@@ -229,6 +229,10 @@ abstract class DownloadCommand extends Command
             ));
         }
 
+        if ('demo' === $this->projectName && 'new' === $this->getName()) {
+            $this->output->writeln("\n <bg=yellow> TIP </> If you want to download the Symfony Demo app, execute 'symfony demo' instead of 'symfony new demo'");
+        }
+
         return $this;
     }
 

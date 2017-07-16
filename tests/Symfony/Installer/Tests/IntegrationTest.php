@@ -122,6 +122,12 @@ class IntegrationTest extends \PHPUnit_Framework_TestCase
         $this->assertContains('Symfony version 2.7.5 - app/dev/debug', $output);
     }
 
+    public function testSymfonyDemoInstallationWithNewCommand()
+    {
+        $output = $this->runCommand(sprintf('php %s/symfony.phar new demo', $this->rootDir));
+        $this->assertContains("If you want to download the Symfony Demo app, execute 'symfony demo' instead of 'symfony new demo'", $output);
+    }
+
     /**
      * Runs the given string as a command and returns the resulting output.
      * The CWD is set to the root project directory to simplify command paths.
