@@ -134,7 +134,7 @@ abstract class DownloadCommand extends Command
         $symfonyArchiveFile = $distill
             ->getChooser()
             ->setStrategy(new MinimumSize())
-            ->addFilesWithDifferentExtensions($this->getRemoteFileUrl(), ['tgz', 'zip'])
+            ->addFilesWithDifferentExtensions($this->getRemoteFileUrl(), array('tgz', 'zip'))
             ->getPreferredFile()
         ;
 
@@ -184,7 +184,7 @@ abstract class DownloadCommand extends Command
             $request->getEmitter()->on('progress', $downloadCallback);
             $response = $client->send($request);
         } catch (ClientException $e) {
-            if ('new' === $this->getName() && ($e->getCode() === 403 || $e->getCode() === 404)) {
+            if ('new' === $this->getName() && (403 === $e->getCode() || 404 === $e->getCode())) {
                 throw new \RuntimeException(sprintf(
                     "The selected version (%s) cannot be installed because it does not exist.\n".
                     "Execute the following command to install the latest stable Symfony release:\n".
@@ -227,6 +227,10 @@ abstract class DownloadCommand extends Command
                 'Change your project name or create it in another directory.',
                 $this->projectName, $this->projectDir
             ));
+        }
+
+        if ('demo' === $this->projectName && 'new' === $this->getName()) {
+            $this->output->writeln("\n <bg=yellow> TIP </> If you want to download the Symfony Demo app, execute 'symfony demo' instead of 'symfony new demo'");
         }
 
         return $this;
@@ -413,7 +417,7 @@ abstract class DownloadCommand extends Command
 
         if (!empty($symfonyVersion) && 'v' === substr($symfonyVersion, 0, 1)) {
             return substr($symfonyVersion, 1);
-        };
+        }
 
         return $symfonyVersion;
     }
@@ -570,7 +574,7 @@ abstract class DownloadCommand extends Command
     /**
      * Enables the signal handler.
      *
-     * @throws AbortException If the execution has been aborted with SIGINT signal.
+     * @throws AbortException if the execution has been aborted with SIGINT signal
      */
     private function enableSignalHandler()
     {
@@ -578,7 +582,7 @@ abstract class DownloadCommand extends Command
             return;
         }
 
-        declare(ticks = 1);
+        declare(ticks=1);
 
         pcntl_signal(SIGINT, function () {
             error_reporting(0);
