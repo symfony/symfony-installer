@@ -41,6 +41,7 @@ $app->add(new Symfony\Installer\AboutCommand($appVersion));
 $app->add(new Symfony\Installer\NewCommand());
 $app->add(new Symfony\Installer\DemoCommand());
 $app->add(new Symfony\Installer\SelfUpdateCommand());
+$app->add(new Symfony\Installer\AvailableVersionsCommand());
 
 $app->setDefaultCommand('about');
 
