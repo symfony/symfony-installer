@@ -97,7 +97,7 @@ class NewCommand extends DownloadCommand
     /**
      * Checks whether the given Symfony version is installable by the installer.
      * Due to the changes introduced in the Icu/Intl components
-     * (see http://symfony.com/blog/new-in-symfony-2-6-farewell-to-icu-component)
+     * (see https://symfony.com/blog/new-in-symfony-2-6-farewell-to-icu-component)
      * not all the previous Symfony versions are installable by the installer.
      *
      * The rules to decide if the version is installable are as follows:
@@ -124,12 +124,12 @@ class NewCommand extends DownloadCommand
 
         // Get the full list of Symfony versions to check if it's installable
         $client = $this->getGuzzleClient();
-        $symfonyVersions = $client->get('http://symfony.com/versions.json')->json();
+        $symfonyVersions = $client->get('https://symfony.com/versions.json')->json();
         if (empty($symfonyVersions)) {
             throw new \RuntimeException(
                 "There was a problem while downloading the list of Symfony versions from\n".
                 "symfony.com. Check that you are online and the following URL is accessible:\n\n".
-                'http://symfony.com/versions.json'
+                'https://symfony.com/versions.json'
             );
         }
 
@@ -266,7 +266,7 @@ class NewCommand extends DownloadCommand
             "    * Run your application:\n".
             "        1. Execute the <comment>php %s/console %s</comment> command.\n".
             "        2. Browse to the <comment>http://localhost:8000</comment> URL.\n\n".
-            "    * Read the documentation at <comment>http://symfony.com/doc</comment>\n",
+            "    * Read the documentation at <comment>https://symfony.com/doc</comment>\n",
             $consoleDir, $serverRunCommand
         ));
 
@@ -352,6 +352,6 @@ class NewCommand extends DownloadCommand
      */
     protected function getRemoteFileUrl()
     {
-        return 'http://symfony.com/download?v=Symfony_Standard_Vendors_'.$this->version;
+        return 'https://symfony.com/download?v=Symfony_Standard_Vendors_'.$this->version;
     }
 }
