@@ -107,6 +107,10 @@ class IntegrationTest extends \PHPUnit_Framework_TestCase
      */
     public function testUseComposerToInstallSymfony4()
     {
+        if (PHP_VERSION_ID < 50500) {
+            $this->markTestSkipped('This test requires PHP 5.5 or newer.');
+        }
+
         $this->runCommand(sprintf('php %s/symfony.phar new my_test_project', $this->rootDir));
     }
 
