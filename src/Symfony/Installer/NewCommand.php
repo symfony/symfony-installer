@@ -139,7 +139,7 @@ class NewCommand extends DownloadCommand
                 throw new \RuntimeException(sprintf(
                     "The selected branch (%s) does not exist, or is not maintained.\n".
                     "To solve this issue, install Symfony with the latest stable release:\n\n".
-                    '%s %s %s',  $this->version, $_SERVER['PHP_SELF'], $this->getName(), $this->projectDir
+                    '%s %s %s', $this->version, $_SERVER['PHP_SELF'], $this->getName(), $this->projectDir
                 ));
             }
 
@@ -173,11 +173,11 @@ class NewCommand extends DownloadCommand
         }
 
         // check that the system has the PHP version required by the Symfony version to be installed
-        if (version_compare($this->version, '3.0.0', '>=') && version_compare(phpversion(), '5.5.9', '<')) {
+        if (version_compare($this->version, '3.0.0', '>=') && version_compare(PHP_VERSION, '5.5.9', '<')) {
             throw new \RuntimeException(sprintf(
                 "The selected version (%s) cannot be installed because it requires\n".
                 "PHP 5.5.9 or higher and your system has PHP %s installed.\n",
-                $this->version, phpversion()
+                $this->version, PHP_VERSION
             ));
         }
 
@@ -339,12 +339,12 @@ class NewCommand extends DownloadCommand
     protected function updateComposerConfig()
     {
         parent::updateComposerConfig();
-        $this->composerManager->updateProjectConfig([
+        $this->composerManager->updateProjectConfig(array(
             'name' => $this->composerManager->createPackageName($this->projectName),
             'license' => 'proprietary',
             'description' => null,
-            'extra' => ['branch-alias' => null],
-        ]);
+            'extra' => array('branch-alias' => null),
+        ));
 
         return $this;
     }
