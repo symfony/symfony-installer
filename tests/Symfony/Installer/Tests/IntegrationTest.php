@@ -116,6 +116,10 @@ class IntegrationTest extends \PHPUnit_Framework_TestCase
 
     public function testSymfonyDemoInstallationWithNewCommand()
     {
+        if (PHP_VERSION_ID < 50500) {
+            $this->markTestSkipped('This test requires PHP 5.5 or higher.');
+        }
+
         $output = $this->runCommand(sprintf('php %s/symfony.phar new demo 3.4', $this->rootDir));
         $this->assertContains("If you want to download the Symfony Demo app, execute 'symfony demo' instead of 'symfony new demo'", $output);
         $this->fs->remove('demo');
