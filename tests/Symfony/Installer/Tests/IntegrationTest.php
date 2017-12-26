@@ -52,11 +52,7 @@ class IntegrationTest extends \PHPUnit_Framework_TestCase
         $this->assertContains('Downloading the Symfony Demo Application', $output);
         $this->assertContains('Symfony Demo Application was successfully installed.', $output);
 
-        $output = $this->runCommand('php bin/console --version', $projectDir);
-        $this->assertRegExp('/Symfony version 3\.\d+\.\d+(-DEV)? - app\/dev\/debug/', $output);
-
         $composerConfig = json_decode(file_get_contents($projectDir.'/composer.json'), true);
-
         $this->assertArrayNotHasKey('platform', $composerConfig['config'], 'The composer.json file does not define any platform configuration.');
     }
 
@@ -76,14 +72,10 @@ class IntegrationTest extends \PHPUnit_Framework_TestCase
         $this->assertContains('Downloading Symfony...', $output);
         $this->assertRegExp($messageRegexp, $output);
 
-        if ('3' === substr($versionToInstall, 0, 1) || '' === $versionToInstall) {
-            if (PHP_VERSION_ID < 50500) {
-                $this->markTestSkipped('Symfony 3 requires PHP 5.5.9 or higher.');
-            }
-
-            $output = $this->runCommand('php bin/console --version', $projectDir);
-        } else {
+        if (file_exists($projectDir.'/app/console')) {
             $output = $this->runCommand('php app/console --version', $projectDir);
+        } else {
+            $output = $this->runCommand('php bin/console --version', $projectDir);
         }
 
         $this->assertRegExp($versionRegexp, $output);
@@ -124,8 +116,9 @@ class IntegrationTest extends \PHPUnit_Framework_TestCase
 
     public function testSymfonyDemoInstallationWithNewCommand()
     {
-        $output = $this->runCommand(sprintf('php %s/symfony.phar new demo', $this->rootDir));
+        $output = $this->runCommand(sprintf('php %s/symfony.phar new demo 3.4', $this->rootDir));
         $this->assertContains("If you want to download the Symfony Demo app, execute 'symfony demo' instead of 'symfony new demo'", $output);
+        $this->fs->remove('demo');
     }
 
     /**
@@ -157,13 +150,6 @@ class IntegrationTest extends \PHPUnit_Framework_TestCase
     {
         return array(
             array(
-                '',
-                '/.*Symfony 3\.1\.\d+ was successfully installed.*/',
-                '/Symfony version 3\.1\.\d+(-DEV)? - app\/dev\/debug/',
-                '5.5.9',
-            ),
-
-            array(
                 '3.0',
                 '/.*Symfony 3\.0\.\d+ was successfully installed.*/',
                 '/Symfony version 3\.0\.\d+(-DEV)? - app\/dev\/debug/',
@@ -172,9 +158,9 @@ class IntegrationTest extends \PHPUnit_Framework_TestCase
 
             array(
                 'lts',
-                '/.*Symfony 2\.8\.\d+ was successfully installed.*/',
-                '/Symfony version 2\.8\.\d+(-DEV)? - app\/dev\/debug/',
-                '5.3.9',
+                '/.*Symfony 3\.4\.\d+ was successfully installed.*/',
+                '/Symfony 3\.4\.\d+ \(kernel: app, env: dev, debug: true\)/',
+                '5.5.9',
             ),
 
             array(
