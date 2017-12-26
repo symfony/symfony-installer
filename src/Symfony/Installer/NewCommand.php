@@ -181,6 +181,16 @@ class NewCommand extends DownloadCommand
             ));
         }
 
+        // check that the Symfony version to be installed is not 4.x, which is incompatible with this installer
+        if (version_compare($this->version, '4.0.0', '>=')) {
+            throw new \RuntimeException(sprintf(
+                "The Symfony Installer is not compatible with Symfony 4.x or newer versions.\n".
+                "Run this other command to install Symfony using Composer instead:\n\n".
+                'composer create-project symfony/skeleton %s',
+                $this->projectName
+            ));
+        }
+
         if ($isUnstableVersion) {
             $this->output->writeln("\n <bg=red> WARNING </> You are downloading an unstable Symfony version.");
         }
