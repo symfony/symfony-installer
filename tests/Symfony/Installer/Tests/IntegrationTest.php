@@ -101,6 +101,19 @@ class IntegrationTest extends \PHPUnit_Framework_TestCase
         $this->runCommand(sprintf('php %s/symfony.phar new my_test_project 3.0.0', $this->rootDir));
     }
 
+    /**
+     * @expectedException \RuntimeException
+     * @expectedExceptionMessageRegExp /.+The Symfony Installer is not compatible with Symfony 4\.x or newer versions.*Run this other command to install Symfony using Composer instead:.*composer create-project symfony\/skeleton .+/s
+     */
+    public function testUseComposerToInstallSymfony4()
+    {
+        if (PHP_VERSION_ID < 50500) {
+            $this->markTestSkipped('This test requires PHP 5.5 or newer.');
+        }
+
+        $this->runCommand(sprintf('php %s/symfony.phar new my_test_project', $this->rootDir));
+    }
+
     public function testSymfonyInstallationInCurrentDirectory()
     {
         $projectDir = sprintf('%s/my_test_project', sys_get_temp_dir());
