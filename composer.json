@@ -20,7 +20,8 @@
         "raulfraile/distill": "~0.9,!=0.9.3,!=0.9.4"
     },
     "require-dev": {
-        "symfony/process": "~2.5"
+        "symfony/process": "~2.5",
+        "symfony/phpunit-bridge": "^4.0"
     },
     "extra": {
         "branch-alias": {
