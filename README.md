@@ -11,3 +11,5 @@ $ composer create-project symfony/framework-standard-edition my_project_name
 # Symfony 4.x
 $ composer create-project symfony/skeleton my_project_name
 ```
+
+More information: [Installing & Setting up the Symfony Framework](https://symfony.com/doc/current/setup.html).
