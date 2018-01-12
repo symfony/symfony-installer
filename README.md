@@ -1,8 +1,21 @@
 Symfony Installer
 =================
 
-**This is the official installer to start new projects based on the Symfony
-full-stack framework.**
+This is the official installer to start new projects based on the Symfony
+full-stack framework. The installer is only compatible with Symfony 2 and 3.
+
+Creating Symfony 4 projects
+---------------------------
+
+**This installer is not compatible with Symfony 4** and newer versions. Instead,
+use [Composer](https://getcomposer.org/) and create your Symfony 4 project as follows:
+
+```bash
+$ composer create-project symfony/skeleton my_project_name
+```
+
+See the [Symfony Installation article](https://symfony.com/doc/current/setup.html)
+on the official Symfony Documentation for more details.
 
 Installing the installer
 ------------------------
