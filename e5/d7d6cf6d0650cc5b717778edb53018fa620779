@@ -1,0 +1,11 @@
+---------------------------------------------------------------------------
+
+by fabpot at 2018-01-09T06:28:29Z
+
+IMHO, we should just add a mention at the top of the README mentioning that from 3.4 on, using Flex is better and that Symfony 4.0+ won't be supported by the installer. But for all other versions (that are still supported), the installer is still the recommended tool.
+
+---------------------------------------------------------------------------
+
+by fabpot at 2018-01-12T13:24:13Z
+
+See http://symfony.com/blog/the-end-of-the-symfony-installer for the blog post announcing this.
