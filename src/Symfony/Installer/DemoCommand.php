@@ -157,6 +157,13 @@ class DemoCommand extends DownloadCommand
             $this->projectDir, $serverRunCommand
         ));
 
+        $this->output->writeln(
+            "<bg=yellow> WARNING </>\n\n".
+            "   This installer downloads the old Symfony Demo version based on Symfony 3.\n".
+            "   If you prefer to install the new version based on Symfony 4 and Symfony Flex,\n".
+            "   execute the following command:\n\n".
+            "     composer create-project symfony/symfony-demo\n");
+
         return $this;
     }
 
