@@ -468,11 +468,16 @@ abstract class DownloadCommand extends Command
      */
     protected function generateRandomSecret()
     {
+        $random = '';
         if (function_exists('openssl_random_pseudo_bytes')) {
-            return hash('sha1', openssl_random_pseudo_bytes(23));
+            $random = openssl_random_pseudo_bytes(23);
+        }
+        
+        if ($random === '') {
+            $random = uniqid(mt_rand(), true);
         }
 
-        return hash('sha1', uniqid(mt_rand(), true));
+        return hash('sha1', $random);
     }
 
     /**
