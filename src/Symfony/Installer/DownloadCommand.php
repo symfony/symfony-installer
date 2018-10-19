@@ -473,7 +473,7 @@ abstract class DownloadCommand extends Command
             $random = openssl_random_pseudo_bytes(23);
         }
         
-        if ($random === '') {
+        if ($random === false) {
             $random = uniqid(mt_rand(), true);
         }
 
